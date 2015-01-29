@@ -79,6 +79,7 @@ Simulation::~Simulation()
 void Simulation::SetInitialParameter(const Param::Params& param)
 {
   params_ = param;
+  params_.vaderJacob.Eitje = 2;
   /*SimulationTime_ = 0.0;	/*changed by Robin*/
 	gl_.reset( new GLSLState() );
 	gl_->Init(AppWindow.GetDC());

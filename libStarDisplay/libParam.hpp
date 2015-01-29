@@ -24,6 +24,7 @@ namespace libParam {
   template <> Params      LUA_API FromLua<Params>(const luabind::object& luaobj);
   
   template <> luabind::object LUA_API ToLua<Roost>(lua_State* L, const Roost& cobj);
+  template <> luabind::object LUA_API ToLua<vaderJacob>(lua_State* L, const vaderJacob& cobj);
   template <> luabind::object LUA_API ToLua<RenderFlags>(lua_State* L, const RenderFlags& cobj);
 }
 

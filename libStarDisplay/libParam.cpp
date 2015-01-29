@@ -267,6 +267,14 @@ namespace libParam
     return luaobj;
   }
 
+  template <> luabind::object ToLua<vaderJacob>(lua_State* L, const vaderJacob& cobj)
+  {
+	  object luaobj = newtable(L);
+	  luaobj["kuchDan"] = cobj.Eitje;
+
+	  return luaobj;
+  }
+
 
   template <> luabind::object LUA_API ToLua<Panic>(lua_State* L, const Panic& cobj)
   {

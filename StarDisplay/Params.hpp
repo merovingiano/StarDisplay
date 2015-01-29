@@ -21,11 +21,7 @@ namespace Param {
 
   struct vaderJacob
   {
-	  unsigned numPrey;
-	  unsigned numPredators;
-	  float Radius;
-	  float minRadius;
-	  float maxRadius;
+	  float Eitje;
   };
 
   struct ModelLod {
@@ -330,6 +326,7 @@ namespace Param {
     unsigned maxPredators;
     unsigned maxTopologicalRange;
     Roost roost;
+	vaderJacob vaderJacob;
     double ClusterDetectionTime;
     float ClusterDistance1D;
     float ClusterDistance3D;

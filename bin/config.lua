@@ -185,6 +185,9 @@ function CustomTimeTickHook ()
   for prey in Simulation.Prey() do
     print (prey.BirdParams.houjebek)
   end
+  local roost = Simulation.GetVaderJacob()
+  print (roost['kuchDan'])
+  
 end
 
 

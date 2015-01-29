@@ -150,6 +150,11 @@ namespace liblua {
   { 
     return ToLua<Roost>(Lua, PROOST); 
   }
+
+  object GetVaderJacob()
+  {
+	  return ToLua<vaderJacob>(Lua, VADER);
+  }
     
   void SetRoost(const object& luaobj) 
   { 
@@ -315,6 +320,7 @@ namespace liblua {
       def("ShowAnnotation", &ShowAnnotation),
       def("GetFlock", &GetFlock),
       def("GetRoost", &GetRoost),
+	  def("GetVaderJacob", &GetVaderJacob),
       def("SetRoost", &SetRoost),
       def("NewPrey", &NewPrey),
       def("NewPredator", &NewPredator),

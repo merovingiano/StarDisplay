@@ -13,6 +13,7 @@ extern Simulation Sim;
 
 #define PARAMS Sim.Params()
 #define PROOST Sim.Params().roost
+#define VADER Sim.Params().vaderJacob
 #define PSKYBOX Sim.Params().skybox
 #define PFM Sim.Params().featureMap
 #define PFME(E) PFM.Entries[(Param::FeatureMap::##E)]
