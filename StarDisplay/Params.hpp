@@ -19,6 +19,15 @@ namespace Param {
   };
 
 
+  struct vaderJacob
+  {
+	  unsigned numPrey;
+	  unsigned numPredators;
+	  float Radius;
+	  float minRadius;
+	  float maxRadius;
+  };
+
   struct ModelLod {
     std::string acFile;
     float pxCoverage;
