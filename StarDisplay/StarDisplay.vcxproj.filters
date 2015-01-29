@@ -1,0 +1,478 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Analysis">
+      <UniqueIdentifier>{00e062fa-6d63-42b7-88b8-745581037fc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model">
+      <UniqueIdentifier>{b7387e44-b61a-4e5e-bad5-81a417fc3731}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lua">
+      <UniqueIdentifier>{33f5d02b-40dd-4c1f-b341-41e95fd9534f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Environment">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="libLua">
+      <UniqueIdentifier>{535acc26-2eca-419d-af74-68a1640add4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{3f1e5359-db5f-4458-bb04-92f27939e47e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\glsl">
+      <UniqueIdentifier>{4906959b-50bb-4728-ae67-ce9d1666517d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\glsl\shader">
+      <UniqueIdentifier>{9777ece8-696d-4153-b978-88165b32843e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lua\lua">
+      <UniqueIdentifier>{26d3aa0e-338c-46de-b993-64ee4505e780}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lua\doc">
+      <UniqueIdentifier>{1cc33f58-d7c5-4eff-a9b3-3af3213160b9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+    <None Include="starlings16.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="starlings32.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="starlings48.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\bin\config.lua">
+      <Filter>Lua</Filter>
+    </None>
+    <None Include="..\bin\shader\shader.glsl">
+      <Filter>Graphics\glsl\shader</Filter>
+    </None>
+    <None Include="..\bin\keymaps.lua">
+      <Filter>Lua</Filter>
+    </None>
+    <None Include="..\bin\lua\StarDisplay.lua">
+      <Filter>Lua\lua</Filter>
+    </None>
+    <None Include="..\bin\lua\Birds.lua">
+      <Filter>Lua\lua</Filter>
+    </None>
+    <None Include="..\bin\lua\Camera.lua">
+      <Filter>Lua\lua</Filter>
+    </None>
+    <None Include="..\bin\lua\Defaults.lua">
+      <Filter>Lua\lua</Filter>
+    </None>
+    <None Include="..\bin\lua\Enums.lua">
+      <Filter>Lua\lua</Filter>
+    </None>
+    <None Include="..\bin\lua\Help.lua">
+      <Filter>Lua\lua</Filter>
+    </None>
+    <None Include="..\bin\lua\KeyHooks.lua">
+      <Filter>Lua\lua</Filter>
+    </None>
+    <None Include="..\bin\lua\MouseHooks.lua">
+      <Filter>Lua\lua</Filter>
+    </None>
+    <None Include="..\bin\lua\Random.lua">
+      <Filter>Lua\lua</Filter>
+    </None>
+    <None Include="..\bin\lua\VK.lua">
+      <Filter>Lua\lua</Filter>
+    </None>
+    <None Include="..\doc\bindings.lua">
+      <Filter>Lua\doc</Filter>
+    </None>
+    <None Include="..\bin\attacks.lua">
+      <Filter>Lua</Filter>
+    </None>
+    <None Include="..\bin\evasion.lua">
+      <Filter>Lua</Filter>
+    </None>
+    <None Include="..\bin\lua\GUI.lua">
+      <Filter>Lua\lua</Filter>
+    </None>
+    <None Include="..\bin\statistic.lua">
+      <Filter>Lua</Filter>
+    </None>
+    <None Include="..\bin\travelDist.lua">
+      <Filter>Lua</Filter>
+    </None>
+    <None Include="..\bin\meta_config.lua">
+      <Filter>Lua</Filter>
+    </None>
+    <None Include="..\bin\egbert_statistic.lua">
+      <Filter>Lua</Filter>
+    </None>
+    <None Include="..\bin\lars_statistic.lua">
+      <Filter>Lua</Filter>
+    </None>
+    <None Include="..\bin\triggerPanic.lua">
+      <Filter>Lua</Filter>
+    </None>
+    <None Include="..\bin\lars_config.lua">
+      <Filter>Lua</Filter>
+    </None>
+    <None Include="..\bin\meta_config_repeated_attacks.lua">
+      <Filter>Lua</Filter>
+    </None>
+    <None Include="..\bin\lua\pursuits.lua">
+      <Filter>Lua\lua</Filter>
+    </None>
+    <None Include="..\bin\average_wave.lua">
+      <Filter>Lua</Filter>
+    </None>
+    <None Include="..\bin\lua\inspect.lua">
+      <Filter>Lua\lua</Filter>
+    </None>
+    <None Include="..\bin\lua\RollRateStatistic.lua">
+      <Filter>Lua\lua</Filter>
+    </None>
+    <None Include="..\bin\wave.lua">
+      <Filter>Lua</Filter>
+    </None>
+    <None Include="..\bin\lua\gpws.lua">
+      <Filter>Lua\lua</Filter>
+    </None>
+    <None Include="..\bin\turn_statistic.lua">
+      <Filter>Lua</Filter>
+    </None>
+    <None Include="..\bin\lua\valarray.lua">
+      <Filter>Lua\lua</Filter>
+    </None>
+    <None Include="..\bin\TA.lua">
+      <Filter>Lua</Filter>
+    </None>
+    <None Include="..\bin\TA_config.lua">
+      <Filter>Lua</Filter>
+    </None>
+    <None Include="..\bin\TA_Birds.lua">
+      <Filter>Lua</Filter>
+    </None>
+    <None Include="..\bin\diffusion.lua">
+      <Filter>Lua</Filter>
+    </None>
+    <None Include="..\bin\marijke.lua">
+      <Filter>Lua</Filter>
+    </None>
+    <None Include="..\bin\terror_waves_config.lua">
+      <Filter>Lua</Filter>
+    </None>
+    <None Include="..\bin\Rolf.lua">
+      <Filter>Lua</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="StarDisplay.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GLSLImm.hpp">
+      <Filter>Graphics\glsl</Filter>
+    </ClInclude>
+    <ClInclude Include="GLSLInstancingProg.hpp">
+      <Filter>Graphics\glsl</Filter>
+    </ClInclude>
+    <ClInclude Include="GLSLModel.hpp">
+      <Filter>Graphics\glsl</Filter>
+    </ClInclude>
+    <ClInclude Include="GLSLRibbonProg.hpp">
+      <Filter>Graphics\glsl</Filter>
+    </ClInclude>
+    <ClInclude Include="GLSLSkybox.hpp">
+      <Filter>Graphics\glsl</Filter>
+    </ClInclude>
+    <ClInclude Include="GLSLState.hpp">
+      <Filter>Graphics\glsl</Filter>
+    </ClInclude>
+    <ClInclude Include="GLSLStripeProg.hpp">
+      <Filter>Graphics\glsl</Filter>
+    </ClInclude>
+    <ClInclude Include="GLSLText.hpp">
+      <Filter>Graphics\glsl</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.hpp">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="GLWin.hpp">
+      <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="glmfwd.hpp">
+      <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="menu.hpp">
+      <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Simulation.hpp">
+      <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="accumulators.hpp">
+      <Filter>Analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="bounding_box.hpp">
+      <Filter>Analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="ClusterStatistic.hpp">
+      <Filter>Analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="DefaultStatistic.hpp">
+      <Filter>Analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="EvolveDeflection.hpp">
+      <Filter>Analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="fcorrelation.hpp">
+      <Filter>Analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="FcorrelationStatistic.hpp">
+      <Filter>Analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="features.hpp">
+      <Filter>Analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalDevStatistic.hpp">
+      <Filter>Analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="histogram.hpp">
+      <Filter>Analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="HistogramStatistic.hpp">
+      <Filter>Analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="NNStatistic.hpp">
+      <Filter>Analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="PredatorStatistic.hpp">
+      <Filter>Analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeSeriesStatistic.hpp">
+      <Filter>Analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="val2TexCoord.hpp">
+      <Filter>Analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="VoxelVolumeStatistic.hpp">
+      <Filter>Analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="voxel_volume.hpp">
+      <Filter>Analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="visitors.hpp">
+      <Filter>Analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="HistOverlay.hpp">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="libLua.hpp">
+      <Filter>libLua</Filter>
+    </ClInclude>
+    <ClInclude Include="Flock.hpp">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Predator.hpp">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="trail_buffer.hpp">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Clock.hpp">
+      <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyState.hpp">
+      <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Globals.hpp">
+      <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Bird.hpp">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Prey.hpp">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Params.hpp">
+      <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="debug.hpp">
+      <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="ClusterDetection.hpp">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="ICamera.hpp">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="IGUIBox.hpp">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="IText.hpp">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="IStatistic.hpp">
+      <Filter>Analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="GLSLiotexture.hpp">
+      <Filter>Graphics\glsl</Filter>
+    </ClInclude>
+    <ClInclude Include="GLSLLocals.hpp">
+      <Filter>Graphics\glsl</Filter>
+    </ClInclude>
+    <ClInclude Include="mapped_buffer.hpp">
+      <Filter>Graphics\glsl</Filter>
+    </ClInclude>
+    <ClInclude Include="ac3d.hpp">
+      <Filter>Graphics\glsl</Filter>
+    </ClInclude>
+    <ClInclude Include="filesystem.hpp">
+      <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="neighbors_vect.hpp">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="random.hpp">
+      <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="color32.hpp">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="QmStatistic.hpp">
+      <Filter>Analysis</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Clock.cpp">
+      <Filter>Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="GLWin.cpp">
+      <Filter>Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="menu.cpp">
+      <Filter>Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="Simulation.cpp">
+      <Filter>Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="GLSLImm.cpp">
+      <Filter>Graphics\glsl</Filter>
+    </ClCompile>
+    <ClCompile Include="GLSLInstancingProg.cpp">
+      <Filter>Graphics\glsl</Filter>
+    </ClCompile>
+    <ClCompile Include="GLSLModel.cpp">
+      <Filter>Graphics\glsl</Filter>
+    </ClCompile>
+    <ClCompile Include="GLSLRibbonProg.cpp">
+      <Filter>Graphics\glsl</Filter>
+    </ClCompile>
+    <ClCompile Include="GLSLSkybox.cpp">
+      <Filter>Graphics\glsl</Filter>
+    </ClCompile>
+    <ClCompile Include="GLSLState.cpp">
+      <Filter>Graphics\glsl</Filter>
+    </ClCompile>
+    <ClCompile Include="GLSLStripeProg.cpp">
+      <Filter>Graphics\glsl</Filter>
+    </ClCompile>
+    <ClCompile Include="GLSLText.cpp">
+      <Filter>Graphics\glsl</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="ClusterStatistic.cpp">
+      <Filter>Analysis</Filter>
+    </ClCompile>
+    <ClCompile Include="DefaultStatistic.cpp">
+      <Filter>Analysis</Filter>
+    </ClCompile>
+    <ClCompile Include="EvolveDeflection.cpp">
+      <Filter>Analysis</Filter>
+    </ClCompile>
+    <ClCompile Include="FCorrelationStatistic.cpp">
+      <Filter>Analysis</Filter>
+    </ClCompile>
+    <ClCompile Include="features.cpp">
+      <Filter>Analysis</Filter>
+    </ClCompile>
+    <ClCompile Include="GlobalDevStatistic.cpp">
+      <Filter>Analysis</Filter>
+    </ClCompile>
+    <ClCompile Include="HistogramStatistic.cpp">
+      <Filter>Analysis</Filter>
+    </ClCompile>
+    <ClCompile Include="NNStatistic.cpp">
+      <Filter>Analysis</Filter>
+    </ClCompile>
+    <ClCompile Include="PredatorStatistic.cpp">
+      <Filter>Analysis</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeSeriesStatistic.cpp">
+      <Filter>Analysis</Filter>
+    </ClCompile>
+    <ClCompile Include="VoxelVolumeStatistic.cpp">
+      <Filter>Analysis</Filter>
+    </ClCompile>
+    <ClCompile Include="HistOverlay.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Flock.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Predator.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="libLua.cpp">
+      <Filter>libLua</Filter>
+    </ClCompile>
+    <ClCompile Include="trail_buffer.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Globals.cpp">
+      <Filter>Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="Bird.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Prey.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="libBirds.cpp">
+      <Filter>libLua</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyState.cpp">
+      <Filter>Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="debug.cpp">
+      <Filter>Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="ClusterDetection.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="GLSLiotexture.cpp">
+      <Filter>Graphics\glsl</Filter>
+    </ClCompile>
+    <ClCompile Include="GLSLLocals.cpp">
+      <Filter>Graphics\glsl</Filter>
+    </ClCompile>
+    <ClCompile Include="ac3d.cpp">
+      <Filter>Graphics\glsl</Filter>
+    </ClCompile>
+    <ClCompile Include="random.cpp">
+      <Filter>Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="QmStatistic.cpp">
+      <Filter>Analysis</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

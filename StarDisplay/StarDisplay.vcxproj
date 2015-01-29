@@ -1,0 +1,425 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{2B52D44B-6873-4B02-902C-2CA247807ADB}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>StarDisplay</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>NotSet</CharacterSet>
+    <UseIntelIPP>false</UseIntelIPP>
+    <UseIntelTBB>false</UseIntelTBB>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\common\libs\common_use.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\common\libs\common_use.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\common\libs\common_use.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\common\libs\common_use.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
+    <TargetName>StarDisplay</TargetName>
+    <IntDir>$(TmpDir)</IntDir>
+    <CustomBuildAfterTargets>
+    </CustomBuildAfterTargets>
+    <LibraryPath>$(CommonLibs)\;$(OutDir);$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
+    <TargetName>StarDisplay</TargetName>
+    <IntDir>$(TmpDir)</IntDir>
+    <CustomBuildAfterTargets>
+    </CustomBuildAfterTargets>
+    <LibraryPath>$(CommonLibs)\;$(OutDir);$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
+    <TargetName>StarDisplay</TargetName>
+    <IntDir>$(TmpDir)</IntDir>
+    <CustomBuildAfterTargets>
+    </CustomBuildAfterTargets>
+    <LibraryPath>$(CommonLibs)\;$(OutDir);$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
+    <TargetName>StarDisplay</TargetName>
+    <IntDir>$(TmpDir)</IntDir>
+    <CustomBuildAfterTargets>
+    </CustomBuildAfterTargets>
+    <LibraryPath>$(CommonLibs)\;$(OutDir);$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>LUABIND_DYNAMIC_LINK;GLEW_STATIC;WIN32;_DEBUG;_WINDOWS;BOOST_FILESYSTEM_VERSION=3;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ProgramDataBaseFileName>$(TargetName).pdb</ProgramDataBaseFileName>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <DisableSpecificWarnings>4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>$(SolutionDir)libStarDisplay;$(SolutionDir)libStarDisplay\luabind;</AdditionalIncludeDirectories>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ShowProgress>NotSet</ShowProgress>
+      <AdditionalDependencies>libStarDisplay.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
+    </Link>
+    <CustomBuildStep>
+      <Command>call $(SolutionDir)copyDlls.bat $(LuaLibs)DLL\ $(OutDir) $(Configuration)</Command>
+      <Outputs>
+      </Outputs>
+      <Message>
+      </Message>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>LUABIND_DYNAMIC_LINK;_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;NOMINMAX;WIN32;_DEBUG;_WINDOWS;_SCL_SECURE_NO_WARNINGS;BOOST_FILESYSTEM_VERSION=3;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ProgramDataBaseFileName>$(TargetName).pdb</ProgramDataBaseFileName>
+      <DisableSpecificWarnings>4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <OpenMPSupport>false</OpenMPSupport>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <SmallerTypeCheck>true</SmallerTypeCheck>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)libStarDisplay;$(SolutionDir)libStarDisplay\luabind;</AdditionalIncludeDirectories>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>libStarDisplay.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ShowProgress>NotSet</ShowProgress>
+      <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
+    </Link>
+    <CustomBuildStep>
+      <Command>call $(SolutionDir)copyDlls.bat $(LuaLibs)DLL\ $(OutDir) $(Configuration)</Command>
+      <Outputs>
+      </Outputs>
+      <Message>
+      </Message>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>LUABIND_DYNAMIC_LINK;HRTREE_OMP_NUM_THREADS=8;GLEW_STATIC;WIN32;NDEBUG;_WINDOWS;BOOST_FILESYSTEM_VERSION=3;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ProgramDataBaseFileName>$(TargetName).pdb</ProgramDataBaseFileName>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <OmitFramePointers>true</OmitFramePointers>
+      <OpenMPSupport>true</OpenMPSupport>
+      <DisableSpecificWarnings>4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>$(SolutionDir)libStarDisplay;$(SolutionDir)libStarDisplay\luabind;</AdditionalIncludeDirectories>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ShowProgress>NotSet</ShowProgress>
+      <AdditionalDependencies>libStarDisplay.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
+      <Profile>true</Profile>
+      <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
+    </Link>
+    <CustomBuildStep>
+      <Command>call $(SolutionDir)copyDlls.bat $(LuaLibs)DLL\ $(OutDir) $(Configuration)</Command>
+      <Outputs>
+      </Outputs>
+      <Message>
+      </Message>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>LUABIND_DYNAMIC_LINK;HRTREE_OMP_NUM_THREADS=8;_CRT_SECURE_NO_WARNINGS;NOMINMAX;WIN32;NDEBUG;_WINDOWS;BOOST_FILESYSTEM_VERSION=3;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ProgramDataBaseFileName>$(TargetName).pdb</ProgramDataBaseFileName>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <OmitFramePointers>true</OmitFramePointers>
+      <OpenMPSupport>true</OpenMPSupport>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
+      <UseIntelOptimizedHeaders>true</UseIntelOptimizedHeaders>
+      <UseProcessorExtensions>HOST</UseProcessorExtensions>
+      <OpenMP>GenerateParallelCode</OpenMP>
+      <Cpp0xSupport>true</Cpp0xSupport>
+      <RecognizeRestrictKeyword>true</RecognizeRestrictKeyword>
+      <VectorizerDiagnosticLevel>Default</VectorizerDiagnosticLevel>
+      <EnableGapAnalysis>Disable</EnableGapAnalysis>
+      <Parallelization>true</Parallelization>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <DisableSpecificWarnings>4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <AdditionalIncludeDirectories>$(SolutionDir)libStarDisplay;$(SolutionDir)libStarDisplay\luabind;</AdditionalIncludeDirectories>
+      <AdditionalOptions>/Qvec-report:1 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ShowProgress>NotSet</ShowProgress>
+      <AdditionalDependencies>libStarDisplay.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <Profile>false</Profile>
+      <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
+    </Link>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+      <Outputs>
+      </Outputs>
+      <Message>
+      </Message>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="..\bin\attacks.lua" />
+    <None Include="..\bin\average_wave.lua" />
+    <None Include="..\bin\config.lua" />
+    <None Include="..\bin\egbert_statistic.lua" />
+    <None Include="..\bin\evasion.lua" />
+    <None Include="..\bin\diffusion.lua" />
+    <None Include="..\bin\lars_config.lua" />
+    <None Include="..\bin\lua\gpws.lua" />
+    <None Include="..\bin\lua\inspect.lua" />
+    <None Include="..\bin\lua\pursuits.lua" />
+    <None Include="..\bin\lua\RollRateStatistic.lua" />
+    <None Include="..\bin\lua\valarray.lua" />
+    <None Include="..\bin\marijke.lua" />
+    <None Include="..\bin\meta_config_repeated_attacks.lua" />
+    <None Include="..\bin\Rolf.lua" />
+    <None Include="..\bin\TA.lua" />
+    <None Include="..\bin\TA_Birds.lua" />
+    <None Include="..\bin\TA_config.lua" />
+    <None Include="..\bin\terror_waves_config.lua" />
+    <None Include="..\bin\turn_statistic.lua" />
+    <None Include="..\bin\wave.lua" />
+    <None Include="..\bin\keymaps.lua" />
+    <None Include="..\bin\lars_statistic.lua" />
+    <None Include="..\bin\lua\Birds.lua" />
+    <None Include="..\bin\lua\Camera.lua" />
+    <None Include="..\bin\lua\Defaults.lua" />
+    <None Include="..\bin\lua\Enums.lua" />
+    <None Include="..\bin\lua\Help.lua" />
+    <None Include="..\bin\lua\KeyHooks.lua" />
+    <None Include="..\bin\lua\MouseHooks.lua" />
+    <None Include="..\bin\lua\Random.lua" />
+    <None Include="..\bin\lua\GUI.lua" />
+    <None Include="..\bin\lua\StarDisplay.lua" />
+    <None Include="..\bin\lua\VK.lua" />
+    <None Include="..\bin\meta_config.lua" />
+    <None Include="..\bin\shader\shader.glsl" />
+    <None Include="..\bin\statistic.lua" />
+    <None Include="..\bin\travelDist.lua" />
+    <None Include="..\bin\triggerPanic.lua" />
+    <None Include="..\doc\bindings.lua" />
+    <None Include="starlings16.ico" />
+    <None Include="starlings32.ico" />
+    <None Include="starlings48.ico" />
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="StarDisplay.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ac3d.hpp" />
+    <ClInclude Include="accumulators.hpp" />
+    <ClInclude Include="Bird.hpp" />
+    <ClInclude Include="bounding_box.hpp" />
+    <ClInclude Include="color32.hpp" />
+    <ClInclude Include="filesystem.hpp" />
+    <ClInclude Include="ICamera.hpp" />
+    <ClInclude Include="ClusterDetection.hpp" />
+    <ClInclude Include="debug.hpp" />
+    <ClInclude Include="DefaultStatistic.hpp" />
+    <ClInclude Include="Globals.hpp" />
+    <ClInclude Include="GLSLText.hpp" />
+    <ClInclude Include="IGUIBox.hpp" />
+    <ClInclude Include="KeyState.hpp" />
+    <ClInclude Include="mapped_buffer.hpp" />
+    <ClInclude Include="neighbors_vect.hpp" />
+    <ClInclude Include="Params.hpp" />
+    <ClInclude Include="Prey.hpp" />
+    <ClInclude Include="IText.hpp" />
+    <ClInclude Include="HistOverlay.hpp" />
+    <ClInclude Include="GLSLState.hpp" />
+    <ClInclude Include="libLua.hpp" />
+    <ClInclude Include="Camera.hpp" />
+    <ClInclude Include="Clock.hpp" />
+    <ClInclude Include="ClusterStatistic.hpp" />
+    <ClInclude Include="EvolveDeflection.hpp" />
+    <ClInclude Include="fcorrelation.hpp" />
+    <ClInclude Include="FcorrelationStatistic.hpp" />
+    <ClInclude Include="Flock.hpp" />
+    <ClInclude Include="glmfwd.hpp" />
+    <ClInclude Include="GlobalDevStatistic.hpp" />
+    <ClInclude Include="GLSLImm.hpp" />
+    <ClInclude Include="GLSLInstancingProg.hpp" />
+    <ClInclude Include="GLSLLocals.hpp" />
+    <ClInclude Include="GLSLModel.hpp" />
+    <ClInclude Include="GLSLRibbonProg.hpp" />
+    <ClInclude Include="GLSLSkybox.hpp" />
+    <ClInclude Include="GLSLStripeProg.hpp" />
+    <ClInclude Include="GLWin.hpp" />
+    <ClInclude Include="histogram.hpp" />
+    <ClInclude Include="GLSLiotexture.hpp" />
+    <ClInclude Include="menu.hpp" />
+    <ClInclude Include="NNStatistic.hpp" />
+    <ClInclude Include="QmStatistic.hpp" />
+    <ClInclude Include="random.hpp" />
+    <ClInclude Include="Predator.hpp" />
+    <ClInclude Include="PredatorStatistic.hpp" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="Simulation.hpp" />
+    <ClInclude Include="IStatistic.hpp" />
+    <ClInclude Include="HistogramStatistic.hpp" />
+    <ClInclude Include="TimeSeriesStatistic.hpp" />
+    <ClInclude Include="trail_buffer.hpp" />
+    <ClInclude Include="features.hpp" />
+    <ClInclude Include="val2TexCoord.hpp" />
+    <ClInclude Include="visitors.hpp" />
+    <ClInclude Include="VoxelVolumeStatistic.hpp" />
+    <ClInclude Include="voxel_volume.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ac3d.cpp" />
+    <ClCompile Include="Bird.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Clock.cpp" />
+    <ClCompile Include="ClusterDetection.cpp" />
+    <ClCompile Include="ClusterStatistic.cpp" />
+    <ClCompile Include="debug.cpp" />
+    <ClCompile Include="DefaultStatistic.cpp" />
+    <ClCompile Include="Globals.cpp" />
+    <ClCompile Include="GLSLText.cpp" />
+    <ClCompile Include="HistOverlay.cpp" />
+    <ClCompile Include="GLSLState.cpp" />
+    <ClCompile Include="KeyState.cpp" />
+    <ClCompile Include="libBirds.cpp" />
+    <ClCompile Include="libLua.cpp" />
+    <ClCompile Include="EvolveDeflection.cpp" />
+    <ClCompile Include="FCorrelationStatistic.cpp" />
+    <ClCompile Include="Flock.cpp" />
+    <ClCompile Include="GlobalDevStatistic.cpp" />
+    <ClCompile Include="GLSLImm.cpp" />
+    <ClCompile Include="GLSLInstancingProg.cpp" />
+    <ClCompile Include="GLSLLocals.cpp" />
+    <ClCompile Include="GLSLModel.cpp" />
+    <ClCompile Include="GLSLRibbonProg.cpp" />
+    <ClCompile Include="GLSLSkybox.cpp" />
+    <ClCompile Include="GLSLStripeProg.cpp" />
+    <ClCompile Include="GLWin.cpp" />
+    <ClCompile Include="GLSLiotexture.cpp" />
+    <ClCompile Include="menu.cpp" />
+    <ClCompile Include="NNStatistic.cpp" />
+    <ClCompile Include="QmStatistic.cpp" />
+    <ClCompile Include="random.cpp" />
+    <ClCompile Include="Predator.cpp" />
+    <ClCompile Include="PredatorStatistic.cpp" />
+    <ClCompile Include="Prey.cpp" />
+    <ClCompile Include="Simulation.cpp" />
+    <ClCompile Include="HistogramStatistic.cpp" />
+    <ClCompile Include="TimeSeriesStatistic.cpp" />
+    <ClCompile Include="trail_buffer.cpp" />
+    <ClCompile Include="features.cpp" />
+    <ClCompile Include="VoxelVolumeStatistic.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,133 @@
+//! \defgroup Model The starling model implementation
+//! \file Prey.hpp The 'prey'
+//! \ingroup Model
+
+#ifndef PREY_HPP_INCLUDED
+#define PREY_HPP_INCLUDED
+
+#include "Bird.hpp"
+
+
+class CFlock;
+class CPredator;
+
+
+namespace PredationReactions 
+{
+  const int None = 0;
+  const int Return = 1;
+  const int Alerted = 2;
+  const int Panic = 4;
+  const int Detectable = 8;
+}
+
+
+//! CPrey class
+//! \ingroup Simulation
+class CPrey : public CBird
+{
+  CPrey();
+  CPrey(const CPrey&);
+  CPrey& operator=(const CPrey&);
+  CPrey(CPrey&&);
+  CPrey& operator=(CPrey&&);
+
+public:
+  CPrey(int id, const glm::vec3& position, const glm::vec3& forward);
+  virtual ~CPrey();
+
+  virtual bool isPrey() const { return true; }
+  virtual void NumPreyChanged();
+  virtual void NumPredChanged();
+
+  const Param::Prey& GetPreyParams() const { return pPrey_; }     //!< get prey parameter
+  Param::Prey& GetPreyParams() { return pPrey_; }                 //!< get prey parameter
+  void SetPreyParams(const Param::Prey& prey);                    //!< Set Prey parameter
+
+  const glm::vec3& predatorForce() const  { return predatorForce_; }   //!< predator induced force
+
+  void setDefaultColorTex() const { color_tex_ = 0.75f; }
+  float getCurrentColorTex() const { return color_tex_; }
+  void setCurrentColorTex(float val) const { color_tex_ = val; }
+
+  float separationRadius() const { return pBird_.separationStep.y; }
+
+  //! Collect information about neighbors.
+  //! Called once per frame.
+  void updateNeighbors(float dt, const CFlock& flock);
+
+  //! Integrate forces.
+  //! Called once per frame.
+  void update(float dt, const CFlock& flock);
+
+  //! \return Remaining alertness relaxation time
+  glm::vec2 alertnessRelaxation() const { return alertnessRelaxation_; }
+
+  //! \return nearest detected predator in range.
+  const CPredator* detectedPredator() const { return detectedPredator_; }
+
+  //! \return distance to nearest detected predator in range.
+  float predatorDist() const { return predatorDist_; }
+
+  //! \return predator reaction
+  int predatorReaction() const { return predatorReaction_; }
+
+  //! \return Remaining 'return to flock' relaxation time
+  float returnRelaxation() const { return returnRelaxation_; }
+
+  //! \return scalar circularity (length of circularityVec).
+  float circularity() const { return circularity_; }
+
+  //! \return vectorial circularity.
+  glm::vec3 circularityVec() const { return circularityVec_; }
+
+  void invalidateFlockId() { flockId_ = -1; flockSize_ = 0; }
+  void setFlockId(int id, unsigned size) { flockId_ = id; flockSize_ = size; }
+  int getFlockId() const { return flockId_; }
+  unsigned getFlockSize() const { return flockSize_; }
+
+private:
+  friend struct find_neighbors_qf;
+
+  //! Calculate flight forces
+  void flightDynamic();
+
+  //! Handles main social interaction rules
+  void steerToFlock(struct fov_filter const& filter);
+
+  //! Set closestPredator_ to closest predator if any in detect range.
+  void detectClosestPredator(const CFlock& flock);
+  void handleEvasion();
+  void predatorPanicMaximizeDist();				//! Try to increase expected closest approach.
+  void predatorPanicTurnInward();					//! Turn along circularity vector.
+  void predatorPanicTurnAway();						//! Turn in opposite direction to predator.
+	void predatorPanicDrop();						//! Drop out of sky.
+  void predatorPanicMoveCentered();		//! Move towards center.
+  void predatorPanicZig();		  //! Left-right evasion.
+  void predatorPanicCustom();		      //! Callback Lua.
+  void return2Flock(const CFlock& flock);
+
+public:
+  glm::vec3 circularityVec_;
+  float     circularity_;
+  glm::vec3 predatorForce_;
+  const     CPredator* detectedPredator_;
+  float     predatorDist_;
+  glm::vec2 alertnessRelaxation_;
+  glm::vec3 returnForce_;
+  float     returnRelaxation_;
+  double    panicOnset_;
+  int       panicCopy_;
+  int       predatorReaction_;
+
+private:
+  int         skippedLeftHemisphere_;
+  int         skippedRightHemisphere_;
+  Param::Prey pPrey_;
+  glm::vec2   alignmentWeight_;
+  int         flockId_;
+  unsigned    flockSize_;
+};
+
+
+#endif

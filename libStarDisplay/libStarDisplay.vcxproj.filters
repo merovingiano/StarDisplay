@@ -1,0 +1,360 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="luabind-0.9.1">
+      <UniqueIdentifier>{47ddfcdf-c13e-456a-b7d2-c7522a183ca1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lua5.1">
+      <UniqueIdentifier>{fd33d8e3-8f7c-4966-843c-e3e606a42e61}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="luabind\luabind\adopt_policy.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\back_reference.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\back_reference_fwd.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\class.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\class_info.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\config.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\container_policy.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\copy_policy.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\dependency_policy.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\discard_result_policy.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\error.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\exception_handler.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\from_stack.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\function.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\get_main_thread.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\get_pointer.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\handle.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\iterator_policy.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\lua_include.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\luabind.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\make_function.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\nil.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\object.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\open.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\operator.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\out_value_policy.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\prefix.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\raw_policy.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\return_reference_to_policy.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\scope.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\shared_ptr_converter.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\tag_function.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\typeid.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\value_wrapper.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\version.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\weak_ref.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\wrapper_base.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="luabind\luabind\yield_policy.hpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClInclude>
+    <ClInclude Include="libGlm.hpp" />
+    <ClInclude Include="libStarDisplay.hpp" />
+    <ClInclude Include="lua\lapi.h">
+      <Filter>lua5.1</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\lauxlib.h">
+      <Filter>lua5.1</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\lcode.h">
+      <Filter>lua5.1</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\ldebug.h">
+      <Filter>lua5.1</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\ldo.h">
+      <Filter>lua5.1</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\lfunc.h">
+      <Filter>lua5.1</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\lgc.h">
+      <Filter>lua5.1</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\llex.h">
+      <Filter>lua5.1</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\llimits.h">
+      <Filter>lua5.1</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\lmem.h">
+      <Filter>lua5.1</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\lobject.h">
+      <Filter>lua5.1</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\lopcodes.h">
+      <Filter>lua5.1</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\lparser.h">
+      <Filter>lua5.1</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\lstate.h">
+      <Filter>lua5.1</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\lstring.h">
+      <Filter>lua5.1</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\ltable.h">
+      <Filter>lua5.1</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\ltm.h">
+      <Filter>lua5.1</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\lua.h">
+      <Filter>lua5.1</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\lua.hpp">
+      <Filter>lua5.1</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\luaconf.h">
+      <Filter>lua5.1</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\lualib.h">
+      <Filter>lua5.1</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\lundump.h">
+      <Filter>lua5.1</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\lvm.h">
+      <Filter>lua5.1</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\lzio.h">
+      <Filter>lua5.1</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="luabind\src\class.cpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClCompile>
+    <ClCompile Include="luabind\src\class_info.cpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClCompile>
+    <ClCompile Include="luabind\src\class_registry.cpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClCompile>
+    <ClCompile Include="luabind\src\class_rep.cpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClCompile>
+    <ClCompile Include="luabind\src\create_class.cpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClCompile>
+    <ClCompile Include="luabind\src\error.cpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClCompile>
+    <ClCompile Include="luabind\src\exception_handler.cpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClCompile>
+    <ClCompile Include="luabind\src\function.cpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClCompile>
+    <ClCompile Include="luabind\src\inheritance.cpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClCompile>
+    <ClCompile Include="luabind\src\link_compatibility.cpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClCompile>
+    <ClCompile Include="luabind\src\object_rep.cpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClCompile>
+    <ClCompile Include="luabind\src\open.cpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClCompile>
+    <ClCompile Include="luabind\src\pcall.cpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClCompile>
+    <ClCompile Include="luabind\src\scope.cpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClCompile>
+    <ClCompile Include="luabind\src\stack_content_by_name.cpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClCompile>
+    <ClCompile Include="luabind\src\weak_ref.cpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClCompile>
+    <ClCompile Include="luabind\src\wrapper_base.cpp">
+      <Filter>luabind-0.9.1</Filter>
+    </ClCompile>
+    <ClCompile Include="libGlm.cpp" />
+    <ClCompile Include="libRnd.cpp" />
+    <ClCompile Include="libStarDisplay.cpp" />
+    <ClCompile Include="lua\lapi.c">
+      <Filter>lua5.1</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\lauxlib.c">
+      <Filter>lua5.1</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\lbaselib.c">
+      <Filter>lua5.1</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\lcode.c">
+      <Filter>lua5.1</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\ldblib.c">
+      <Filter>lua5.1</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\ldebug.c">
+      <Filter>lua5.1</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\ldo.c">
+      <Filter>lua5.1</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\ldump.c">
+      <Filter>lua5.1</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\lfunc.c">
+      <Filter>lua5.1</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\lgc.c">
+      <Filter>lua5.1</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\linit.c">
+      <Filter>lua5.1</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\liolib.c">
+      <Filter>lua5.1</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\llex.c">
+      <Filter>lua5.1</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\lmathlib.c">
+      <Filter>lua5.1</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\lmem.c">
+      <Filter>lua5.1</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\loadlib.c">
+      <Filter>lua5.1</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\lobject.c">
+      <Filter>lua5.1</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\lopcodes.c">
+      <Filter>lua5.1</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\loslib.c">
+      <Filter>lua5.1</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\lparser.c">
+      <Filter>lua5.1</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\lstate.c">
+      <Filter>lua5.1</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\lstring.c">
+      <Filter>lua5.1</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\lstrlib.c">
+      <Filter>lua5.1</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\ltable.c">
+      <Filter>lua5.1</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\ltablib.c">
+      <Filter>lua5.1</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\ltm.c">
+      <Filter>lua5.1</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\lua.c">
+      <Filter>lua5.1</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\lundump.c">
+      <Filter>lua5.1</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\lvm.c">
+      <Filter>lua5.1</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\lzio.c">
+      <Filter>lua5.1</Filter>
+    </ClCompile>
+    <ClCompile Include="libParam.cpp" />
+    <ClCompile Include="libGLWin.cpp" />
+    <ClCompile Include="libCamera.cpp" />
+    <ClCompile Include="libAnalysis.cpp" />
+    <ClCompile Include="libStatistic.cpp" />
+    <ClCompile Include="lua\bit.c">
+      <Filter>lua5.1</Filter>
+    </ClCompile>
+    <ClCompile Include="libText.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="libStarDisplay.rc" />
+  </ItemGroup>
+</Project>

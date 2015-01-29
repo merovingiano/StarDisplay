@@ -1,0 +1,679 @@
+// StarDisplay Shader 
+//
+// Hanno Hildenbrandt 2013
+//
+
+
+void GLSL_VERSION
+{
+  #version 400 core
+};
+
+
+// Transformation uniform block
+void Matrices
+{
+  layout (std140) uniform Matrices
+  {
+    mat4 ModelViewProjection;
+    mat4 ModelView;
+    mat4 Projection;
+    mat4 Ortho;
+  };
+};
+
+
+shader [vertex] Text
+{
+  layout (location = 0) in vec2 TexCoord;
+  layout (location = 1) in vec2 Vertex;
+  layout (location = 2) in vec4 Color;
+
+  out vec2 vTexCoord;
+  out vec2 vVertex;
+  out vec4 vColor;
+
+  void main()
+  {
+    vColor = Color;
+    vTexCoord = TexCoord;
+    vVertex = Vertex;
+  }
+};
+
+shader [geometry] Text
+{
+  layout(lines) in;
+  layout(triangle_strip, max_vertices=4) out;
+
+  in vec2 vTexCoord[2];
+  in vec2 vVertex[2];
+  in vec4 vColor[2];
+
+  smooth out vec2 gTexCoord;
+  flat out vec4 gColor;
+
+  void main()
+  {
+    vec2 t0 = vTexCoord[0];
+    vec2 t1 = vTexCoord[1];
+    vec2 v0 = vVertex[0];
+    vec2 v1 = vVertex[1];
+
+    gColor = vColor[1];
+    gTexCoord = vec2(t0.x, t1.y);
+    gl_Position = Ortho * vec4(v0.x, v1.y, 0, 1);
+    EmitVertex();
+
+    gTexCoord = vec2(t0.x, t0.y);
+    gl_Position = Ortho * vec4(v0.x, v0.y, 0, 1);
+    EmitVertex();
+
+    gTexCoord = vec2(t1.x, t1.y);
+    gl_Position = Ortho * vec4(v1.x, v1.y, 0, 1);
+    EmitVertex();
+
+    gTexCoord = vec2(t1.x, t0.y);
+    gl_Position = Ortho * vec4(v1.x, v0.y, 0, 1);
+    EmitVertex();
+
+    EndPrimitive();
+  }
+};
+
+shader [fragment] Text
+{
+  #extension GL_ARB_texture_rectangle : enable
+  
+  uniform sampler2DRect FontTexture;
+
+  smooth in vec2 gTexCoord;
+  flat in vec4 gColor;
+
+  layout (location = 0) out vec4 FragColor;
+
+  void main()
+  {
+    vec4 color = gColor;
+    color.a = texture2DRect(FontTexture, gTexCoord).r;
+    FragColor = color;
+  }
+};
+
+program Text
+{
+  vertex: *;
+  geometry: Matrices *;
+  fragment: *;
+};
+
+
+shader[vertex] NoLit
+{
+  layout (location = 0) in vec4 Vertex;
+  layout (location = 1) in vec4 Color;
+  layout (location = 2) in float ColorTexCoord;
+
+  smooth out vec4 vColor;
+  smooth out float vColorTexCoord;
+
+  void main(void) 
+  {            
+    vColor = Color;
+    vColorTexCoord = ColorTexCoord;
+    gl_Position = ModelViewProjection * Vertex;
+  }
+
+};
+
+shader[fragment] NoLit
+{
+  uniform sampler1D ColorTex; 
+
+  smooth in vec4 vColor;
+  smooth in float vColorTexCoord;
+  
+  out vec4 FragColor;
+
+  void main(void) 
+  {
+    if (vColorTexCoord <= -90.0) discard;
+    FragColor = (vColorTexCoord <= 90.0) ? texture(ColorTex, vColorTexCoord) : vColor;
+  }
+};
+
+program NoLit
+{
+    vertex: Matrices *;
+    fragment: *;
+};
+
+
+shader[vertex] NoLit2D
+{
+  layout (location = 0) in vec4 Vertex;
+  layout (location = 1) in vec4 Color;
+  layout (location = 2) in float ColorTexCoord;
+
+  smooth out vec4 vColor;
+  smooth out float vColorTexCoord;
+
+  void main(void) 
+  {            
+    vColor = Color;
+    vColorTexCoord = ColorTexCoord;
+    gl_Position = Ortho * Vertex;
+  }
+
+};
+
+program NoLit2D
+{
+    vertex: Matrices *;
+    fragment: NoLit;
+};
+
+
+shader[vertex] SkyBox
+{
+  layout (location = 0) in vec4 Vertex;
+
+  uniform mat4 ModelViewProjectionMatrix;
+
+  smooth out vec3 ViewDirection;
+
+  void main(void) 
+  {            
+    gl_Position = ModelViewProjectionMatrix * Vertex;
+    ViewDirection = Vertex.xyz;
+  }
+};
+
+shader[fragment] SkyBox
+{
+  uniform vec4 colorFact;
+  uniform samplerCube CubeMap;
+
+  smooth in vec3 ViewDirection;
+  out vec4 FragColor;
+
+  void main(void) 
+  { 
+    FragColor = colorFact * texture( CubeMap, ViewDirection );
+    gl_FragDepth = 1.0;
+  }
+};
+
+program SkyBox
+{
+    vertex: *;
+    fragment: *;
+};
+
+
+shader[vertex] Instancing
+{
+  layout (location = 0) in vec2 TexCoord;
+  layout (location = 1) in vec4 Normal;
+  layout (location = 2) in vec4 Vertex;
+  layout (location = 3) in mat3x4 T;
+
+  const vec4 Eye = vec4(0.0, 0.0, 1.0, 0.0);
+
+  uniform sampler1D  ColorTex;
+  uniform float diffuse = 1.0;  
+  uniform float ambient = 0.0;
+  uniform vec2  alphaMask = vec2(0,1);
+  
+  flat   out float vDiscard;
+  flat   out vec4  vColor;
+  smooth out vec2  vTexCoord;
+  smooth out float vShade;
+
+  void main(void)
+  {
+    float modelScale = T[0].w;    
+    float colorTexCoord = isnan(T[2].w) ? 0.0 : T[2].w;
+    mat4 M = mat4( vec4(T[0].xyz, 0.0), 
+                   vec4(T[1].xyz, 0.0),
+                   vec4(cross(T[0].xyz, T[1].xyz), 0.0), 
+                   vec4(T[2].xyz, 1.0) );
+
+    vDiscard = (colorTexCoord >= alphaMask.x && colorTexCoord <= alphaMask.y) ? 0.0 : 1.0;
+    vTexCoord = TexCoord;                         // Object texture
+    vColor = texture(ColorTex, colorTexCoord);    // Color mix texture
+
+    // Normal in view space (remains normalized)
+    vec4 normal = ModelView * M * vec4(Normal.xyz, 0);
+
+    // Add an simple headlight (two-sided)
+    float ds = abs(dot(normal, Eye));
+    vShade = ambient + diffuse * ds;
+    
+    // Vertex in local space
+    vec4 position = Vertex;
+    position.xyz *= modelScale;
+    position = M * position;
+    gl_Position = ModelViewProjection * position;
+  }
+};
+
+
+shader[fragment] Instancing
+{
+  uniform sampler2D Texture;
+  uniform float texMix;
+  
+  flat   in float vDiscard;
+  flat   in vec4  vColor;
+  smooth in vec2  vTexCoord;
+  smooth in float vShade;
+
+  out vec4 FragColor;
+  
+  void main( void )
+  {
+    if (vDiscard == 1.0) discard;
+    FragColor = vShade * mix( texture( Texture, vTexCoord ), vColor, texMix );
+  }
+
+};
+
+program Instancing
+{
+  vertex: Matrices *;
+  fragment: *;
+};
+
+
+shader[vertex] Ribbon
+{
+  layout (location = 0) in vec4 side_T;       // vSide vector & simulation time
+  layout (location = 1) in vec4 pos_U;        // position & color texture coord
+
+  out float vColorTexCoord;    // color texture
+  out float vTime;             // Time
+  out vec3 vPosition;
+  out vec3 vSide;              // Side vector
+
+  void main(void)
+  {
+    vTime = side_T.w;
+    vPosition = pos_U.xyz;
+    vColorTexCoord = pos_U.w;
+    vSide = side_T.xyz;
+  }
+};
+
+
+shader[geometry] Ribbon
+{
+  layout(lines_adjacency) in;
+  layout(triangle_strip, max_vertices=4) out;
+
+  const vec4 eye = vec4(0.0, 0.0, 1.0, 0.0);
+  const float diffuse = 0.5;
+  const float ambient = 1.0 - diffuse;
+
+  uniform sampler1D colorTex;
+  uniform float halfWidth;
+
+  in float vTime[4];              // time
+  in float vColorTexCoord[4];     // color texture
+  in vec3 vPosition[4];           // position
+  in vec3 vSide[4];               // vSide vector
+
+  smooth out vec4 gColor;
+  smooth out float gSimTime;
+  smooth out float gShade;
+
+  float shade(vec3 normal)
+  {
+    float ds = abs(dot(ModelView * vec4(normal, 0.0), eye));
+    return diffuse * ds + ambient;
+  }
+
+  void Emit(vec3 v)
+  {
+    gl_Position = ModelViewProjection * vec4(v, 1.0);
+    EmitVertex();
+  }
+
+  void main(void)
+  {
+    float skip = vTime[0] * vTime[1] * vTime[2] * vTime[3];
+    if (skip == 0) return;
+
+    vec3 tangent01 = normalize(vPosition[1]-vPosition[0]);
+    vec3 tangent21 = normalize(vPosition[2]-vPosition[1]);
+    vec3 tangent23 = normalize(vPosition[3]-vPosition[2]);
+
+    vec3 up0 = cross(vSide[0], tangent01);
+    vec3 up1 = cross(vSide[1], tangent21);
+    vec3 up2 = cross(vSide[2], tangent23);
+    
+    float shade0 = shade(up0);
+    float shade1 = shade(up1);
+    float shade2 = shade(up2);
+    
+    vec4 color0 = texture(colorTex, vColorTexCoord[0]);
+    vec4 color1 = texture(colorTex, vColorTexCoord[1]);
+    vec4 color2 = texture(colorTex, vColorTexCoord[2]);
+
+    gColor = mix(color0, color1, 0.5);
+    gShade = mix(shade0, shade1, 0.5);
+    gSimTime = vTime[1];
+    Emit(vPosition[1] - halfWidth * vSide[1]);
+    Emit(vPosition[1] + halfWidth * vSide[1]);
+    
+    gColor = mix(color1, color2, 0.5);
+    gShade = mix(shade1, shade2, 0.5);
+    gSimTime = vTime[2];
+    Emit(vPosition[2] - halfWidth * vSide[2]);
+    Emit(vPosition[2] + halfWidth * vSide[2]);
+  }
+};
+
+
+shader[fragment] Ribbon
+{
+  uniform float oneOverTickInterval;
+  uniform float oneMinusTickWidth;
+
+  smooth in vec4 gColor;
+  smooth in float gSimTime;
+  smooth in float gShade;
+
+  out vec4 FragColor;
+
+  void main( void )
+  {
+    float tickIntensity = step(oneMinusTickWidth, fract(oneOverTickInterval * gSimTime));
+    FragColor = gShade * clamp(gColor + tickIntensity, 0.0, 1.0) + 0.25 * tickIntensity;
+  }
+};
+
+
+program Ribbon
+{
+  vertex: *;
+  geometry: Matrices *;
+  fragment: *;
+};
+
+
+shader [vertex] Disk
+{
+  layout (location = 0) in float Radius;
+  out float vRadius;
+
+  void main()
+  {
+    vRadius = Radius;
+  }
+};
+
+shader [fragment] Stripe
+{
+  const float colorFact = 0.75;
+  uniform float stripeLen = 10.0;
+
+  smooth in float s;
+  out vec4 FragColor;
+
+  void main()
+  {
+    float rg = colorFact * step(stripeLen, mod(s, 2.0 * stripeLen));
+    FragColor = vec4(colorFact, rg, rg, 1.0);
+  }
+};
+
+shader [geometry] DiskRadii
+{
+  layout(points) in;
+  layout(line_strip, max_vertices=108) out;
+
+  in float vRadius[1];
+  smooth out float s;
+
+  void main()
+  {
+    for (int i=0; i<360; i+=10)
+    {
+      float angle = radians(float(i));
+      vec3 d = vec3(cos(angle), 0.0, sin(angle));
+
+      s = 0.0;
+      gl_Position = ModelViewProjection * vec4(0.0, 0.0, 0.0, 1.0);
+      EmitVertex();
+      
+      s = vRadius[0];
+      gl_Position = ModelViewProjection * vec4(d * vRadius[0], 1.0);
+      EmitVertex();
+      
+      EndPrimitive();
+    }
+  }
+};
+
+shader [geometry] DiskCircles
+{
+  layout(points) in;
+  layout(line_strip, max_vertices=200) out;
+
+  in float vRadius[1];
+  smooth out float s;
+
+  void main()
+  {
+    for (int i=0; i<=360; i+=2)
+    {
+      float angle = radians(float(i));
+      vec3 d = vec3(cos(angle), 0.0, sin(angle));
+
+      s = angle * vRadius[0];
+      gl_Position = ModelViewProjection * vec4(d * vRadius[0], 1.0);
+      EmitVertex();
+    }
+    EndPrimitive();
+  }
+};
+
+
+program DiskRadii
+{
+  vertex: Disk;
+  geometry: Matrices *;
+  fragment: Stripe;
+};
+
+program DiskCircles
+{
+  vertex: Disk;
+  geometry: Matrices *;
+  fragment: Stripe;
+};
+
+
+shader [vertex] Grid
+{
+  layout (location = 0) in vec3 Vertex;
+  out vec4 vVertex;
+
+  void main()
+  {
+    vVertex = vec4(Vertex, 1.0);
+  }
+};
+
+
+shader [geometry] Grid
+{
+  layout(lines) in;
+  layout(line_strip, max_vertices=200) out;
+
+  in vec4 vVertex[2];
+  smooth out float s;
+
+  void main()
+  {
+    s = 0.0;
+    gl_Position = ModelViewProjection * vVertex[0];
+    EmitVertex();
+
+    s = distance(vVertex[0], vVertex[1]);
+    gl_Position = ModelViewProjection * vVertex[1];
+    EmitVertex();
+
+    EndPrimitive();
+  }
+};
+
+
+program Grid
+{
+  vertex: *;
+  geometry: Matrices *;
+  fragment: Stripe;
+};
+
+
+shader [vertex] PointSprite
+{
+  layout (location = 0) in vec3 pos;
+  layout (location = 1) in float colorTexCoord;
+  layout (location = 2) in float pointScale;
+
+  uniform sampler1D ColorTex;
+  uniform vec2  alphaMask = vec2(0,1);
+  uniform vec4  Color;
+
+  flat out float vDiscard;
+  flat out vec3  vColor;
+  flat out vec3  posEye;
+
+  void main()
+  {
+    float ctex = isnan(colorTexCoord) ? 0.0 : colorTexCoord;
+    vDiscard = (ctex >= alphaMask.x && ctex <= alphaMask.y) ? 0.0 : 1.0;
+    vColor = mix(Color.rgb, texture(ColorTex, ctex).rgb, Color.a);
+    vec4 Vertex = vec4(pos, 1.0);
+    gl_Position = ModelViewProjection * Vertex;
+    
+    // calculate window-space point size
+    posEye = vec3(ModelView * Vertex);
+	  float dist = length(posEye);
+	  gl_PointSize = pointScale / dist;
+  }
+};
+
+
+shader [fragment] PointSprite
+{
+  uniform float PointRadius;    // point size in world
+
+  flat in float vDiscard;
+  flat in vec3  vColor;
+  flat in vec3  posEye;
+
+  layout (location = 0) out vec4 FragColor;
+
+  void main( void )
+  {
+    if (vDiscard == 1.0) discard;   // killed by alpha mask
+
+	  vec3 N;
+    N.xy = 2.0 * gl_PointCoord.st - vec2(1.0, 1.0);  // [0 1] to [-1 1]
+	  float r = dot(N.xy, N.xy);
+	  if (r > 1.0) discard;   // kill pixels outside circle
+    N.z = sqrt(1.0 - r);    // from sphere equation
+
+    vec4 spherePosEye =vec4(posEye + N * PointRadius, 1.0);
+    vec4 clipSpacePos = Projection * spherePosEye;
+    float normDepth = clipSpacePos.z / clipSpacePos.w;
+    
+    gl_FragDepth = 0.5 * ((gl_DepthRange.diff * normDepth) + (gl_DepthRange.far + gl_DepthRange.near));
+    FragColor.xyz = (1.0 - r) * vColor;
+  }
+};
+
+
+program PointSprite
+{
+  vertex: Matrices *;
+  fragment: Matrices *;
+};
+
+
+shader [vertex] Widget
+{
+  layout (location = 0) in vec4 vAttribs;     // tex, vert
+
+  out vec2 vTexCoord;
+  out vec2 vVertex;
+
+  void main()
+  {
+    vTexCoord = vAttribs.xy;
+    vVertex = vAttribs.zw;
+  }
+};
+
+shader [geometry] Widget
+{
+  layout(lines) in;
+  layout(triangle_strip, max_vertices=4) out;
+
+  in vec2 vTexCoord[2];
+  in vec2 vVertex[2];
+
+  smooth out vec2 gTexCoord;
+
+  void main()
+  {
+    vec2 t0 = vTexCoord[0];
+    vec2 t1 = vTexCoord[1];
+    vec2 v0 = vVertex[0];
+    vec2 v1 = vVertex[1];
+
+    gTexCoord = vec2(t0.x, t1.y);
+    gl_Position = Ortho * vec4(v0.x, v1.y, 0, 1);
+    EmitVertex();
+
+    gTexCoord = vec2(t0.x, t0.y);
+    gl_Position = Ortho * vec4(v0.x, v0.y, 0, 1);
+    EmitVertex();
+
+    gTexCoord = vec2(t1.x, t1.y);
+    gl_Position = Ortho * vec4(v1.x, v1.y, 0, 1);
+    EmitVertex();
+
+    gTexCoord = vec2(t1.x, t0.y);
+    gl_Position = Ortho * vec4(v1.x, v0.y, 0, 1);
+    EmitVertex();
+
+    EndPrimitive();
+  }
+};
+
+shader [fragment] Widget
+{
+  uniform sampler2D WidgetTexture;
+
+  smooth in vec2 gTexCoord;
+  out vec4 FragColor;
+
+  void main()
+  {
+    FragColor = texture(WidgetTexture, gTexCoord);
+  }
+};
+
+program Widget
+{
+  vertex: *;
+  geometry: Matrices *;
+  fragment: *;
+};
+
+
