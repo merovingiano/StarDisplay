@@ -66,14 +66,14 @@ function Birds.Starling (p)
   bird.wingArea = bird.wingSpan * (bird.wingSpan / bird.wingAspectRatio)   -- [m^2]
   bird.CL = CL(bird)
 
-  bird.maxForce = 1  -- max steering force [N] 
+  bird.maxForce = 0.001  -- max steering force [N] 
   bird.maxLift = 1      -- [N]
   bird.cruiseSpeed = CruiseSpeed(bird)      -- [m/s]
   -- for experiment
   bird.cruiseSpeed = 0.001
   bird.speedControl = 1 / 0.1			-- one over tau 
-  bird.minSpeed = bird.cruiseSpeed - 5
-  bird.maxSpeed = bird.cruiseSpeed + 5
+  bird.minSpeed = 0.001
+  bird.maxSpeed = 0.001
   bird.houjebek = 5
   
   -----------------------------------------------------------------------------
