@@ -16,7 +16,7 @@ Simulation.CustomStatistic = require "RobinStat"
 
 -- Overwrite default initial parameter if required
 gParam.Roost = {
-  numPrey = 1,
+  numPrey = 50,
   numPredators = 10,
   Radius = 500.0,
   minRadius = 150.0,
@@ -182,11 +182,9 @@ function CustomTimeTickHook ()
 	--p:StartAttack()
 	--local hunt = p:GetHuntStat()
   --end
-  for prey in Simulation.Prey() do
-    print (prey.BirdParams.houjebek)
-  end
+  
   local roost = Simulation.GetVaderJacob()
-  print (roost['kuchDan'])
+
   
 end
 
@@ -220,8 +218,7 @@ function SetParameters ()
 								120,
 								0) 
 	Init_flockForward = glm.normalize(glm.vec3(1,0,0))
-	print(prey.position)
-	print("ID prey " .. prey.id)
+	
 	if run < 3 then
 		preyStrat = "none"
 	else

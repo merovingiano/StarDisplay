@@ -97,7 +97,7 @@ GLSLState::GLSLState()
 : annotationElapsed_(0),
   alphaMaskWidth_(0.05f),
   alphaMaskCenter_(0.5f),
-  currentPreyModel_(1),
+  currentPreyModel_(2),
   currentPredatorModel_(1),
   buBuf(new glsl::buffer()),
   hDC_(NULL), hGLRC_(NULL)

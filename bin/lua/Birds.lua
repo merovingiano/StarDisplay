@@ -70,7 +70,7 @@ function Birds.Starling (p)
   bird.maxLift = 1      -- [N]
   bird.cruiseSpeed = CruiseSpeed(bird)      -- [m/s]
   -- for experiment
-  bird.cruiseSpeed = 0.001
+  --bird.cruiseSpeed = 0.001
   bird.speedControl = 1 / 0.1			-- one over tau 
   bird.minSpeed = bird.cruiseSpeed - 5
   bird.maxSpeed = bird.cruiseSpeed + 5
