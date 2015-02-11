@@ -268,7 +268,7 @@ void CPrey::flightDynamic()
   const float L = pBird_.bodyWeight * (speed_ * speed_) / (pBird_.cruiseSpeed * pBird_.cruiseSpeed);  // Lift
   const float D = CDCL * L;                                           // Drag
   lift_ = B_[1] * std::min(L, pBird_.maxLift);
-  flightForce_ = B_[1] * L + B_[0] * (CDCL * pBird_.bodyWeight - D);  // apply lift, drag and default thrust
+  flightForce_ = B_[1] * lift_ + B_[0] * (CDCL * pBird_.bodyWeight - D);  // apply lift, drag and default thrust
   flightForce_.y -= pBird_.bodyWeight;                                // apply gravity
 }
 

@@ -65,7 +65,8 @@ Simulation.Skybox = {
 
 
 Simulation.ModelSet = {
-  { name = "Delta", LOD = { {acFile = "delta.ac", pxCoverage = 0} }, Scale = 1.5, texMix = 0.9 },  
+  { name = "Delta", LOD = { {acFile = "delta.ac", pxCoverage = 0} }, Scale = 1.5, texMix = 0.9 }, 
+  { name = "Condor", LOD = { {acFile = "condor.ac", pxCoverage = 0} }, Scale = 1.5, texMix = 0.9 }, 
   { name = "Humbird", 
     LOD = { 
       {acFile = "humbirdLOD1.ac", pxCoverage = 100},
@@ -75,6 +76,7 @@ Simulation.ModelSet = {
     Scale = 1.0, texMix = 0.9 
   },  
   { name = "Sphere", LOD = {}, Scale = 1.0, texMix = 1.0 },
+
 }
 
 
