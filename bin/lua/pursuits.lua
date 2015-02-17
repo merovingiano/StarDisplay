@@ -56,7 +56,7 @@ function pursuits.ProportionalNavigation(Weight)
 		blind = (math.abs(phi) < 0.8 and pnew.x < 0)
 		--print("catches " .. hunt.catches)
 		if (blind and glm.dot(r,r)<10) or hunt.catches > 0 then
-			--print("catches " .. hunt.catches)
+			print("catches " .. hunt.catches)
 			RESET = true
 			pred:EndHunt(false)
 		end

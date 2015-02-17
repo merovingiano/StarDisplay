@@ -197,12 +197,12 @@ function Birds.Falcon (p)
   local predator = Params.Predator()
   predator.AttackWBetaIn = bird.wBetaIn;
   predator.AttackWBetaOut = bird.wBetaOut;
-  predator.CatchDistance = 0.2                 -- [m]
+  predator.CatchDistance = 0.2                -- [m]
   predator.StartAttack = StartAttacks.Manual   -- Manual, Auto, Evolve
   predator.PreySelection = PreySelections.Picked -- Auto, Picked, PickedTopo
   
-  --predator.PursuitStrategy = { type = pursuits.Custom, hook = pursuits.DirectPursuit(0.5) }
-  predator.PursuitStrategy = { type = pursuits.Custom, hook = pursuits.ProportionalNavigation(3) }
+  --predator.PursuitStrategy = { type = pursuits.Custom, hook = pursuits.DirectPursuit(3) }
+  predator.PursuitStrategy = { type = pursuits.Custom, hook = pursuits.ProportionalNavigation(30) }
 
   predator.AttackSpan = 6000                   -- max. attack time span w/o lock [s]
   predator.Dogfight = 20000                  -- max. attack time span after first lock [s]

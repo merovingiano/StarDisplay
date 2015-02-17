@@ -67,6 +67,8 @@ Simulation.Skybox = {
 Simulation.ModelSet = {
   { name = "Delta", LOD = { {acFile = "delta.ac", pxCoverage = 0} }, Scale = 1.5, texMix = 0.9 }, 
   { name = "Eagle", LOD = { {acFile = "eagle.ac", pxCoverage = 0} }, Scale = 1.5, texMix = 0.9 }, 
+  { name = "Rabbit", LOD = { {acFile = "rabbit.ac", pxCoverage = 0} }, Scale = 1.5, texMix = 0.9 }, 
+  { name = "Dove", LOD = { {acFile = "dove.ac", pxCoverage = 0} }, Scale = 1.5, texMix = 0.9 }, 
    
   { name = "Humbird", 
     LOD = { 

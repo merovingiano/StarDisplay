@@ -229,6 +229,7 @@ shader[vertex] Instancing
   flat   out vec4  vColor;
   smooth out vec2  vTexCoord;
   smooth out float vShade;
+  out vec3 fnormal;
 
   void main(void)
   {
@@ -249,7 +250,7 @@ shader[vertex] Instancing
     // Add an simple headlight (two-sided)
     float ds = abs(dot(normal, Eye));
     vShade = ambient + diffuse * ds;
-    
+    fnormal = normalize(normal.xyz);
     // Vertex in local space
     vec4 position = Vertex;
     position.xyz *= modelScale;
@@ -268,13 +269,14 @@ shader[fragment] Instancing
   flat   in vec4  vColor;
   smooth in vec2  vTexCoord;
   smooth in float vShade;
+  in vec3 fnormal;
 
   out vec4 FragColor;
   
   void main( void )
   {
     if (vDiscard == 1.0) discard;
-    FragColor = vShade * mix( texture( Texture, vTexCoord ), vColor, texMix );
+    FragColor = (1 + 0.0001*vShade) * mix( texture( Texture, vTexCoord ), vColor, texMix )*(0.1 + abs(fnormal.z)) + vec4(0.8, 0.9, 0.7, 1.0) * pow(abs(fnormal.z), 40.0);
   }
 
 };
