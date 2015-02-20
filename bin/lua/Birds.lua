@@ -66,8 +66,8 @@ function Birds.Starling (p)
   bird.wingArea = bird.wingSpan * (bird.wingSpan / bird.wingAspectRatio)   -- [m^2]
   bird.CL = CL(bird)
 
-  bird.maxForce = 1  -- max steering force [N] 
-  bird.maxLift = 1      -- [N]
+  bird.maxForce = 2  -- max steering force [N] 
+  bird.maxLift = 2      -- [N]
   bird.cruiseSpeed = CruiseSpeed(bird)      -- [m/s]
   -- for experiment
   --bird.cruiseSpeed = 0.001
@@ -99,7 +99,7 @@ function Birds.Starling (p)
   bird.cohesionWeight = 1 * glm.vec3( 1, 1, 1 )   -- forward, up, side
   bird.randomWeight = 0.01                        
     
-  bird.boundaryWeight = glm.vec3(0.01, 0.005 , 0.01)  -- horizontal-x, vertical-y (indiv.), horizontal-z
+  bird.boundaryWeight = glm.vec3(0.01, 0.05 , 0.01)  -- horizontal-x, vertical-y (indiv.), horizontal-z
   bird.boundaryReflectAngle = 180                           -- [deg]
   bird.innerBoundary = 0   -- inner radius = (1 - innerBoundary) * Roost.Radius
   bird.altitude = 120         -- preferred altitude [m]  @Rolf only used at initialisation

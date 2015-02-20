@@ -30,6 +30,7 @@
 #include "libLua.hpp"
 #include "debug.hpp"
 #include "random.hpp"
+#include "Mmsystem.h"
 
 
 using namespace Param;
@@ -263,6 +264,7 @@ void Simulation::PauseCurrentStatistic()
 void Simulation::SaveCurrentStatistic(const char* fname, bool append)
 {
   statistic_->save(fname, append);
+  
 }
 
 
@@ -291,7 +293,16 @@ bool Simulation::HandleKey(unsigned key, unsigned ks)
       gl_->LoadModels();
     } 
     break;
+  case VK_UP:
+	  std::cout <<  "\nUp\n";//key up
+  case VK_DOWN:
+	  std::cout << "\nUp\n";//key up
+  case VK_RIGHT:
+	  std::cout << "\nUp\n";//key up
+  case VK_LEFT:
+	  std::cout << "\nUp\n";//key up
   case 'R':
+	  std::cout << "\nUp\n";//key up
     if (KEYSTATE_IS_ALT_CTRL(ks)) 
     {
       handled = true;
@@ -656,6 +667,9 @@ void Simulation::EnterGameLoop()
     if ((timeDrift >= 0) || (skippedFrame == params_.maxSkippedFrames))
     {
       renderFun();
+	  if (int(SimulationTime_) % 15 == 0) {
+		  PlaySound("C:/Users/Robin/Documents/Cpp/starlings/bin/media/wavs/birds003.wav", NULL, SND_FILENAME | SND_ASYNC);
+	  }
       skippedFrame = 0;
     }
     else

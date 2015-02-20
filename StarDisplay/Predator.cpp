@@ -11,6 +11,7 @@
 #include "Params.hpp"
 #include "visitors.hpp"
 #include "Globals.hpp"
+#include "Mmsystem.h"
 
 
 using namespace Param;
@@ -244,6 +245,10 @@ void CPredator::update(float dt, const CFlock&)
     handleGPWS();
     steering_ += boundary_;
     steering_ += speedControl() * B_[0];
+	if (GetAsyncKeyState(VK_DOWN)) steering_ +=  B_[1];
+	if (GetAsyncKeyState(VK_UP)) steering_ -= B_[1];
+	if (GetAsyncKeyState(VK_RIGHT)) steering_ += B_[2];
+	if (GetAsyncKeyState(VK_LEFT)) steering_ -= B_[2];
     noise();    // add some noise
 
     avx::vec3 force(steering_);
@@ -287,6 +292,7 @@ void CPredator::update(float dt, const CFlock&)
       // EndHunt(true);
     }
   }
+  
   appendTrail(trail_, position_, B_[2], color_tex_, dt);
 }
 

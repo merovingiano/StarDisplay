@@ -57,7 +57,7 @@ Simulation.Fonts = {
 
 
 Simulation.Skybox = {
-  name = "BlueishSky",
+  name = "sea",
   ColorCorr = glm.vec3(1.0, 1.0, 1.0),
   ColorCorrAlt = glm.vec3(0.1, 0.1, 0.1),
   fovy = 45.0
@@ -65,11 +65,13 @@ Simulation.Skybox = {
 
 
 Simulation.ModelSet = {
-  { name = "Delta", LOD = { {acFile = "delta.ac", pxCoverage = 0} }, Scale = 1.5, texMix = 0.9 }, 
-  { name = "Blancer", LOD = { {acFile = "blancer.ac", pxCoverage = 0} }, Scale = 0.165, texMix = 0.9 }, 
-  { name = "Rabbit", LOD = { {acFile = "rabbit.ac", pxCoverage = 0} }, Scale = 1.5, texMix = 0.9 }, 
-  { name = "Eagle", LOD = { {acFile = "eagle.ac", pxCoverage = 0} }, Scale = 1.5, texMix = 0.9 }, 
+  { name = "Delta", LOD = { {acFile = "delta.ac", pxCoverage = 0} }, Scale = 1.5, texMix = 0.0 }, 
+  { name = "untitled", LOD = { {acFile = "untitled.ac", pxCoverage = 0} }, Scale = 1.5, texMix = 0.0 }, 
   { name = "Dove", LOD = { {acFile = "dove.ac", pxCoverage = 0} }, Scale = 1.5, texMix = 0.9 }, 
+  { name = "Eagle", LOD = { {acFile = "eagle.ac", pxCoverage = 0} }, Scale = 1.5, texMix = 0.9 }, 
+ 
+    { name = "Blancer", LOD = { {acFile = "blancer.ac", pxCoverage = 0} }, Scale = 0.165, texMix = 0.9 }, 
+  { name = "Rabbit", LOD = { {acFile = "rabbit.ac", pxCoverage = 0} }, Scale = 1.5, texMix = 0.9 }, 
   { name = "Humbird", 
     LOD = { 
       {acFile = "humbirdLOD1.ac", pxCoverage = 100},
@@ -79,7 +81,7 @@ Simulation.ModelSet = {
     Scale = 1.0, texMix = 0.9 
   },  
   { name = "Condor", LOD = { {acFile = "condor.ac", pxCoverage = 0} }, Scale = 1.5, texMix = 0.9 },
-  { name = "Sphere", LOD = {}, Scale = 1.0, texMix = 1.0 },
+  --{ name = "Sphere", LOD = {}, Scale = 1.0, texMix = 1.0 },
 
 }
 

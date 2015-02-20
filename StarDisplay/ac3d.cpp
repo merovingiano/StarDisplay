@@ -77,7 +77,7 @@ namespace {
     std::string texture;
     float crease;
     glm::mat3 rot;
-    glm::vec3 loc;
+    glm::vec3 loc[3];
     pos_vect vert;
     std::vector<acTriangle> triangles;
     bool twoSided;
@@ -127,6 +127,9 @@ namespace {
     std::vector<acObject> objects_;
     const filesystem::path ShaderPath_;
     std::string acFileName_;
+	int startNumb[4];
+	int partIndex;
+	
   };
 
 
@@ -192,6 +195,10 @@ namespace {
   void acParser::read_OBJECT() 
   {
     objects_.emplace_back();
+	partIndex = 0;
+	startNumb[0] = 0;
+	startNumb[1] = 0;
+	startNumb[2] = 0;
     std::string tok;
     is_ >> tok;
     while (!is_.eof())
@@ -200,9 +207,15 @@ namespace {
       takeAction(tok);
       if (objects_.back().kids >= 0) break;  // last object token
     }
-    acObject& obj(objects_.back());
-    glm::mat4 M = glm::translate(glm::mat4(1), obj.loc);
-    glmutils::transformPoints(M, static_cast<int>(obj.vert.size()), obj.vert.begin(), obj.vert.begin());
+	acObject& obj(objects_.back());
+	startNumb[3] = obj.vert.size();
+	for (int i = 0; i < partIndex; i++)
+	{
+		std::cout << "\nint i: "<< i;
+		std::cout << "\nStartNumb: " << startNumb[i];
+		glm::mat4 M = glm::translate(glm::mat4(1), obj.loc[i]);
+		glmutils::transformPoints(M, static_cast<int>(startNumb[i + 1] - startNumb[i]), obj.vert.begin() + startNumb[i], obj.vert.begin() + startNumb[i]);
+	}
   }
 
 
@@ -243,12 +256,13 @@ namespace {
 
   void acParser::read_loc() 
   { 
-    is_ >> objects_.back().loc; 
+	  is_ >> objects_.back().loc[partIndex];
   }
   
 
   void acParser::read_numvert() 
   {
+	  startNumb[partIndex] = objects_.back().vert.size();
     int N; is_ >> N;
     for (int i=0; i<N; ++i)
     {
@@ -260,6 +274,8 @@ namespace {
 
   void acParser::read_numsurf() 
   {
+	
+	std::cout << "\n Startnumb: " << startNumb;
     int S; is_ >> S;
     for (int i=0; i<S;) 
     {
@@ -281,14 +297,18 @@ namespace {
         acTriangle surf;
         for (int r=0; r<refs; ++r) 
         {
-          is_ >> surf.vi[r];
+		  is_>> surf.vi[r] ;
+		  surf.vi[r] += startNumb[partIndex];
+		  //std::cout << "\n surf.vi[r]: "<< surf.vi[r];
           is_ >> surf.tex[r];
+		  //std::cout << "\n surf.tex[r]: " << surf.tex[r];
         }
         objects_.back().triangles.push_back(surf);
         ++i;
       }
       else read_fail();
     }
+	partIndex++;
   }
 
 
@@ -327,20 +347,26 @@ namespace {
   ac3d_model acParser::Triangulate(size_t objectID)
   {
     ac3d_model model;
-    pos_vect v; TranslateObj(objectID, glm::rotate(glm::mat4(1), 90.0f, glm::vec3(0,1,0)), v);
+    pos_vect v; 
+	TranslateObj(objectID, glm::rotate(glm::mat4(1), 90.0f, glm::vec3(0,1,0)), v);
     model.bbox = glmutils::bbox3(static_cast<int>(v.size()), v.begin());
     acObject& obj(objects_[objectID]);
+	float* ptr = &(obj.vert[0]).x;
+	std::cout << "\n total vertices:  " << obj.vert.size() << "\n first: " << ptr[0] << "\n total triangles:  " << obj.triangles.size();
     // Sort triangle by hilbert value (increase cache coherence)
     hilbert_cmp_tri_center cmp(v, model.bbox);
     std::sort(obj.triangles.begin(), obj.triangles.end(), std::ref(cmp));
     if (obj.vert.empty()) return model;
     model.twoSided = obj.twoSided;
-    for (int i=0; i<static_cast<int>(obj.triangles.size()); ++i)
+	std::cout << "\n total vertices:  " << obj.vert.size() << "\n first: " << ptr[0] << "\n total triangles:  " << obj.triangles.size();
+	int countDouble = 0;
+    for (long i=0; i<static_cast<long>(obj.triangles.size()); ++i)
     {
       const acTriangle& tri(obj.triangles[i]);
       T2F_N3F_V3F vertex[3];
       for (int j=0; j<3; ++j) 
       {
+		  
         vertex[j].v = v[tri.vi[j]];
         vertex[j].t = glm::vec2(tri.tex[j].x, 1.0f - tri.tex[j].y);
         vertex[j].n = vertexNormal(obj, i, tri.vi[j]);
@@ -348,6 +374,8 @@ namespace {
           std::find_if(model.vertices.begin(), model.vertices.end(), eps_eq_vertex(vertex[j]));
         if (it != model.vertices.end())
         {
+			
+			countDouble++;
           model.indices.push_back(static_cast<GLuint>(std::distance(model.vertices.begin(), it)));
         }
         else
@@ -357,6 +385,8 @@ namespace {
         }
       }
     }
+	std::cout << "\n"<< countDouble << "\n";
+	std::cout << "\n total vertices:  " << model.vertices.size() << "\n";
     model.texFile = obj.texture;
     model.material = material_;
     computeACMR(model);
@@ -394,7 +424,7 @@ namespace {
   void acParser::TranslateObj(size_t i, glm::mat4 M, pos_vect& v)
   {
     acObject& obj(objects_[i]);
-    M = glm::translate(M, obj.loc);
+    M = glm::translate(M, obj.loc[0]);
     glmutils::transformPoints(M, static_cast<int>(obj.vert.size()), obj.vert.begin(), std::back_inserter(v));
     for (int k=0; k<obj.kids; ++k) 
     {
