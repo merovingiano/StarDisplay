@@ -370,6 +370,7 @@ namespace {
         vertex[j].v = v[tri.vi[j]];
         vertex[j].t = glm::vec2(tri.tex[j].x, 1.0f - tri.tex[j].y);
         vertex[j].n = vertexNormal(obj, i, tri.vi[j]);
+		vertex[j].part = 0;
         std::vector<T2F_N3F_V3F>::iterator it = 
           std::find_if(model.vertices.begin(), model.vertices.end(), eps_eq_vertex(vertex[j]));
         if (it != model.vertices.end())

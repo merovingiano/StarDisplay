@@ -60,9 +60,11 @@ GLSLModel::GLSLModel(const std::vector<Param::ModelLod>& lods,
   glEnableVertexAttribArray(0);
   glEnableVertexAttribArray(1);
   glEnableVertexAttribArray(2);
+  glEnableVertexAttribArray(6);
   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(T2F_N3F_V3F), 0);
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(T2F_N3F_V3F), (void*)(2*sizeof(float)));
   glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(T2F_N3F_V3F), (void*)(5*sizeof(float)));
+  glVertexAttribPointer(6, 1, GL_FLOAT, GL_FALSE, sizeof(T2F_N3F_V3F), (void*)(8 * sizeof(float)));
 }
 
 

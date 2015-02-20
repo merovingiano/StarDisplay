@@ -15,6 +15,7 @@ struct T2F_N3F_V3F {
   glm::vec2 t;    
   glm::vec3 n;    
   glm::vec3 v;    
+  float part;
 };
 
 

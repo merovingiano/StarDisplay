@@ -157,7 +157,7 @@ function Birds.Falcon (p)
   bird.wingArea = bird.wingSpan * (bird.wingSpan / bird.wingAspectRatio)   -- [m^2]
   bird.CL = CL(bird)
   bird.maxForce = 3           -- max steering force [N]
-  bird.maxLift = 2            -- [N}
+  bird.maxLift = 2           -- [N}
 
   bird.cruiseSpeed = 20          -- CruiseSpeed(bird)    -- [m/s]
   --bird.speedControl = 1 / 1000   -- one over tau 
