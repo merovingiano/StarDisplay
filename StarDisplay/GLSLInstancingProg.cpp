@@ -15,7 +15,7 @@
 #include "Globals.hpp"
 #include "ICamera.hpp"
 
-
+# define M_PI           3.14159265358979323846
 namespace avx = glmutils::avx;
 
 
@@ -161,6 +161,24 @@ void GLSLInstancingProg<LOD>::Render()
   const bool colored = PFM.ColorMapping();
   model_->Bind();
   glsl::program* pprog = GGl.use_program("Instancing");
+
+  float beatSize = 2;
+  double time = Sim.SimulationTime();
+  time = fmod(time*8, 2 * beatSize);
+  double rot;
+  rot = time;
+  if (time >  0.5 * beatSize && time < 1.5 * beatSize) rot = beatSize - time;
+  if (time >  1.5 * beatSize) rot = time - 2 * beatSize;
+  GLuint wingRotateLoc = glGetUniformLocation(pprog->get(), "wingRotationMatrix");
+  GLuint locLoc = glGetUniformLocation(pprog->get(), "loc");
+  float wingRotate[16] = { 1, 0, 0, 0,
+	  0, cos(rot), -sin(rot), 0,
+	  0, sin(rot), cos(rot), 0,
+						   0, 0, 0, 1 };
+  glUniformMatrix4fv(wingRotateLoc, 1, GL_FALSE, wingRotate);
+
+  float locs[9] = { model_->loc[0][0], model_->loc[0][1], model_->loc[0][2], model_->loc[0][0], model_->loc[0][1], model_->loc[0][2], model_->loc[0][0], model_->loc[0][1], model_->loc[0][2] };
+  glUniform3fv(locLoc, 3, locs);
   glsl::uniform* alphaMask = pprog->uniform("alphaMask");
   if (PRENDERFLAGS.alphaMasking) 
   {

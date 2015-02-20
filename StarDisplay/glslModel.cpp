@@ -38,6 +38,10 @@ GLSLModel::GLSLModel(const std::vector<Param::ModelLod>& lods,
     nIndices_[lod] = (GLsizei)model[lod].indices.size();
     cumVertices += nVertices_[lod];
     cumIndices += nIndices_[lod];
+	for (int i = 0; i < 3; i++){
+		loc[i] = model[lod].loc[i];
+		//std::cout << "\n model location: " << i << "is: " << loc[i][0] <<  loc[i][1] << loc[i][2];
+	}
   }
   texture_ = LoadTexture(model[0].texFile, true);
   texture_.set_wrap_filter(GL_CLAMP_TO_EDGE, GL_NEAREST_MIPMAP_LINEAR, GL_LINEAR);
@@ -50,6 +54,7 @@ GLSLModel::GLSLModel(const std::vector<Param::ModelLod>& lods,
   ibuffer_.data(sizeof(GLint) * cumIndices, 0, GL_STATIC_DRAW);
   cumVertices = 0;
   cumIndices = 0;
+  
   for (int lod = 0; lod < nLods_; ++lod)
   {
     vbuffer_.sub_data(sizeof(T2F_N3F_V3F) * cumVertices, sizeof(T2F_N3F_V3F) * nVertices_[lod], (GLvoid*)(&model[lod].vertices[0]));

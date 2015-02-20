@@ -38,6 +38,7 @@ struct ac3d_model
   bool twoSided;
   ac3d_material material;
   glmutils::bbox3 bbox;
+  glm::vec3 loc[3];
 };
 
 

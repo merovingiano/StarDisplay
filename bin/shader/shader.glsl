@@ -217,6 +217,7 @@ shader[vertex] Instancing
   layout (location = 1) in vec4 Normal;
   layout (location = 2) in vec4 Vertex;
   layout (location = 3) in mat3x4 T;
+  layout (location = 6) in float part;
 
   const vec4 Eye = vec4(0.0, 0.0, 1.0, 0.0);
 
@@ -224,6 +225,8 @@ shader[vertex] Instancing
   uniform float diffuse = 1.0;  
   uniform float ambient = 0.0;
   uniform vec2  alphaMask = vec2(0,1);
+  uniform mat4 wingRotationMatrix;
+  uniform vec4 loc[3];
   
   flat   out float vDiscard;
   flat   out vec4  vColor;
@@ -254,8 +257,20 @@ shader[vertex] Instancing
     // Vertex in local space
     vec4 position = Vertex;
     position.xyz *= modelScale;
+	
+	if (int(part) == 1) {
+		position = wingRotationMatrix * (position-loc[int(part)]) + loc[int(part)];
+	}
+	if (int(part) == 2) {
+		mat4x4 Matrix = wingRotationMatrix;
+	    Matrix[1][2] *= -1;
+		Matrix[2][1] *= -1;
+		position = Matrix * (position-loc[int(part)])+loc[int(part)];
+	}
     position = M * position;
-    gl_Position = ModelViewProjection * position;
+    position = ModelViewProjection * position;
+	position += vec4(0,wingRotationMatrix[2][1]*0.2,0,0);
+	gl_Position = position;
   }
 };
 

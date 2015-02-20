@@ -45,6 +45,7 @@ public:
   const std::array<float, 4>& pxCoverage() const { return pxCoverage_; }
   int nLods() const { return nLods_; }
   float texMixAlt() const { return texMix_; }
+  glm::vec3 loc[3];
 
 private:
   int                     nLods_;
