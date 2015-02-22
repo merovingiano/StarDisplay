@@ -242,9 +242,9 @@ shader[vertex] Instancing
      float time = force[3];
      float rot;
 	 float M_PI = 3.14159265358979323;
-     rot = sin(time*16)+0.5;
-     float outer = sin(time * 16 - 0.5*M_PI);
-     float upTest = mod(time * 16, 2 * M_PI);
+     rot = sin(time)+0.5;
+     float outer = sin(time - 0.5*M_PI);
+     float upTest = mod(time, 2 * M_PI);
      int up;
      if (upTest > 0.5 * M_PI && upTest < 1.5 * M_PI) up = 1; else up = 0;
 	 mat4 wingRotate = mat4( 1, 0, 0, 0,

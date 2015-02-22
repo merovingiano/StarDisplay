@@ -39,6 +39,7 @@ CBird::CBird(int id, const glm::vec3& position, const glm::vec3& forward)
   alignment_(0),
   cohesion_(0),
   boundary_(0),
+  beatCycle_(0),
   flightForce_(0),
   bank_(0),
   wBetaIn_(0),
@@ -266,6 +267,10 @@ void CBird::regenerateLocalSpace(float dt)
   forward.store(H_[0]);
   up.store(H_[1]);
   side.store(H_[2]);
+ 
+
+  //beat cycle
+   beatCycle_ += dt*(8 + 3*glm::length(force_));
 }
 
 

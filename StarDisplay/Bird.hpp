@@ -46,6 +46,7 @@ public:
   const glm::vec3& side() const { return B_[2]; }                     //!< side direction
   const glm::vec3& velocity() const { return velocity_; }             //!< velocity
   float speed() const { return speed_; }                              //!< speed
+  float beatCycle() const { return beatCycle_; }                              //!< speed
   void SetSpeed(float x);                                             //!< write speed
   void SetVelocity(glm::vec3 const& x);                               //!< write velocity
 
@@ -126,6 +127,7 @@ protected:
   glm::vec3 wBetaIn_;
   glm::vec3 wBetaOut_;
 
+  float   beatCycle_;
   float   speed_;
   float   reactionTime_;
   float   reactionInterval_;
