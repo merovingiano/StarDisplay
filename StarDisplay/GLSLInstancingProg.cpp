@@ -1,6 +1,7 @@
 #include <stddef.h>       // offsetof
 #include <array>
 #include <atomic>
+#include <iostream>
 #include <glsl/shader_pool.hpp>
 #include <glsl/uniform_block.hpp>
 #include <glmutils/avx/vec.hpp>
@@ -33,7 +34,7 @@ class GLSLInstancingProg : public IInstancingProg
 {
   struct attrib_t
   {
-    avx::vec4 c[3];
+    avx::vec4 c[4];
   };
 
 public:
@@ -71,12 +72,16 @@ GLSLInstancingProg<LOD>::GLSLInstancingProg(unsigned ModelId, unsigned MaxN)
   glEnableVertexAttribArray(3);
   glEnableVertexAttribArray(4);
   glEnableVertexAttribArray(5);
+  // 7 is the force attribute, a vec4, 1 = force, 2-4 will be other stuff
+  glEnableVertexAttribArray(7);
   glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(attrib_t), 0);
   glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(attrib_t), (void*)(4*sizeof(float)));
   glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(attrib_t), (void*)(8*sizeof(float)));
+  glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(attrib_t), (void*)(12 * sizeof(float)));
   glVertexAttribDivisor(3, 1);
   glVertexAttribDivisor(4, 1);
   glVertexAttribDivisor(5, 1);
+  glVertexAttribDivisor(7, 1);
 }
 
 
@@ -96,9 +101,11 @@ void GLSLInstancingProg<LOD>::do_instance(const CBird& bird, size_t ofs, int lod
     avx::vec4 c0(bird.forward(), scale);
     avx::vec4 c1(bird.up(), 0);
     avx::vec4 c2(bird.position(), bird.getCurrentColorTex());
+	avx::vec4 c3(bird.force(),Sim.SimulationTime());
     dst->c[0] = c0;
     dst->c[1] = c1;
     dst->c[2] = c2;
+	dst->c[3] = c3;
   }
 }
 
@@ -162,21 +169,7 @@ void GLSLInstancingProg<LOD>::Render()
   model_->Bind();
   glsl::program* pprog = GGl.use_program("Instancing");
 
-  float beatSize = 2;
-  double time = Sim.SimulationTime();
-  time = fmod(time*8, 2 * beatSize);
-  double rot;
-  rot = time;
-  if (time >  0.5 * beatSize && time < 1.5 * beatSize) rot = beatSize - time;
-  if (time >  1.5 * beatSize) rot = time - 2 * beatSize;
-  GLuint wingRotateLoc = glGetUniformLocation(pprog->get(), "wingRotationMatrix");
   GLuint locLoc = glGetUniformLocation(pprog->get(), "loc");
-  float wingRotate[16] = { 1, 0, 0, 0,
-	  0, cos(rot), -sin(rot), 0,
-	  0, sin(rot), cos(rot), 0,
-						   0, 0, 0, 1 };
-  glUniformMatrix4fv(wingRotateLoc, 1, GL_FALSE, wingRotate);
-
   float locs[9] = { model_->loc[0][0], model_->loc[0][1], model_->loc[0][2], model_->loc[0][0], model_->loc[0][1], model_->loc[0][2], model_->loc[0][0], model_->loc[0][1], model_->loc[0][2] };
   glUniform3fv(locLoc, 3, locs);
   glsl::uniform* alphaMask = pprog->uniform("alphaMask");

@@ -203,6 +203,7 @@ void GLSLState::Flush()
   const CBird* focal = GCAMERA.GetFocalBird();
   const int ignoreId = (focal && GCAMERA.HideFocal()) ? focal->id() : -1;
   
+  // Here data is inserted per instance, I could add force data for wingbeat frequency
   InstancingPrey->Instance(GFLOCK.prey_begin(), GFLOCK.prey_end(), ignoreId);
   InstancingPred->Instance(GFLOCK.predator_begin(), GFLOCK.predator_end(), ignoreId);
   RibbonProg->Flush(ignoreId);

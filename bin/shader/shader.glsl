@@ -218,6 +218,7 @@ shader[vertex] Instancing
   layout (location = 2) in vec4 Vertex;
   layout (location = 3) in mat3x4 T;
   layout (location = 6) in float part;
+  layout (location = 7) in vec4 force;
 
   const vec4 Eye = vec4(0.0, 0.0, 1.0, 0.0);
 
@@ -226,7 +227,9 @@ shader[vertex] Instancing
   uniform float ambient = 0.0;
   uniform vec2  alphaMask = vec2(0,1);
   uniform mat4 wingRotationMatrix;
+  uniform mat4 Outer;
   uniform vec4 loc[3];
+  uniform int up;
   
   flat   out float vDiscard;
   flat   out vec4  vColor;
@@ -236,12 +239,29 @@ shader[vertex] Instancing
 
   void main(void)
   {
+     float time = force[3];
+     float rot;
+	 float M_PI = 3.14159265358979323;
+     rot = sin(time*16)+0.5;
+     float outer = sin(time * 16 - 0.5*M_PI);
+     float upTest = mod(time * 16, 2 * M_PI);
+     int up;
+     if (upTest > 0.5 * M_PI && upTest < 1.5 * M_PI) up = 1; else up = 0;
+	 mat4 wingRotate = mat4( 1, 0, 0, 0,
+	  0, cos(rot), -sin(rot), 0,
+	  0, sin(rot), cos(rot), 0,
+						   0, 0, 0, 1 );
+    mat4 outerMat = mat4( 1, 0, 0, 0,
+	  0, cos(outer), -sin(outer), 0,
+	  0, sin(outer), cos(outer), 0,
+	  0, 0, 0, 1 );
     float modelScale = T[0].w;    
     float colorTexCoord = isnan(T[2].w) ? 0.0 : T[2].w;
     mat4 M = mat4( vec4(T[0].xyz, 0.0), 
                    vec4(T[1].xyz, 0.0),
                    vec4(cross(T[0].xyz, T[1].xyz), 0.0), 
                    vec4(T[2].xyz, 1.0) );
+	
 
     vDiscard = (colorTexCoord >= alphaMask.x && colorTexCoord <= alphaMask.y) ? 0.0 : 1.0;
     vTexCoord = TexCoord;                         // Object texture
@@ -259,17 +279,29 @@ shader[vertex] Instancing
     position.xyz *= modelScale;
 	
 	if (int(part) == 1) {
-		position = wingRotationMatrix * (position-loc[int(part)]) + loc[int(part)];
+		if (up==1 && position.z < -0.5){
+			position = outerMat * (position-vec4(0,0,-0.5,0)) + vec4(0,0,-0.5,0);
+		}
+		position = wingRotate * (position-loc[int(part)]) + loc[int(part)];
+		
 	}
 	if (int(part) == 2) {
-		mat4x4 Matrix = wingRotationMatrix;
+	    mat4x4 outerMatrix = outerMat;
+	    outerMatrix[1][2] *= -1;
+		outerMatrix[2][1] *= -1;
+
+	    if (up==1 && position.z > 0.5){
+			position = outerMatrix * (position-vec4(0,0,0.5,0)) + vec4(0,0,0.5,0);
+		}
+		mat4x4 Matrix = wingRotate;
 	    Matrix[1][2] *= -1;
 		Matrix[2][1] *= -1;
 		position = Matrix * (position-loc[int(part)])+loc[int(part)];
 	}
+	
     position = M * position;
     position = ModelViewProjection * position;
-	position += vec4(0,wingRotationMatrix[2][1]*0.2,0,0);
+	position += vec4(0,wingRotationMatrix[2][1]*0.1,0,0);
 	gl_Position = position;
   }
 };
