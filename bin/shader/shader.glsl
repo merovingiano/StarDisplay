@@ -226,8 +226,6 @@ shader[vertex] Instancing
   uniform float diffuse = 1.0;  
   uniform float ambient = 0.0;
   uniform vec2  alphaMask = vec2(0,1);
-  uniform mat4 wingRotationMatrix;
-  uniform mat4 Outer;
   uniform vec4 loc[3];
   uniform int up;
   
@@ -239,7 +237,7 @@ shader[vertex] Instancing
 
   void main(void)
   {
-     float time = force[3];
+     float time = 0.8*force[3];
      float rot;
 	 float M_PI = 3.14159265358979323;
      rot = sin(time)+0.5;
@@ -251,10 +249,9 @@ shader[vertex] Instancing
 	  0, cos(rot), -sin(rot), 0,
 	  0, sin(rot), cos(rot), 0,
 						   0, 0, 0, 1 );
-    mat4 outerMat = mat4( 1, 0, 0, 0,
-	  0, cos(outer), -sin(outer), 0,
-	  0, sin(outer), cos(outer), 0,
-	  0, 0, 0, 1 );
+	
+    
+	
     float modelScale = T[0].w;    
     float colorTexCoord = isnan(T[2].w) ? 0.0 : T[2].w;
     mat4 M = mat4( vec4(T[0].xyz, 0.0), 
@@ -277,31 +274,52 @@ shader[vertex] Instancing
     // Vertex in local space
     vec4 position = Vertex;
     position.xyz *= modelScale;
+	float pronationDist; float outerDist;
 	
-	if (int(part) == 1) {
-		if (up==1 && position.z < -0.5){
-			position = outerMat * (position-vec4(0,0,-0.5,0)) + vec4(0,0,-0.5,0);
+	 if (int(part) == 1) pronationDist = 2*exp(-pow(length(vec3(0.1,0.15,-1.3) - Vertex.xyz),2)*2); 
+	 if (int(part) == 2) pronationDist = 2*exp(-pow(length(vec3(0.1,0.15,1.3) - Vertex.xyz),2)*2);
+	 if (int(part) == 1) outerDist = (1-exp(-pow(-0.4 - position[2],2)*20)); 
+	 if (int(part) == 2) outerDist = (1-exp(-pow(0.4 - position[2],2)*20));
+
+	 mat4 outerMat = mat4( 1, 0, 0, 0,
+	  0,  outerDist*cos(outer) + (1-outerDist)*1, -sin(outer)*outerDist, 0,
+	  0, sin(outer)*outerDist,  outerDist*cos(outer) + (1-outerDist)*1, 0,
+	  0, 0, 0, 1 );
+
+	//pronationDist = 1.0f;
+	 mat4 pronationMat = mat4( pronationDist*cos(outer) + (1-pronationDist)*1, -sin(outer)*pronationDist, 0, 0,
+	  sin(outer)*pronationDist, pronationDist*cos(outer) + (1-pronationDist)*1, 0, 0,
+	  0, 0, 1, 0,
+	  0, 0, 0, 1 );
+	if (int(part) == 1) { 
+       
+		if (up==1 && position.z < -0.4){
+			position = outerMat * (position-vec4(0,0.2,-0.5,0)) + vec4(0,0.2,-0.5,0);
 		}
-		position = wingRotate * (position-loc[int(part)]) + loc[int(part)];
+		position = pronationMat * (position-vec4(0.1,0.2,0,0)) + vec4(0.1,0.2,0,0);
+		position = wingRotate * (position-loc[int(part)]*modelScale) + loc[int(part)]*modelScale;
 		
 	}
 	if (int(part) == 2) {
+	    //pronationMat[1][2] *= -1;
+		//pronationMat[2][1] *= -1;
 	    mat4x4 outerMatrix = outerMat;
 	    outerMatrix[1][2] *= -1;
 		outerMatrix[2][1] *= -1;
-
-	    if (up==1 && position.z > 0.5){
-			position = outerMatrix * (position-vec4(0,0,0.5,0)) + vec4(0,0,0.5,0);
+		vec4 second = vec4(loc[1][0],loc[1][1],-loc[1][2],loc[1][3]);
+	    if (up==1 && position.z > 0.4){
+			position = outerMatrix * (position-vec4(0,0.2,0.5,0)) + vec4(0,0.2,0.5,0);
 		}
-		mat4x4 Matrix = wingRotate;
+		position = pronationMat * (position-vec4(0.1,0.2,0,0)) + vec4(0.1,0.2,0,0);
+		mat4x4 Matrix = wingRotate;  
 	    Matrix[1][2] *= -1;
 		Matrix[2][1] *= -1;
-		position = Matrix * (position-loc[int(part)])+loc[int(part)];
+		position = Matrix * (position-second*modelScale)+second*modelScale;
 	}
 	
     position = M * position;
     position = ModelViewProjection * position;
-	position += vec4(0,wingRotationMatrix[2][1]*0.1,0,0);
+	position += vec4(0,wingRotate[2][1]*0.1,0,0);
 	gl_Position = position;
   }
 };

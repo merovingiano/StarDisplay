@@ -170,8 +170,9 @@ void GLSLInstancingProg<LOD>::Render()
   glsl::program* pprog = GGl.use_program("Instancing");
 
   GLuint locLoc = glGetUniformLocation(pprog->get(), "loc");
-  float locs[9] = { model_->loc[0][0], model_->loc[0][1], model_->loc[0][2], model_->loc[0][0], model_->loc[0][1], model_->loc[0][2], model_->loc[0][0], model_->loc[0][1], model_->loc[0][2] };
-  glUniform3fv(locLoc, 3, locs);
+  float locs[12] = { model_->loc[0][0], model_->loc[0][1], model_->loc[0][2],0, model_->loc[1][0], model_->loc[1][1], model_->loc[1][2],0, model_->loc[2][0], model_->loc[2][1], model_->loc[2][2],0 };
+  std::cout << "\n locs: " << locs[0] << " " << locs[1] << " " << locs[2] << " " << locs[3] << " " << locs[4] << " " << locs[5] << " " << locs[6] << " " << locs[7] << " " << locs[8];
+  glUniform4fv(locLoc, 3, locs);
   glsl::uniform* alphaMask = pprog->uniform("alphaMask");
   if (PRENDERFLAGS.alphaMasking) 
   {

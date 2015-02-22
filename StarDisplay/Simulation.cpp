@@ -666,7 +666,10 @@ void Simulation::EnterGameLoop()
 
     if ((timeDrift >= 0) || (skippedFrame == params_.maxSkippedFrames))
     {
-      renderFun();
+		for (int i = 0; i < 10; i++){
+			renderFun();
+		}
+      
 	  if (int(SimulationTime_) % 15 == 0) {
 		  PlaySound("C:/Users/Robin/Documents/Cpp/starlings/bin/media/wavs/birds003.wav", NULL, SND_FILENAME | SND_ASYNC);
 	  }
