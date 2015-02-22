@@ -30,8 +30,6 @@ public:
   virtual const glm::dvec3& up() const = 0;
   virtual double Fovy() const = 0;
 
-  int depthFieldCounter;
-
   virtual glm::dvec3 getEye() const = 0;
   virtual glm::dvec3 getCenter() const = 0;
   virtual glm::dvec3 getUp() const = 0;

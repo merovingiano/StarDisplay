@@ -16,7 +16,7 @@ public:
   ~Simulation();
 
   //Robin
-  int depthFieldCounter;
+ 
   //
   void SetInitialParameter(const Param::Params&);
   void SetPFeatureMap(const Param::FeatureMap&);
@@ -56,9 +56,8 @@ public:
   class ICamera const&       ccamera() const { return *camera_; }
   class trail_buffer_pool&   trails() const { return *(trails_); }
 
-  class ICamera*                            camera_;
-  Param::Params params_;
 
+  
 private:
   const class CBird* PickNearestBird2Ray(const glm::vec3& ray_position, const glm::vec3& ray_direction);
   void UpdateBirds(const float sim_dt);
@@ -87,7 +86,7 @@ private:
   std::unique_ptr<class CFlock>             flock_;
   std::shared_ptr<class IStatistic>         statistic_;
   std::unique_ptr<class GLSLState>          gl_;
-  
+  class ICamera*                            camera_;
   luabind::object                           luaCamera_;
 
   bool  statisticsPaused_;
@@ -98,7 +97,7 @@ private:
   double lastClusterTime_;
 
   // Parameter records
-  
+  Param::Params params_;
 
   // Registered callbacks
   luabind::object PreyFactory_;

@@ -230,33 +230,23 @@ void GLSLState::Flush()
 
 void GLSLState::Render()
 {
-	
-
-
-		buBuf->bind_base_uniform(0);
-		UseSimViewport();
-		Skybox->Render();
-		imm3D->Render();
-		Locals->Render();
-		if (flags_.wireFrame) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		RibbonProg->Render();
-	for (int i = 0; i < 2; i++){
-		InstancingPrey->Render();
-		InstancingPred->Render();
-		if (flags_.wireFrame) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);   // reset
-		glDisable(GL_CULL_FACE);
-		if (flags_.show_world) DiskProg->Render();
-		if (flags_.show_rulers) GridProg->Render();
-		imm2D->Render();
-		UseFullViewport();
-		Fonts->Render();
-		glEnable(GL_CULL_FACE);
-		//Sim.depthFieldCounter = 0;
-		//Sim.camera_->Update(Sim.params_.IntegrationTimeStep);
-		//UploadMatrices();
-		
-	}
-	
+  buBuf->bind_base_uniform(0);
+  UseSimViewport();
+  Skybox->Render();
+  imm3D->Render();
+  Locals->Render();
+  if (flags_.wireFrame) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  RibbonProg->Render();
+  InstancingPrey->Render();
+  InstancingPred->Render();
+  if (flags_.wireFrame) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);   // reset
+  glDisable(GL_CULL_FACE);
+  if (flags_.show_world) DiskProg->Render();  
+  if (flags_.show_rulers) GridProg->Render();
+  imm2D->Render();
+  UseFullViewport();
+  Fonts->Render();
+  glEnable(GL_CULL_FACE);
   ::SwapBuffers((HDC)hDC_);
 }
 

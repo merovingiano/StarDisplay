@@ -53,8 +53,6 @@ public:
   void tilt(double theta);
   void flushLerp();
  
-  
-
   void SelectFocalBird(bool predator);
   void SetFocalBird(const class CBird* bird);
   void SetFocalPrey(const class CPrey* bird) { focalPrey_ = bird; }
