@@ -74,14 +74,24 @@ void CCamera::Update(double sim_dt)
   actualEye_ = glm::mix(actualEye_, eye_, std::min(1.0, lerp_.x * sim_dt));
   actualCenter_ = glm::mix(actualCenter_, center_, std::min(1.0, lerp_.y * sim_dt));
   actualUp_ = glm::mix(actualUp_, up_, std::min(1.0, lerp_.z * sim_dt));  
+  //actual center is the object that it focusses on 
+  // manipulate eye for depth of field effect
+  float M_PI = 3.14;
   const glm::dvec3 f = glm::normalize(actualEye_ - actualCenter_);
   const glm::dvec3 s = glm::normalize(glm::cross(actualUp_, f));
   const glm::dvec3 u = glm::cross(f, s);
+
+  glm::vec3 f2 = glm::normalize(glm::vec3(actualEye_) - glm::vec3(actualCenter_));
+  glm::vec3 s2 = glm::normalize(glm::cross(glm::vec3(actualUp_), f2));
+  glm::vec3 u2 = glm::cross(f2, s2);
+  glm::vec3 bokeh = s2 * cosf(Sim.depthFieldCounter * 2.0f * M_PI / 10.0f) + u2 * sinf(Sim.depthFieldCounter * 2 * M_PI / 10.0f);
+  //MV = modelview = direction of camera
   MV_ = glm::translate(glm::dmat4(s.x, u.x, f.x, 0.0,    
                                   s.y, u.y, f.y, 0.0,
                                   s.z, u.z, f.z, 0.0,
                                   0.0, 0.0, 0.0, 1.0),
                        -actualEye_);
+  //MV_ = glm::lookAt(glm::vec3(actualEye_) + 0.05f * bokeh, glm::vec3(actualCenter_), u2);
   double aspect = static_cast<double>(Viewport_[2]) / Viewport_[3];
   P_ = glm::perspective(actualFovy_, aspect, 0.1, 1000.0);
   MVP_ = P_*MV_;

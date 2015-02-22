@@ -16,6 +16,7 @@
 #include "GLSLState.hpp"
 #include "HistOverlay.hpp"
 #include "DefaultStatistic.hpp"
+#include <glsl/swap_control.hpp>
 #include "HistogramStatistic.hpp"
 #include "VoxelVolumeStatistic.hpp"
 #include "TimeSeriesStatistic.hpp"
@@ -668,6 +669,7 @@ void Simulation::EnterGameLoop()
     {
 		for (int i = 0; i < 10; i++){
 			renderFun();
+
 		}
       
 	  if (int(SimulationTime_) % 15 == 0) {
