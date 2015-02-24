@@ -247,6 +247,7 @@ void GLSLState::Render()
   UseFullViewport();
   Fonts->Render();
   glEnable(GL_CULL_FACE);
+  
   ::SwapBuffers((HDC)hDC_);
 }
 

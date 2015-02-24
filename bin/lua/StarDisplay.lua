@@ -21,7 +21,7 @@ Simulation.DebugLogStackLevel = 0
 
 
 Simulation.IntegrationTimeStep = 0.002  -- [s]
-Simulation.slowMotion = 1000              -- slowdown factor
+Simulation.slowMotion = 10              -- slowdown factor
 Simulation.pausedSleep = 0              -- sleep time if paused [microseconds]
 Simulation.realTime = true
 Simulation.maxSkippedFrames = 50
@@ -67,6 +67,7 @@ Simulation.Skybox = {
 Simulation.ModelSet = {
   { name = "Delta", LOD = { {acFile = "delta.ac", pxCoverage = 0} }, Scale = 1.5, texMix = 0.0 }, 
   { name = "eagle2", LOD = { {acFile = "eagle2.ac", pxCoverage = 0} }, Scale = 1.5, texMix = 0.0 }, 
+  --{ name = "eagle3", LOD = { {acFile = "eagle3.ac", pxCoverage = 0} }, Scale = 0.7, texMix = 0.0 }, 
   { name = "Dove", LOD = { {acFile = "dove.ac", pxCoverage = 0} }, Scale = 1.5, texMix = 0.9 }, 
   { name = "Eagle", LOD = { {acFile = "eagle.ac", pxCoverage = 0} }, Scale = 1.5, texMix = 0.9 }, 
  

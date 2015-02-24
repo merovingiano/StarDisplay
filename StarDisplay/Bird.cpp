@@ -6,6 +6,7 @@
 #include "random.hpp"
 #include "Bird.hpp"
 #include "Globals.hpp"
+#include <stdlib.h> 
 
 
 using namespace Param;

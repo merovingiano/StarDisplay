@@ -12,6 +12,8 @@
 #include "visitors.hpp"
 #include "Globals.hpp"
 #include "Mmsystem.h"
+#include <stdlib.h> 
+#include <iostream>
 
 
 using namespace Param;
@@ -246,9 +248,18 @@ void CPredator::update(float dt, const CFlock&)
     steering_ += boundary_;
     steering_ += speedControl() * B_[0];
 	if (GetAsyncKeyState(VK_DOWN)) steering_ +=  B_[1];
+	if (GetAsyncKeyState(VK_NUMPAD2)) steering_ += 5.0f*B_[1];
 	if (GetAsyncKeyState(VK_UP)) steering_ -= B_[1];
+	if (GetAsyncKeyState(VK_NUMPAD8)) steering_ -= 5.0f*B_[1];
 	if (GetAsyncKeyState(VK_RIGHT)) steering_ += B_[2];
+	if (GetAsyncKeyState(VK_NUMPAD6)) steering_ += 5.0f*B_[2];
 	if (GetAsyncKeyState(VK_LEFT)) steering_ -= B_[2];
+	if (GetAsyncKeyState(VK_NUMPAD4)) steering_ -= 5.0f*B_[2];
+	if (GetAsyncKeyState(VK_NUMPAD5)) steering_ += 3.0f*B_[0];
+	if (GetAsyncKeyState(VK_NUMPAD0)) steering_ += 10.0f*B_[0];
+	rand_ = float(rand()) / (float(RAND_MAX)*100) +0.8 * rand_;
+	std::cout << "\n" << rand_;
+	std::cout << "\n" << float(rand()) / (float(RAND_MAX));
     noise();    // add some noise
 
     avx::vec3 force(steering_);

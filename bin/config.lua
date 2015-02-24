@@ -17,7 +17,7 @@ Simulation.CustomStatistic = require "RobinStat"
 -- Overwrite default initial parameter if required
 gParam.Roost = {
   numPrey = 500,
-  numPredators = 10,
+  numPredators = 2,
   Radius = 500.0,
   minRadius = 150.0,
   maxRadius = 10000.0,

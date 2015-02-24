@@ -92,6 +92,7 @@ private:
 
   Param::Predator  pPred_;
   float            attackTime_;
+
   float            handleTime_;
   float            dogFight_;
   const CPrey*     lockedOn_;
