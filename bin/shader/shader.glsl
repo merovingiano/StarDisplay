@@ -247,10 +247,7 @@ shader[vertex] Instancing
      float upTest = mod(time, 2 * M_PI);
      int up;
      if (upTest > 0.5 * M_PI && upTest < 1.5 * M_PI) up = 1; else up = 0;
-	 mat4 wingRotate = mat4( 1, 0, 0, 0,
-	  0, cos(rot), -sin(rot), 0,
-	  0, sin(rot), cos(rot), 0,
-						   0, 0, 0, 1 );
+	
 	
     
 	
@@ -276,16 +273,26 @@ shader[vertex] Instancing
     // Vertex in local space
     vec4 position = Vertex;
     position.xyz *= modelScale;
-	float pronationDist; float outerDist; float randomLoc; float realPronationDist;
+	float pronationDist; float outerDist; float randomLoc; float realPronationDist; float rotationDist; 
+	float headDist;
 	
 	 if (int(part) == 1) pronationDist = 2*exp(-pow(length(vec3(0.1,0.15,-1.3) - Vertex.xyz),2)*2); 
 	 if (int(part) == 2) pronationDist = 2*exp(-pow(length(vec3(0.1,0.15,1.3) - Vertex.xyz),2)*2);
 	 if (int(part) == 1) realPronationDist = 1-exp(-pow(length(vec3(0.1,0.04,-0.1) - position.xyz),2)*2); 
 	 if (int(part) == 2) realPronationDist = 1-exp(-pow(length(vec3(0.1,0.04,0.1) - position.xyz),2)*2); 
+	 if (int(part) == 1) rotationDist = 1-exp(-pow(length(vec3(0.1,0.04,-0.1) - position.xyz),2)*30); 
+	 if (int(part) == 2) rotationDist = 1-exp(-pow(length(vec3(0.1,0.04,0.1) - position.xyz),2)*30); 
 	 if (int(part) > 0) randomLoc = 2*exp(-pow(length(-1 - position.x),2)*2); 
 	 if (int(part) == 0) randomLoc = 2*exp(-pow(length(-1.2 - position.x),2)*2); 
 	 if (int(part) == 1) outerDist = (1-exp(-pow(-0.2 - position[2],2)*5)); 
 	 if (int(part) == 2) outerDist = (1-exp(-pow(0.2 - position[2],2)*5));
+
+	 headDist = 1-exp(-pow(length(0.3 - position.x),2)*5); 
+
+	  mat4 wingRotate = mat4( 1, 0, 0, 0,
+	  0, rotationDist*cos(rot) + (1-rotationDist)*1, -rotationDist*sin(rot), 0,
+	  0, rotationDist*sin(rot), rotationDist*cos(rot) + (1-rotationDist)*1, 0,
+						   0, 0, 0, 1 );
 
 	 mat4 outerMat = mat4( 1, 0, 0, 0,
 	  0,  outerDist*cos(outer) + (1-outerDist)*1, -sin(outer)*outerDist, 0,
@@ -352,7 +359,7 @@ shader[vertex] Instancing
 	//position = randomMat * position;
     position = M * position;
     position = ModelViewProjection * position;
-	position += vec4(0,wingRotate[2][1]*0.1,0,0);
+	position += vec4(0,sin(rot)*headDist*0.1,0,0);
 	gl_Position = position;
   }
 };
