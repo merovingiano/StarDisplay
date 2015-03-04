@@ -35,6 +35,19 @@ local CruiseSpeed = function (bird)
   return U
 end
 
+--drag to lift ratio
+
+local CDCL = function (bird)
+	local cdcl = 1.0 / ((math.pi * bird.wingAspectRatio) / CL(bird))
+	return cdcl
+end
+
+local maxForce = function (bird)
+	local maxForce = (bird.maxSpeed / bird.cruiseSpeed) * bird.bodyMass * 9.81 * CDCL(bird)
+	return maxForce
+
+end 
+
 
 local skipHemisphere = function (P)
   if random:uniform01() < P then
@@ -156,14 +169,16 @@ function Birds.Falcon (p)
   bird.wingAspectRatio = 3.5
   bird.wingArea = bird.wingSpan * (bird.wingSpan / bird.wingAspectRatio)   -- [m^2]
   bird.CL = CL(bird)
-  bird.maxForce = 5           -- max steering force [N]
+  
   bird.maxLift = 4           -- [N}
 
   bird.cruiseSpeed = 20          -- CruiseSpeed(bird)    -- [m/s]
   --bird.speedControl = 1 / 1000   -- one over tau 
   bird.minSpeed = 5
   bird.maxSpeed = 40
-  
+  bird.maxForce = maxForce(bird)          -- max steering force [N]
+ 
+  print ("\nmaxForce:" .. maxForce(bird)  .."\n")
   -----------------------------------------------------------------------------
   -- Steering
   -----------------------------------------------------------------------------

@@ -167,6 +167,7 @@ void GLSLState::Init(void* hDC)
 
   glm::ivec2 ext = Fonts->extent(footer_fmt);
   Lua.CreateTextBox(Fonts.get(), "sim_footer", glm::ivec4(4, -ext.y + 8, ext.x + 4, ext.y + 4), &GCAMERA);
+  Lua.CreateTextBox(Fonts.get(), "sim_footer", glm::ivec4(4, -ext.y - 80, ext.x + 4, ext.y + 4), &GCAMERA);
 }
 
 

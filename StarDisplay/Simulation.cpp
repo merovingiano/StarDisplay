@@ -294,15 +294,15 @@ bool Simulation::HandleKey(unsigned key, unsigned ks)
     } 
     break;
   case VK_UP:
-	  std::cout <<  "\nUp\n";//key up
+	  //std::cout <<  "\nUp\n";//key up
   case VK_DOWN:
-	  std::cout << "\nUp\n";//key up
+	  //std::cout << "\nUp\n";//key up
   case VK_RIGHT:
-	  std::cout << "\nUp\n";//key up
+	  //std::cout << "\nUp\n";//key up
   case VK_LEFT:
-	  std::cout << "\nUp\n";//key up
+	  //std::cout << "\nUp\n";//key up
   case 'R':
-	  std::cout << "\nUp\n";//key up
+	  //std::cout << "\nUp\n";//key up
     if (KEYSTATE_IS_ALT_CTRL(ks)) 
     {
       handled = true;

@@ -127,20 +127,27 @@ void EvolveDeflection::Display() const
 
 void EvolveDeflection::Shuffle()
 {
+	//next generation starts here
   ++Generation_;
+  // just a vector of type vec4 having three deflection parameters and the min distance
   allele_type allele;
+  //looping over the predators and placing all 
   std::for_each(GFLOCK.predator_begin(), GFLOCK.predator_end(), [&allele] (const CPredator& pred)
   {
     const glm::vec3& defl = pred.getDeflection();
     allele.push_back( glm::vec4(defl.x, defl.y, defl.z, pred.hunts().minDist) );
   });
+  //resort on having the minimum distance
   std::sort(allele.begin(), allele.end(), cmp_min_dist());
+  // placing all alleles into the total bunch of alleles over time
   alleles_.emplace_back(allele);
+  //how big is the total amount of alleles in the population?
   unsigned N = static_cast<unsigned>(allele.size());
   
   // 50% overwritten + mutation
   std::copy(allele.begin(), allele.begin() + (N >> 1), allele.begin() + (N >> 1));
   std::uniform_real_distribution<float> rnd(-0.5f, 0.5f);
+  //each generation the mutation becomes less..
   for (unsigned i=(N >> 1); i < N; ++i)
   {
     allele[i].x += (1.0f / Generation_) * rnd(rnd_eng());
@@ -148,6 +155,8 @@ void EvolveDeflection::Shuffle()
   }
   CFlock::pred_iterator first(GFLOCKNC.predator_begin());
   CFlock::pred_iterator last(GFLOCKNC.predator_end());
+
+  //change all of the settings of the predators after mutation
   for (unsigned i=0; first != last; ++first, ++i)
   {
     first->setDeflection(*(const glm::vec3*)&allele[i]);
@@ -160,7 +169,9 @@ void EvolveDeflection::Shuffle()
     top1 += allele[i];
   }
   top1 /= n;
+
   first = GFLOCKNC.predator_end() - n;
+  //set the the last n to the average of the top 1%, This is possibly wrong, you want the sorted vector to be adapted
   for (; first != last; ++first)
   {
     first->setDeflection(*(const glm::vec3*)&top1);

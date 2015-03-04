@@ -247,6 +247,7 @@ void CPredator::update(float dt, const CFlock&)
     handleGPWS();
     steering_ += boundary_;
     steering_ += speedControl() * B_[0];
+
 	if (GetAsyncKeyState(VK_DOWN)) steering_ +=  B_[1];
 	if (GetAsyncKeyState(VK_NUMPAD2)) steering_ += 5.0f*B_[1];
 	if (GetAsyncKeyState(VK_UP)) steering_ -= B_[1];
@@ -258,8 +259,8 @@ void CPredator::update(float dt, const CFlock&)
 	if (GetAsyncKeyState(VK_NUMPAD5)) steering_ += 3.0f*B_[0];
 	if (GetAsyncKeyState(VK_NUMPAD0)) steering_ += 10.0f*B_[0];
 	rand_ = float(rand()) / (float(RAND_MAX)*100) +0.8 * rand_;
-	std::cout << "\n" << rand_;
-	std::cout << "\n" << float(rand()) / (float(RAND_MAX));
+	//std::cout << "\n" << rand_;
+	//std::cout << "\n" << float(rand()) / (float(RAND_MAX));
     noise();    // add some noise
 
     avx::vec3 force(steering_);
