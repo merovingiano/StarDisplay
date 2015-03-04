@@ -66,6 +66,7 @@ public:
   void BeginHunt();
   void EndHunt(bool success);
   void ResetHunt();
+  
 
   void setDefaultColorTex() const;
 
@@ -79,7 +80,7 @@ private:
   void flightDynamic();
   void steerToFlock();
   void ignoreFlock();
-
+  void predatorIntegration(float dt);
   void ManualStartAttack();
   void AutoStartAttack();
   void EvolveStartAttack();

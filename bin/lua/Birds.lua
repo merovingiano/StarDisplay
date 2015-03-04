@@ -127,7 +127,7 @@ function Birds.Starling (p)
   prey.DetectionSurfaceProb = 0.30 
   prey.DetectionHemisphereFOV = 270        -- [deg]
 
-  prey.EvasionStrategy = { type = EvasionStrategies.Custom, hook = Wave(DropEx(5,10)) }
+  --prey.EvasionStrategy = { type = EvasionStrategies.Custom, hook = Wave(DropEx(5,10)) }
   --prey.EvasionStrategy = { type = EvasionStrategies.Drop, weight = 5.0, edges = glm.vec4(0, 2, 2, 2) }
 
   prey.IncurNeighborPanic = 2        -- absorb panic reaction from nth nearest neighbor

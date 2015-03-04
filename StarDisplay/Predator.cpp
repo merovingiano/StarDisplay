@@ -14,6 +14,7 @@
 #include "Mmsystem.h"
 #include <stdlib.h> 
 #include <iostream>
+#include "ICamera.hpp"
 
 
 using namespace Param;
@@ -248,16 +249,21 @@ void CPredator::update(float dt, const CFlock&)
     steering_ += boundary_;
     steering_ += speedControl() * B_[0];
 
-	if (GetAsyncKeyState(VK_DOWN)) steering_ +=  B_[1];
-	if (GetAsyncKeyState(VK_NUMPAD2)) steering_ += 5.0f*B_[1];
-	if (GetAsyncKeyState(VK_UP)) steering_ -= B_[1];
-	if (GetAsyncKeyState(VK_NUMPAD8)) steering_ -= 5.0f*B_[1];
-	if (GetAsyncKeyState(VK_RIGHT)) steering_ += B_[2];
-	if (GetAsyncKeyState(VK_NUMPAD6)) steering_ += 5.0f*B_[2];
-	if (GetAsyncKeyState(VK_LEFT)) steering_ -= B_[2];
-	if (GetAsyncKeyState(VK_NUMPAD4)) steering_ -= 5.0f*B_[2];
-	if (GetAsyncKeyState(VK_NUMPAD5)) steering_ += 3.0f*B_[0];
-	if (GetAsyncKeyState(VK_NUMPAD0)) steering_ += 10.0f*B_[0];
+	if ((GCAMERA.GetFocalBird())->id() == id_)
+	{
+
+		if (GetAsyncKeyState(VK_DOWN)) steering_ +=  B_[1];
+		if (GetAsyncKeyState(VK_NUMPAD2)) steering_ += 5.0f*B_[1];
+		if (GetAsyncKeyState(VK_UP)) steering_ -= B_[1];
+		if (GetAsyncKeyState(VK_NUMPAD8)) steering_ -= 5.0f*B_[1];
+		if (GetAsyncKeyState(VK_RIGHT)) steering_ += B_[2];
+		if (GetAsyncKeyState(VK_NUMPAD6)) steering_ += 5.0f*B_[2];
+		if (GetAsyncKeyState(VK_LEFT)) steering_ -= B_[2];
+		if (GetAsyncKeyState(VK_NUMPAD4)) steering_ -= 5.0f*B_[2];
+		if (GetAsyncKeyState(VK_NUMPAD5)) steering_ += 3.0f*B_[0];
+		if (GetAsyncKeyState(VK_NUMPAD0)) steering_ += 10.0f*B_[0];
+	}
+	
 	rand_ = float(rand()) / (float(RAND_MAX)*100) +0.8 * rand_;
 	//std::cout << "\n" << rand_;
 	//std::cout << "\n" << float(rand()) / (float(RAND_MAX));
@@ -268,7 +274,7 @@ void CPredator::update(float dt, const CFlock&)
     if (f2 > pBird_.maxForce * pBird_.maxForce) {
       force /= avx::fast_sqrt(f2);
       force *= pBird_.maxForce;
-      force.store(steering_);
+      //force.store(steering_);
     }
     force.store(force_);
 
@@ -279,7 +285,7 @@ void CPredator::update(float dt, const CFlock&)
   // Physics works in real time...
   handleTime_ -= dt;
   flightDynamic();
-  integration(dt);
+  predatorIntegration(dt);
   regenerateLocalSpace(dt);
 
   if (closestPrey_)
@@ -485,3 +491,32 @@ void CPredator::PursuitCustom(const glm::vec3& targetHeading, const glm::vec3& t
   }
 }
 
+void CPredator::predatorIntegration(float dt)
+{
+	const float hdt = 0.5f * dt;
+	const float rBM = 1.0f / pBird_.bodyMass;
+	avx::vec3 accel(accel_);
+	avx::vec3 velocity(velocity_);
+
+	glm::vec3 forceInBody = glm::vec3(glm::dot(B_[0], force_), glm::dot(B_[1], force_), 0);
+	avx::vec3 force(forceInBody * glm::inverse(B_));
+	
+	avx::vec3 position(position_);
+	avx::vec3 flightForce(flightForce_);
+	avx::vec3 forward(B_[0]);
+
+	velocity += accel * hdt;                 // v(t + dt/2) = v(t) + a(t) dt/2
+	position += velocity * dt;               // r(t + dt) = r(t) + v(t + dt/2)
+	accel = (force + flightForce) * rBM;     // a(t + dt) = F(t + dt)/m
+	position.store(position_);
+	velocity += accel * hdt;                 // v(t) = v(t + dt/2) + a(t + dt) dt/2
+	accel.store(accel_);
+
+	// clip speed
+	speed_ = avx::length(velocity);
+	//speed_ = avx::clamp(speed_, pBird_.minSpeed, pBird_.maxSpeed);
+	forward = velocity / speed_;
+
+	// interesting: This keeps it always aligned with the forward velocity. This has great impact on the turning behavior.
+	forward.store(B_[0]);
+}

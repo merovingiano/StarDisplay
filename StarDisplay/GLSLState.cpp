@@ -36,7 +36,7 @@ namespace {
     "\\smallface{}\n[F1] Help\n[F2] Birds: %d + %d\n[F3] Boundary radius: %d\n[F4] HRTree level: %d\n\nh.hildenbrandt@rug.nl\n";
 
   const char details_predator[] =
-	  "\\smallface{}\nVelocity: %.1f \nAltitude: %.1f \nSteering Force magnitude: %.1f \nAcceleration: %.1f \n Prey Caught: %d \n minDist: %2f \n Locks: %d \n";
+	  "\\smallface{}\nVelocity: %.1f \nAltitude: %.1f \nSteering Force magnitude: %.1f \nAcceleration: %.1f \nPrey Caught: %d \nminDist: %2f \nLocks: %d \nHunting: %d ";
 
   const char footer_fmt[] =
     "\\smallface{}Sim. time: %02.0f:%02.0f:%02.0f\nupdate: %.1f ms\nfps: %d";
@@ -282,7 +282,7 @@ void GLSLState::PrintInfoText()
   {
 	  Fonts->set_color(glm::vec4(1, 1, 0, 1));
 	  const CPredator* focalPred = GCAMERA.GetFocalPredator();
-	  _snprintf_s(buf, 255, details_predator, glm::length(focalBird->velocity()), (focalBird->position())[1], glm::length(focalBird->steering()), glm::length(focalBird->accel()), (focalPred->hunts()).success, (focalPred->hunts()).minDist, (focalPred->hunts()).locks);
+	  _snprintf_s(buf, 255, details_predator, glm::length(focalBird->velocity()), (focalBird->position())[1], glm::length(focalBird->steering()), glm::length(focalBird->accel()), (focalPred->hunts()).success, (focalPred->hunts()).minDist, (focalPred->hunts()).locks, focalPred->is_attacking());
 	  Fonts->print(buf);
   }
   // Annotation
