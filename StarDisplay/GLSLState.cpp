@@ -35,6 +35,8 @@ namespace {
   const char header_fmt[] =
     "\\smallface{}\n[F1] Help\n[F2] Birds: %d + %d\n[F3] Boundary radius: %d\n[F4] HRTree level: %d\n\nh.hildenbrandt@rug.nl\n";
 
+  const char details_predator[] =
+	  "\\smallface{}\nVelocity: %.1f \nAltitude: %.1f \nSteering Force magnitude: %.1f \nAcceleration: %.1f \n Prey Caught: %d \n minDist: %2f \n Locks: %d \n";
 
   const char footer_fmt[] =
     "\\smallface{}Sim. time: %02.0f:%02.0f:%02.0f\nupdate: %.1f ms\nfps: %d";
@@ -275,12 +277,20 @@ void GLSLState::PrintInfoText()
     _snprintf_s(buf, 255, header_fmt, Sim.getNumPrey(), Sim.getNumPredators(), static_cast<int>(PROOST.Radius), flags.rtreeLevel);
     Fonts->print(buf);
   }
-
+  const CBird* focalBird = GCAMERA.GetFocalBird();
+  if (focalBird->isPredator())
+  {
+	  Fonts->set_color(glm::vec4(1, 1, 0, 1));
+	  const CPredator* focalPred = GCAMERA.GetFocalPredator();
+	  _snprintf_s(buf, 255, details_predator, glm::length(focalBird->velocity()), (focalBird->position())[1], glm::length(focalBird->steering()), glm::length(focalBird->accel()), (focalPred->hunts()).success, (focalPred->hunts()).minDist, (focalPred->hunts()).locks);
+	  Fonts->print(buf);
+  }
   // Annotation
   if (annotationElapsed_ > 0.0) 
   {
     // Place the message below the header.
     if (flags.show_annotation)
+	  Fonts->set_color(glm::vec4(1,1,0,1));
       Fonts->print((std::string("\\mediumface{}\n") + annotation_).c_str());
     annotationElapsed_ -= Sim.FrameTime();
   }
