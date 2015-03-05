@@ -239,15 +239,16 @@ void CBird::regenerateLocalSpace(float dt)
   avx::vec3 up = B_[1];
   avx::vec3 side = B_[2];
   avx::vec3 steering = steering_;
+  glm::vec3 steering2 = glm::vec3(0,steering_.y, steering_.z);
   avx::vec3 gyro = gyro_.x * forward + gyro_.y * side + gyro_.z * up;
   steering += gyro;
   
-  float Fl = glm::dot(steering_, H_[2]); 
-  float Ll = glm::dot(lift_, H_[2]);
-  float beta = std::min(wBetaIn_.x * (Fl - Ll) * dt, 0.00025f); 
+  float Fl = glm::cross(glm::vec3(lift_),steering2).x;
+  //float Ll = glm::dot(lift_, H_[2]);
+  float beta = std::max(std::min(wBetaIn_.x * (Fl) * dt, 0.025f), -0.025f);
   avx::vec3 bank = beta * side;
 
-  float phi = std::min((wBetaIn_.y * avx::dot(steering, up)), 0.00005f / dt);
+  float phi = std::max(std::min((wBetaIn_.y * avx::dot(steering, up)), 0.005f / dt), -0.005f / dt);
   avx::vec3 pitch = (phi * dt) * up;
 
   forward = avx::save_normalize(forward + pitch, forward);

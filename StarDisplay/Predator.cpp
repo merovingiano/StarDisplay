@@ -123,6 +123,7 @@ CPredator::hunt& CPredator::hunt::operator+=(const CPredator::hunt& h)
   locks += h.locks;
   success += h.success;
   minDist = std::min(minDist, h.minDist);
+  lastMinDist = h.minDist;
   minDistLockedOn = std::min(minDistLockedOn, h.minDistLockedOn);
   seqTime += h.seqTime;
   lookTime += h.lookTime;
@@ -205,6 +206,7 @@ void CPredator::updateNeighbors(float dt, const CFlock& flock)
       }
       if ((dogFight_ > pPred_.Dogfight) || (locks_ > pPred_.maxLocks))
       {
+		  std::cout << "JAJAJAJAJAJA";
         EndHunt(false);
       }
     } 
@@ -292,7 +294,15 @@ void CPredator::update(float dt, const CFlock&)
   {
     // Check for collisions in real-time
     const float distance = glm::distance(position_, closestPrey_->position());
-    if (distance < hunts_.minDist) hunts_.minDist = distance;
+	if (distance < hunts_.minDist)
+	{
+		hunts_.minDist = distance;
+		
+	}
+	if (distance < hunts_.lastMinDist)
+	{
+		hunts_.lastMinDist = distance;
+	}
   }
   if (0 == lockedOn_)
   {
@@ -416,6 +426,7 @@ void CPredator::BeginHunt()
   ++hunts_.sequences;
   handleTime_ = 0;
   attackTime_ = pPred_.AttackSpan;
+  hunts_.lastMinDist = 999.99f;
 }
 
 

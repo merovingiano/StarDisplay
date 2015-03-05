@@ -159,7 +159,7 @@ end
 function Birds.Falcon (p)
   local bird = Params.Bird()
   bird.reactionTime = 0.01          -- [s]
-  bird.reactionStochastic = 0.001   -- reactionTime <- (1 + uniform(-reactionStochastic, + reactionStocastic)) * reactionTime
+  bird.reactionStochastic = 0.000   -- reactionTime <- (1 + uniform(-reactionStochastic, + reactionStocastic)) * reactionTime
   bird.skipLeftHemisphere = 0       -- spacial hemisphere (not brain hemisphere)
   bird.skipRightHemisphere = 0      -- spacial hemisphere (not brain hemisphere)
 
@@ -216,7 +216,7 @@ function Birds.Falcon (p)
   predator.StartAttack = StartAttacks.Manual   -- Manual, Auto, Evolve
   predator.PreySelection = PreySelections.Picked -- Auto, Picked, PickedTopo
   
-  --predator.PursuitStrategy = { type = pursuits.Custom, hook = pursuits.DirectPursuit(3) }
+  --predator.PursuitStrategy = { type = pursuits.Custom, hook = pursuits.DirectPursuit(10) }
   predator.PursuitStrategy = { type = pursuits.Custom, hook = pursuits.ProportionalNavigation(30) }
 
   predator.AttackSpan = 6000                   -- max. attack time span w/o lock [s]
@@ -224,7 +224,7 @@ function Birds.Falcon (p)
   predator.HoldLock = true 
   predator.LockBlindAngle = 360-45            -- [deg] 
   predator.LockDistance = 10.0                -- [m]
-  predator.maxLocks = 10                       -- max locks per attack
+  predator.maxLocks = 10000                       -- max locks per attack
   predator.ExposureThreshold = glm.vec2(0.35, 0.20) -- (lock on, lose lock)
   predator.AttractMix = 0.1                   -- mix between distance (1) and exposure - factor (0)
   predator.HandleTime = 1

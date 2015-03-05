@@ -27,7 +27,7 @@ public:
   {
     hunt() : sequences(0), locks(0), success(0),
              minDist(999.99f), minDistLockedOn(999.99f), 
-             seqTime(0), lookTime(0) 
+			 seqTime(0), lookTime(0), lastMinDist(999.99f)
     {}
     hunt& operator+=(const hunt& h);
     int sequences;
@@ -39,6 +39,7 @@ public:
     double lookTime;
     std::vector<unsigned> attackSize;
     std::vector<unsigned> catchSize;
+    float lastMinDist;
   };
 
 public:
