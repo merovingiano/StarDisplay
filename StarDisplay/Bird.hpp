@@ -130,6 +130,7 @@ protected:
 
   float   beatCycle_;
   float   rand_;
+  float   desiredLift_;
   float   speed_;
   float   reactionTime_;
   float   reactionInterval_;

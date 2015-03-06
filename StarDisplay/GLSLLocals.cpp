@@ -83,12 +83,12 @@ namespace
         imm->Begin(IMM_LINES);
         imm->Emit(position, steeringColor);
         imm->Emit(position + b.steering(), steeringColor);
-        imm->Emit(position, flightColor);
-        imm->Emit(position + b.flightForce(), flightColor);
-        imm->Emit(position, liftColor);
-        imm->Emit(position + b.up() * glm::dot(b.flightForce(), b.up()), liftColor);
-        imm->Emit(position, dragColor);
-        imm->Emit(position + b.forward() * glm::dot(b.flightForce(), b.forward()), dragColor);
+        //imm->Emit(position, flightColor);
+        //imm->Emit(position + b.flightForce(), flightColor);
+        //imm->Emit(position, liftColor);
+        //imm->Emit(position + b.up() * glm::dot(b.flightForce(), b.up()), liftColor);
+        //imm->Emit(position, dragColor);
+        //imm->Emit(position + b.forward() * glm::dot(b.flightForce(), b.forward()), dragColor);
         if (b.isPrey())
         {
           imm->Emit(position, predatorForceColor);

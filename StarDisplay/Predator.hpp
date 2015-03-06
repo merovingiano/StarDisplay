@@ -82,6 +82,7 @@ private:
   void steerToFlock();
   void ignoreFlock();
   void predatorIntegration(float dt);
+  void predatorRegenerateLocalSpace(float dt);
   void ManualStartAttack();
   void AutoStartAttack();
   void EvolveStartAttack();

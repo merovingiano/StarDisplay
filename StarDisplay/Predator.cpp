@@ -288,7 +288,7 @@ void CPredator::update(float dt, const CFlock&)
   handleTime_ -= dt;
   flightDynamic();
   predatorIntegration(dt);
-  regenerateLocalSpace(dt);
+  predatorRegenerateLocalSpace(dt);
 
   if (closestPrey_)
   {
@@ -336,7 +336,7 @@ void CPredator::flightDynamic()
 
 
   glm::vec3 down = glm::vec3(0, 0, -pBird_.bodyWeight);
-  const float desiredLift = glm::length(glm::cross(down, velocity_)) / glm::length(velocity_);
+  const float desiredLift = desiredLift_;
 
   const float D = CDCL * L;   // Drag
   lift_ = B_[1] * std::min(L, desiredLift);
@@ -511,7 +511,7 @@ void CPredator::predatorIntegration(float dt)
 
 	glm::vec3 forceInBody = glm::vec3(glm::dot(B_[0], force_), glm::dot(B_[1], force_), 0);
 	avx::vec3 force(forceInBody * glm::inverse(B_));
-	
+	//std::cout << "\n yforce: " << force.get_y();
 	avx::vec3 position(position_);
 	avx::vec3 flightForce(flightForce_);
 	avx::vec3 forward(B_[0]);
@@ -528,6 +528,62 @@ void CPredator::predatorIntegration(float dt)
 	//speed_ = avx::clamp(speed_, pBird_.minSpeed, pBird_.maxSpeed);
 	forward = velocity / speed_;
 
+
+	//EndHunt(false);
 	// interesting: This keeps it always aligned with the forward velocity. This has great impact on the turning behavior.
 	forward.store(B_[0]);
 }
+
+
+
+void CPredator::predatorRegenerateLocalSpace(float dt)
+{
+	avx::vec3 forward = B_[0];
+	avx::vec3 up = B_[1];
+	avx::vec3 side = B_[2];
+	avx::vec3 steering = steering_;
+	glm::vec3 steering2 = steering_;
+	steering2.y += pBird_.bodyWeight;
+	avx::vec3 gyro = gyro_.x * forward + gyro_.y * side + gyro_.z * up;
+	steering += gyro;
+
+
+	//float Ll = glm::dot(lift_, H_[2]);
+	glm::vec3 Fl = glm::vec3(0, glm::dot(steering2, B_[1]), glm::dot(steering2, B_[2]));
+	desiredLift_ = glm::length(Fl);
+	glm::vec3 Ll = glm::vec3(0, glm::dot(lift_, B_[1]), glm::dot(lift_, B_[2]));
+	float turn = asin(glm::cross(Ll, Fl).x / (glm::length(Ll) * glm::length(Fl)));
+	//std::cout << "\nturn: " << turn;
+	//std::cout << "\nlift: " << Ll.x << "  " << Ll.y << "  " << Ll.z;
+	float beta = std::max(std::min(wBetaIn_.x * (turn)* dt, 0.0025f), -0.0025f);
+	//std::cout << "\nbeta: " << beta;
+	avx::vec3 bank = beta * side;
+
+	//float phi = std::max(std::min((wBetaIn_.y * avx::dot(steering, up)), 0.0005f / dt), -0.0005f / dt);
+	//std::cout << "\nphi: " << phi;
+	//avx::vec3 pitch = (phi * dt) * up;
+
+	//forward = avx::save_normalize(forward + pitch, forward);
+	up += bank;
+	side = avx::normalize(avx::cross(forward, up));
+	up = avx::cross(side, forward);
+
+	forward.store(B_[0]);
+	up.store(B_[1]);
+	side.store(B_[2]);
+	bank.store(bank_);
+	(forward * speed_).store(velocity_);
+
+	// Head system
+	up = avx::vec3(0, 1, 0);            // tmp. Head-up
+	side = avx::normalize(avx::cross(forward, up));   // Head-side
+	up = avx::cross(side, forward);   // Head-up
+	forward.store(H_[0]);
+	up.store(H_[1]);
+	side.store(H_[2]);
+
+
+	//beat cycle
+	beatCycle_ += dt*(8 + 3 * glm::length(force_));
+}
+
