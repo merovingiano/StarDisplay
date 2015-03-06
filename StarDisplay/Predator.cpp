@@ -327,11 +327,19 @@ void CPredator::update(float dt, const CFlock&)
 
 void CPredator::flightDynamic()
 {
+  glm::vec3 forceInBody = glm::vec3(glm::dot(B_[0], steering_), glm::dot(B_[1], steering_), 0);
+  const float f2 = glm::length(forceInBody);
+  if (f2 > pBird_.maxForce) {
+	  forceInBody /= f2;
+	  forceInBody *= pBird_.maxForce;
+  }
+
+
   const float pi = glm::pi<float>();
   const float CL = pBird_.CL;
   const float CDCL = 1.0f / ((pi * pBird_.wingAspectRatio) / CL);
-  float L = pBird_.bodyWeight * (speed_ * speed_) / (pBird_.cruiseSpeed * pBird_.cruiseSpeed);  // Lift
-
+  float L = pBird_.bodyWeight * (speed_ * speed_) / (pBird_.cruiseSpeed * pBird_.cruiseSpeed) + forceInBody.y;  // Lift
+  
 
 
 
@@ -341,7 +349,8 @@ void CPredator::flightDynamic()
   const float D = CDCL * L;   // Drag
   lift_ = B_[1] * std::min(L, desiredLift);
   //std::cout << "\nlift: " << L << ", desired Lift: " << desiredLift;
-  flightForce_ = lift_ + B_[0] * (CDCL * pBird_.bodyWeight - D); // apply clamped lift, drag and default thrust
+  flightForce_ = lift_ + B_[0] * (CDCL * pBird_.bodyWeight - D + forceInBody.x); // apply clamped lift, drag and default thrust
+  //std::cout << "default thrust: " <<CDCL * pBird_.bodyWeight;
   flightForce_.y -= pBird_.bodyWeight;        // apply gravity
 }
 
@@ -509,8 +518,7 @@ void CPredator::predatorIntegration(float dt)
 	avx::vec3 accel(accel_);
 	avx::vec3 velocity(velocity_);
 
-	glm::vec3 forceInBody = glm::vec3(glm::dot(B_[0], force_), glm::dot(B_[1], force_), 0);
-	avx::vec3 force(forceInBody * glm::inverse(B_));
+
 	//std::cout << "\n yforce: " << force.get_y();
 	avx::vec3 position(position_);
 	avx::vec3 flightForce(flightForce_);
@@ -518,7 +526,7 @@ void CPredator::predatorIntegration(float dt)
 
 	velocity += accel * hdt;                 // v(t + dt/2) = v(t) + a(t) dt/2
 	position += velocity * dt;               // r(t + dt) = r(t) + v(t + dt/2)
-	accel = (force + flightForce) * rBM;     // a(t + dt) = F(t + dt)/m
+	accel = (flightForce) * rBM;     // a(t + dt) = F(t + dt)/m
 	position.store(position_);
 	velocity += accel * hdt;                 // v(t) = v(t + dt/2) + a(t + dt) dt/2
 	accel.store(accel_);

@@ -43,9 +43,8 @@ local CDCL = function (bird)
 end
 
 local maxForce = function (bird)
-	local maxForce = (bird.maxSpeed / bird.cruiseSpeed) * bird.bodyMass * 9.81 * CDCL(bird)
+	local maxForce = (bird.maxSpeed^2 / bird.cruiseSpeed^2) * bird.bodyMass * 9.81 * CDCL(bird) - CDCL(bird)* bird.bodyMass * 9.81 
 	return maxForce
-
 end 
 
 
@@ -83,10 +82,10 @@ function Birds.Starling (p)
   bird.maxLift = 2      -- [N]
   bird.cruiseSpeed = CruiseSpeed(bird)      -- [m/s]
   -- for experiment
-  --bird.cruiseSpeed = 0.001
+  bird.cruiseSpeed = 10
   bird.speedControl = 1 / 0.1			-- one over tau 
-  bird.minSpeed = bird.cruiseSpeed - 5
-  bird.maxSpeed = bird.cruiseSpeed + 5
+  bird.minSpeed = bird.cruiseSpeed + 5
+  bird.maxSpeed = bird.cruiseSpeed - 5
   bird.houjebek = 5
   
   -----------------------------------------------------------------------------
@@ -166,7 +165,7 @@ function Birds.Falcon (p)
   bird.rho = rho
   bird.bodyMass = 0.9         -- [kg]
   bird.wingSpan = 1.0         -- [m]
-  bird.wingAspectRatio = 3.5
+  bird.wingAspectRatio = 7.92
   bird.wingArea = bird.wingSpan * (bird.wingSpan / bird.wingAspectRatio)   -- [m^2]
   bird.CL = CL(bird)
   
@@ -217,7 +216,7 @@ function Birds.Falcon (p)
   predator.PreySelection = PreySelections.Picked -- Auto, Picked, PickedTopo
   
   --predator.PursuitStrategy = { type = pursuits.Custom, hook = pursuits.DirectPursuit(10) }
-  predator.PursuitStrategy = { type = pursuits.Custom, hook = pursuits.ProportionalNavigation(30) }
+  predator.PursuitStrategy = { type = pursuits.Custom, hook = pursuits.ProportionalNavigation(8) }
 
   predator.AttackSpan = 6000                   -- max. attack time span w/o lock [s]
   predator.Dogfight = 20000                  -- max. attack time span after first lock [s]

@@ -236,55 +236,44 @@ void CBird::integration(float dt)
 
 void CBird::regenerateLocalSpace(float dt)
 {
-  avx::vec3 forward = B_[0];
-  avx::vec3 up = B_[1];
-  avx::vec3 side = B_[2];
-  avx::vec3 steering = steering_;
-  glm::vec3 steering2 = steering_;
-  steering2.y += pBird_.bodyWeight;
-  avx::vec3 gyro = gyro_.x * forward + gyro_.y * side + gyro_.z * up;
-  steering += gyro;
-  
-  
-  //float Ll = glm::dot(lift_, H_[2]);
-  glm::vec3 Fl = glm::vec3(0, glm::dot(steering2, B_[1]), glm::dot(steering2, B_[2]));
-  desiredLift_ = glm::length(Fl);
-  glm::vec3 Ll = glm::vec3(0, glm::dot(lift_, B_[1]), glm::dot(lift_, B_[2]));
-  float turn = asin(glm::cross(Ll,Fl).x/ (glm::length(Ll) * glm::length(Fl)));
-  //std::cout << "\nturn: " << turn;
-  //std::cout << "\nlift: " << Ll.x << "  " << Ll.y << "  " << Ll.z;
-  float beta = std::max(std::min(wBetaIn_.x * (turn) * dt, 0.0025f), -0.0025f);
-  //std::cout << "\nbeta: " << beta;
-  avx::vec3 bank = beta * side;
+	avx::vec3 forward = B_[0];
+	avx::vec3 up = B_[1];
+	avx::vec3 side = B_[2];
+	avx::vec3 steering = steering_;
+	avx::vec3 gyro = gyro_.x * forward + gyro_.y * side + gyro_.z * up;
+	steering += gyro;
 
-  //float phi = std::max(std::min((wBetaIn_.y * avx::dot(steering, up)), 0.0005f / dt), -0.0005f / dt);
-  //std::cout << "\nphi: " << phi;
-  //avx::vec3 pitch = (phi * dt) * up;
+	float Fl = glm::dot(steering_, H_[2]);
+	float Ll = glm::dot(lift_, H_[2]);
+	float beta = wBetaIn_.x * (Fl - Ll) * dt;
+	avx::vec3 bank = beta * side;
 
-  //forward = avx::save_normalize(forward + pitch, forward);
-  up += bank;
-  side = avx::normalize( avx::cross(forward, up) );
-  up = avx::cross(side, forward);
+	float phi = (wBetaIn_.y * avx::dot(steering, up));
+	avx::vec3 pitch = (phi * dt) * up;
 
-  forward.store(B_[0]);
-  up.store(B_[1]);
-  side.store(B_[2]);
-  bank.store(bank_);
-  (forward * speed_).store(velocity_);
+	forward = avx::save_normalize(forward + pitch, forward);
+	up += bank;
+	side = avx::normalize(avx::cross(forward, up));
+	up = avx::cross(side, forward);
 
-  // Head system
-  up = avx::vec3(0,1,0);            // tmp. Head-up
-  side = avx::normalize( avx::cross(forward, up) );   // Head-side
-  up = avx::cross(side, forward);   // Head-up
-  forward.store(H_[0]);
-  up.store(H_[1]);
-  side.store(H_[2]);
- 
+	forward.store(B_[0]);
+	up.store(B_[1]);
+	side.store(B_[2]);
+	bank.store(bank_);
+	(forward * speed_).store(velocity_);
 
-  //beat cycle
-   beatCycle_ += dt*(8 + 3*glm::length(force_));
+	// Head system
+	up = avx::vec3(0, 1, 0);            // tmp. Head-up
+	side = avx::normalize(avx::cross(forward, up));   // Head-side
+	up = avx::cross(side, forward);   // Head-up
+	forward.store(H_[0]);
+	up.store(H_[1]);
+	side.store(H_[2]);
+
+
+	//beat cycle
+	beatCycle_ += dt*(8 + 3 * glm::length(force_));
 }
-
 
 void CBird::nextReactionTime()
 {
