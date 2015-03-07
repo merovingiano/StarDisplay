@@ -265,7 +265,7 @@ void CPredator::update(float dt, const CFlock&)
 		if (GetAsyncKeyState(VK_NUMPAD5)) steering_ += 3.0f*B_[0];
 		if (GetAsyncKeyState(VK_NUMPAD0)) steering_ += 10.0f*B_[0];
 	}
-	steering_ += 1.5f*B_[0];
+	steering_ += 10.0f*B_[0];
 	
 	rand_ = float(rand()) / (float(RAND_MAX)*100) +0.8 * rand_;
 	//std::cout << "\n" << rand_;
@@ -328,16 +328,22 @@ void CPredator::update(float dt, const CFlock&)
 
 void CPredator::flightDynamic()
 {
-  float xForce = glm::dot(B_[0], steering_);
-  float maxForce = pBird_.maxForce;
-  xForce = std::min(xForce, maxForce);
-  float yForce = sqrt(maxForce*maxForce - xForce *xForce);
+  //float xForce = glm::dot(B_[0], steering_);
+  //float maxForce = pBird_.maxForce;
+  //xForce = std::min(xForce, maxForce);
+  //float yForce = sqrt(maxForce*maxForce - xForce *xForce);
 
+  glm::vec3 forceInBody = glm::vec3(glm::dot(B_[0], steering_), glm::dot(B_[1], steering_), 0);
+  const float f2 = glm::length(forceInBody);
+  if (f2 > pBird_.maxForce) {
+	  forceInBody /= f2;
+	  forceInBody *= pBird_.maxForce;
+  }
 
   const float pi = glm::pi<float>();
   const float CL = pBird_.CL;
   const float CDCL = 1.0f / ((pi * pBird_.wingAspectRatio) / CL);
-  float L = pBird_.bodyWeight * (speed_ * speed_) / (pBird_.cruiseSpeed * pBird_.cruiseSpeed) + yForce;  // Lift
+  float L = pBird_.bodyWeight * (speed_ * speed_) / (pBird_.cruiseSpeed * pBird_.cruiseSpeed) + forceInBody.y;  // Lift
   
 
 
@@ -346,11 +352,11 @@ void CPredator::flightDynamic()
   const float desiredLift = desiredLift_;
 
   const float D = CDCL * L;   // Drag
-  liftMax_ = lift_;
+  liftMax_ = B_[1] * L;
   lift_ = B_[1] * std::min(L, desiredLift);
   
   //std::cout << "\nlift: " << L << ", desired Lift: " << desiredLift;
-  flightForce_ = lift_ + B_[0] * (CDCL * pBird_.bodyWeight - D + xForce); // apply clamped lift, drag and default thrust
+  flightForce_ = lift_ + B_[0] * (CDCL * pBird_.bodyWeight - D + forceInBody.x); // apply clamped lift, drag and default thrust
   //std::cout << "default thrust: " <<CDCL * pBird_.bodyWeight;
   flightForce_.y -= pBird_.bodyWeight;        // apply gravity
 }
@@ -574,11 +580,16 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 	{
 		desiredLift_ = glm::length(Fl);
 		glm::vec3 Fl2 = glm::vec3(0, glm::dot(steering_, B_[1]), glm::dot(steering_, B_[2]));
-		if (glm::dot(Fl2, Fl2) > 5000000)
+		if (glm::dot(Fl2, Fl2) > 500000000)
 		{
 			
 			glm::vec3 weight = glm::vec3(0, pBird_.bodyWeight, 0);
 			weight = glm::vec3(0, glm::dot(weight, B_[1]), glm::dot(weight, B_[2]));
+
+			glm::vec3 combined = weight + Fl2;
+			//std::cout << "\n combined: " << combined.x << "  " << combined.y << "  " << combined.z;
+			//std::cout << "\n Fl: " << Fl.x << "  " << Fl.y << "  " << Fl.z;
+			//std::cout << "\nlength old steering: " << glm::length(Fl) << "  length of lift: " << glm::length(liftMax_);
 			if (glm::dot(weight, weight) < liftLsq)
 			{
 				float a = glm::dot(Fl2, Fl2);
@@ -602,7 +613,7 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 	float turn = asin(glm::cross(Ll, Fl).x / (glm::length(Ll) * glm::length(Fl)));
 	//std::cout << "\nturn: " << turn;
 	//std::cout << "\nlift: " << Ll.x << "  " << Ll.y << "  " << Ll.z;
-	float beta = std::max(std::min(wBetaIn_.x * (turn)* dt, 0.25f), -0.25f);
+	float beta = std::max(std::min(wBetaIn_.x * (turn)* dt, 0.036f), -0.036f);
 	//std::cout << "\nbeta: " << beta;
 	avx::vec3 bank = beta * side;
 

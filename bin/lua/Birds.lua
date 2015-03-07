@@ -157,7 +157,7 @@ end
 
 function Birds.Falcon (p)
   local bird = Params.Bird()
-  bird.reactionTime = 0.001          -- [s]
+  bird.reactionTime = 0.01          -- [s]
   bird.reactionStochastic = 0.000   -- reactionTime <- (1 + uniform(-reactionStochastic, + reactionStocastic)) * reactionTime
   bird.skipLeftHemisphere = 0       -- spacial hemisphere (not brain hemisphere)
   bird.skipRightHemisphere = 0      -- spacial hemisphere (not brain hemisphere)
@@ -182,7 +182,7 @@ function Birds.Falcon (p)
   -- Steering
   -----------------------------------------------------------------------------
 
-  bird.wBetaIn = glm.vec3( 5, 1, 0 )    -- roll, pitch, yaw  
+  bird.wBetaIn = glm.vec3( 1, 1, 0 )    -- roll, pitch, yaw  
   bird.wBetaOut = glm.vec3( 0, 0, 0 )   -- roll, pitch, yaw
 
   bird.maxRadius = 1000.0     -- [m] 

@@ -17,7 +17,7 @@ Simulation.CustomStatistic = require "RobinStat"
 -- Overwrite default initial parameter if required
 gParam.Roost = {
   numPrey = 1,
-  numPredators = 1,
+  numPredators = 100,
   Radius = 500.0,
   minRadius = 150.0,
   maxRadius = 10000.0,
@@ -165,6 +165,9 @@ end
 
 
 function CustomTimeTickHook ()
+
+	
+
   --if RESET == true or Simulation.SimulationTime() > 60 then 
   --  RESET = false
 	--if run == 100 then 
