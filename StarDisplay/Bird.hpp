@@ -122,6 +122,7 @@ public:
 
 protected:
   HRTREE_ALIGN(16) glm::vec3 lift_;
+  HRTREE_ALIGN(16) glm::vec3 liftMax_;
   HRTREE_ALIGN(16) glm::vec3 flightForce_;
   HRTREE_ALIGN(16) glm::vec3 bank_;
 

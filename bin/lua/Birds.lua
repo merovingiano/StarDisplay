@@ -82,10 +82,10 @@ function Birds.Starling (p)
   bird.maxLift = 2      -- [N]
   bird.cruiseSpeed = CruiseSpeed(bird)      -- [m/s]
   -- for experiment
-  bird.cruiseSpeed = 10
-  bird.speedControl = 1			-- one over tau 
-  bird.minSpeed = bird.cruiseSpeed + 10
-  bird.maxSpeed = bird.cruiseSpeed - 10
+  bird.cruiseSpeed = 0.001
+  bird.speedControl = 1	/0.001		-- one over tau 
+  bird.minSpeed = bird.cruiseSpeed 
+  bird.maxSpeed = bird.cruiseSpeed 
   bird.houjebek = 5
   
   -----------------------------------------------------------------------------

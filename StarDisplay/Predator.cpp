@@ -265,7 +265,7 @@ void CPredator::update(float dt, const CFlock&)
 		if (GetAsyncKeyState(VK_NUMPAD5)) steering_ += 3.0f*B_[0];
 		if (GetAsyncKeyState(VK_NUMPAD0)) steering_ += 10.0f*B_[0];
 	}
-	steering_ += 10.0f*B_[0];
+	steering_ += 1.5f*B_[0];
 	
 	rand_ = float(rand()) / (float(RAND_MAX)*100) +0.8 * rand_;
 	//std::cout << "\n" << rand_;
@@ -328,18 +328,16 @@ void CPredator::update(float dt, const CFlock&)
 
 void CPredator::flightDynamic()
 {
-  glm::vec3 forceInBody = glm::vec3(glm::dot(B_[0], steering_), glm::dot(B_[1], steering_), 0);
-  const float f2 = glm::length(forceInBody);
-  if (f2 > pBird_.maxForce) {
-	  forceInBody /= f2;
-	  forceInBody *= pBird_.maxForce;
-  }
+  float xForce = glm::dot(B_[0], steering_);
+  float maxForce = pBird_.maxForce;
+  xForce = std::min(xForce, maxForce);
+  float yForce = sqrt(maxForce*maxForce - xForce *xForce);
 
 
   const float pi = glm::pi<float>();
   const float CL = pBird_.CL;
   const float CDCL = 1.0f / ((pi * pBird_.wingAspectRatio) / CL);
-  float L = pBird_.bodyWeight * (speed_ * speed_) / (pBird_.cruiseSpeed * pBird_.cruiseSpeed) + forceInBody.y;  // Lift
+  float L = pBird_.bodyWeight * (speed_ * speed_) / (pBird_.cruiseSpeed * pBird_.cruiseSpeed) + yForce;  // Lift
   
 
 
@@ -348,9 +346,11 @@ void CPredator::flightDynamic()
   const float desiredLift = desiredLift_;
 
   const float D = CDCL * L;   // Drag
+  liftMax_ = lift_;
   lift_ = B_[1] * std::min(L, desiredLift);
+  
   //std::cout << "\nlift: " << L << ", desired Lift: " << desiredLift;
-  flightForce_ = lift_ + B_[0] * (CDCL * pBird_.bodyWeight - D + forceInBody.x); // apply clamped lift, drag and default thrust
+  flightForce_ = lift_ + B_[0] * (CDCL * pBird_.bodyWeight - D + xForce); // apply clamped lift, drag and default thrust
   //std::cout << "default thrust: " <<CDCL * pBird_.bodyWeight;
   flightForce_.y -= pBird_.bodyWeight;        // apply gravity
 }
@@ -554,12 +554,50 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 	glm::vec3 steering2 = steering_;
 	steering2.y += pBird_.bodyWeight;
 	avx::vec3 gyro = gyro_.x * forward + gyro_.y * side + gyro_.z * up;
-	steering += gyro;
+	//steering += gyro;
 
 
 	//float Ll = glm::dot(lift_, H_[2]);
 	glm::vec3 Fl = glm::vec3(0, glm::dot(steering2, B_[1]), glm::dot(steering2, B_[2]));
-	desiredLift_ = glm::length(Fl);
+
+
+	//calculate whether there is enough lift for turning towards steering
+	// if so, then decrease lift untill it is equal in length as fSteer
+	// if not, then cut off the part of Fsteer that is not gravity, so it remains the desired angle of turn, but slower
+	float liftLsq = glm::dot(liftMax_, liftMax_);
+	desiredLift_ = 500.0f;
+	if (liftLsq > glm::dot(steering2, steering2))
+	{
+			desiredLift_ = glm::length(Fl);
+	}
+	else
+	{
+		desiredLift_ = glm::length(Fl);
+		glm::vec3 Fl2 = glm::vec3(0, glm::dot(steering_, B_[1]), glm::dot(steering_, B_[2]));
+		if (glm::dot(Fl2, Fl2) > 5000000)
+		{
+			
+			glm::vec3 weight = glm::vec3(0, pBird_.bodyWeight, 0);
+			weight = glm::vec3(0, glm::dot(weight, B_[1]), glm::dot(weight, B_[2]));
+			if (glm::dot(weight, weight) < liftLsq)
+			{
+				float a = glm::dot(Fl2, Fl2);
+				float b = 2 * glm::dot(Fl2, weight);
+				float c = glm::dot(weight, weight) - liftLsq;
+
+				float ans1 = (-b + sqrt(b *b - 4 * a*c)) / (2 * a);
+				float ans2 = (-b - sqrt(b *b - 4 * a*c)) / (2 * a);
+				Fl = Fl2 * std::max(ans1, ans2);
+				Fl += weight;
+				desiredLift_ = glm::length(Fl);
+				//std::cout << "\nlength new steering: " << glm::length(Fl) << "  length of lift: " << glm::length(liftMax_);
+				//std::cout << "\n ans1: " << ans1 << "  ans2: " << ans2;
+			}
+		}
+	}
+
+
+	
 	glm::vec3 Ll = glm::vec3(0, glm::dot(lift_, B_[1]), glm::dot(lift_, B_[2]));
 	float turn = asin(glm::cross(Ll, Fl).x / (glm::length(Ll) * glm::length(Fl)));
 	//std::cout << "\nturn: " << turn;
