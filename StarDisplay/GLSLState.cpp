@@ -38,6 +38,9 @@ namespace {
   const char details_predator[] =
 	  "\\smallface{}\nVelocity: %.1f \nAltitude: %.1f \nSteering Force magnitude: %.1f \nAcceleration: %.1f \nPrey Caught: %d \nminDist: %2f \nLocks: %d \nHunting: %d \n Last MinDist: %2f";
 
+  const char details_prey[] =
+	  "\\smallface{}\nVelocity: %.1f \nAltitude: %.1f \nSteering Force magnitude: %.1f \nAcceleration: %.1f";
+
   const char footer_fmt[] =
     "\\smallface{}Sim. time: %02.0f:%02.0f:%02.0f\nupdate: %.1f ms\nfps: %d";
 
@@ -285,6 +288,17 @@ void GLSLState::PrintInfoText()
 	  _snprintf_s(buf, 255, details_predator, glm::length(focalBird->velocity()), (focalBird->position())[1], glm::length(focalBird->steering()), glm::length(focalBird->accel()), (focalPred->hunts()).success, (focalPred->hunts()).minDist, (focalPred->hunts()).locks, focalPred->is_attacking(), (focalPred->hunts()).lastMinDist);
 	  Fonts->print(buf);
   }
+  else
+  {
+	  Fonts->set_color(glm::vec4(1, 1, 0, 1));
+	  _snprintf_s(buf, 255, details_prey, glm::length(focalBird->velocity()), (focalBird->position())[1], glm::length(focalBird->steering()), glm::length(focalBird->accel()));
+	  Fonts->print(buf);
+
+  }
+  Fonts->set_color(glm::vec4(1, 1, 0, 1));
+  Fonts->set_orig(glm::ivec2(vpc.x *0.5, vpc.y *0.5));
+  Fonts->print("HELLO");
+
   // Annotation
   if (annotationElapsed_ > 0.0) 
   {

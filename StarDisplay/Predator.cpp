@@ -265,6 +265,7 @@ void CPredator::update(float dt, const CFlock&)
 		if (GetAsyncKeyState(VK_NUMPAD5)) steering_ += 3.0f*B_[0];
 		if (GetAsyncKeyState(VK_NUMPAD0)) steering_ += 10.0f*B_[0];
 	}
+	steering_ += 10.0f*B_[0];
 	
 	rand_ = float(rand()) / (float(RAND_MAX)*100) +0.8 * rand_;
 	//std::cout << "\n" << rand_;
@@ -563,7 +564,7 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 	float turn = asin(glm::cross(Ll, Fl).x / (glm::length(Ll) * glm::length(Fl)));
 	//std::cout << "\nturn: " << turn;
 	//std::cout << "\nlift: " << Ll.x << "  " << Ll.y << "  " << Ll.z;
-	float beta = std::max(std::min(wBetaIn_.x * (turn)* dt, 0.0025f), -0.0025f);
+	float beta = std::max(std::min(wBetaIn_.x * (turn)* dt, 0.25f), -0.25f);
 	//std::cout << "\nbeta: " << beta;
 	avx::vec3 bank = beta * side;
 
