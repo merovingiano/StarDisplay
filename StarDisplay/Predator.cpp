@@ -266,6 +266,13 @@ void CPredator::update(float dt, const CFlock&)
 		if (GetAsyncKeyState(VK_NUMPAD4)) steering_ -= 5.0f*B_[2];
 		if (GetAsyncKeyState(VK_NUMPAD5)) steering_ += 3.0f*B_[0];
 		if (GetAsyncKeyState(VK_NUMPAD0)) steering_ += 10.0f*B_[0];
+
+		if (int(generation_) == 4)
+		{
+			positions.push_back(position_);
+			velocities.push_back(velocity_);
+			
+		}
 	}
 	steering_ += 10.0f*B_[0];
 	if (position_.y < 1) steering_ += 5.0f*B_[1];

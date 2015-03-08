@@ -209,6 +209,13 @@ void EvolvePN::Shuffle()
 		first->position_.z /= length*100;
 
 		first->position_.y = first->getStartAltitude();
+
+
+		// when not doing alt:
+		first->position_ = 100.0f*glmutils::vec3_in_sphere(rnd_eng());
+		first->position_.y += 120;
+
+
 		first->setTrail(true);
 		first->BeginHunt(); 
 		//std::cout << "\npred num " << first->id();

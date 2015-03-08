@@ -76,7 +76,9 @@ public:
   void EndHunt(bool success);
   void ResetHunt();
   
- 
+  typedef std::vector<glm::vec3>   Storage;
+  Storage positions;
+  Storage velocities;
 
   void setDefaultColorTex() const;
 

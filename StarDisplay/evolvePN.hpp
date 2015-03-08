@@ -20,7 +20,7 @@ private:
 	double lastShuffle_;
 	int Generation_;
 
-	typedef std::vector<glm::vec4>   allele_type;      // Deflection, minDist
+	typedef std::vector<glm::vec4>   allele_type;     
 	typedef std::vector<allele_type> alleles_vect;
 	alleles_vect alleles_;
 };
