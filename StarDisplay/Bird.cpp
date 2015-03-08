@@ -48,7 +48,7 @@ CBird::CBird(int id, const glm::vec3& position, const glm::vec3& forward)
   wBetaOut_(0),
   reactionTime_(0),
   reactionInterval_(0),
-  searchRadius_(5),
+  searchRadius_(500),
   separation_neighbors_(PARAMS.maxTopologicalRange),
   alignment_neighbors_(PARAMS.maxTopologicalRange),
   cohesion_neighbors_(PARAMS.maxTopologicalRange),

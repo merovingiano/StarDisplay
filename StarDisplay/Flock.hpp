@@ -106,6 +106,8 @@ public:
   //! Required after number of prey changed
   void refresh();
   void update(float sim_dt, bool recluster);
+  float meanN;
+  float meanStartAltitude;
 
   unsigned height() const { return static_cast<unsigned>(rtree_.height()); }
   unsigned num_prey() const { return static_cast<unsigned>(prey_.size()); }

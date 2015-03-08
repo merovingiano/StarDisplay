@@ -26,6 +26,7 @@
 #include "FCorrelationStatistic.hpp"
 #include "PredatorStatistic.hpp"
 #include "EvolveDeflection.hpp"
+#include "EvolvePN.hpp"
 #include "KeyState.hpp"
 #include "libLua.hpp"
 #include "debug.hpp"
@@ -615,9 +616,10 @@ void Simulation::EnterGameLoop()
   double lastFrameDuration = 0.0;
   double lastRender = 0.0;
   double timeDrift = 0.0;
+  bool done = 0;
   bool odd = true;
   int skippedFrame = 0;
-  
+  EvolvePN evolution;
   auto renderFun = [&] {
     if (odd) gl_->Flush(); else gl_->Render();
     odd = !odd;
@@ -680,6 +682,22 @@ void Simulation::EnterGameLoop()
       ++skippedFrame;
     }
     lastFrameDuration = GlobalTimerSinceCopy(nowaitUpdate, frameBegin);
+
+	// specifically for evolution setting:
+	const char* fname = "exp_NnoALT.txt";
+	if (int(SimulationTime_) % 25 == 0 && done ==0)
+	{
+		evolution.apply(5.0);
+		evolution.save(fname, 1);
+		done = 1;
+	}
+	if (int(SimulationTime_) % 25 == 1 && done == 1)
+	{
+		done = 0;
+	}
+	// end evolution setting
+
+
 	}
 }
 

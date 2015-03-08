@@ -40,6 +40,7 @@ public:
     std::vector<unsigned> attackSize;
     std::vector<unsigned> catchSize;
     float lastMinDist;
+
   };
 
 public:
@@ -48,6 +49,7 @@ public:
 
   virtual bool isPrey() const { return false; }
   virtual bool isPredator() const { return true; }
+  
   virtual void NumPreyChanged();
   virtual void NumPredChanged();
 
@@ -61,6 +63,12 @@ public:
   bool is_attacking() const { return attackTime_ > 0.0; }
   const CPrey* GetLockedOn() const { return lockedOn_; }
   const CPrey* GetTargetPrey() const { return targetPrey_; }
+  float get_N() const { return N_; }
+  float getStartAltitude() const { return startAltitude_; }
+  float getGeneration() const { return generation_; }
+  void set_N(float N) {N_ = N; }
+  void setStartAltitude(float start) { startAltitude_ = start; }
+  void setGeneration(float generation) { generation_ = generation; }
   void SetTargetPrey(const CPrey*);
   const glm::vec3& TargetPoint() const { return targetPoint_; }
   const hunt& hunts() const { return hunts_; }
@@ -68,6 +76,7 @@ public:
   void EndHunt(bool success);
   void ResetHunt();
   
+ 
 
   void setDefaultColorTex() const;
 
@@ -92,7 +101,7 @@ private:
   void SelectPickedTopo(struct find_prey_qf&);
 
   void PursuitCustom(const glm::vec3& targetHeading, const glm::vec3& targetVelocity);
-
+  void proportionalNavigation(const glm::vec3& targetHeading, const glm::vec3& targetVelocity);
   Param::Predator  pPred_;
   float            attackTime_;
 
@@ -104,6 +113,10 @@ private:
   glm::vec3        targetPoint_;
   hunt             hunts_;
   int              locks_;        // locks in current attack
+  float            N_;
+  float            startAltitude_;
+  float            generation_;
+
   
   typedef void (CPredator::*handleAttackMPTR)();
   typedef void (CPredator::*selectPreyMPTR)(struct find_prey_qf&);

@@ -349,6 +349,9 @@
     <ClInclude Include="QmStatistic.hpp">
       <Filter>Analysis</Filter>
     </ClInclude>
+    <ClInclude Include="evolvePN.hpp">
+      <Filter>Analysis</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Clock.cpp">
@@ -472,6 +475,9 @@
       <Filter>Environment</Filter>
     </ClCompile>
     <ClCompile Include="QmStatistic.cpp">
+      <Filter>Analysis</Filter>
+    </ClCompile>
+    <ClCompile Include="evolvePN.cpp">
       <Filter>Analysis</Filter>
     </ClCompile>
   </ItemGroup>

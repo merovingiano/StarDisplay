@@ -316,6 +316,7 @@
     <ClInclude Include="bounding_box.hpp" />
     <ClInclude Include="color32.hpp" />
     <ClInclude Include="filesystem.hpp" />
+    <ClInclude Include="evolvePN.hpp" />
     <ClInclude Include="ICamera.hpp" />
     <ClInclude Include="ClusterDetection.hpp" />
     <ClInclude Include="debug.hpp" />
@@ -378,6 +379,7 @@
     <ClCompile Include="ClusterStatistic.cpp" />
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="DefaultStatistic.cpp" />
+    <ClCompile Include="evolvePN.cpp" />
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="GLSLText.cpp" />
     <ClCompile Include="HistOverlay.cpp" />

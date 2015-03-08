@@ -216,12 +216,12 @@ function Birds.Falcon (p)
   predator.PreySelection = PreySelections.Picked -- Auto, Picked, PickedTopo
   
   --predator.PursuitStrategy = { type = pursuits.Custom, hook = pursuits.DirectPursuit(10) }
-  predator.PursuitStrategy = { type = pursuits.Custom, hook = pursuits.ProportionalNavigation(8) }
+  predator.PursuitStrategy = { type = pursuits.Custom, hook = pursuits.ProportionalNavigation(5) }
 
   predator.AttackSpan = 6000                   -- max. attack time span w/o lock [s]
   predator.Dogfight = 20000                  -- max. attack time span after first lock [s]
   predator.HoldLock = true 
-  predator.LockBlindAngle = 360-45            -- [deg] 
+  predator.LockBlindAngle = 360-45          -- [deg] 
   predator.LockDistance = 10.0                -- [m]
   predator.maxLocks = 10000                       -- max locks per attack
   predator.ExposureThreshold = glm.vec2(0.35, 0.20) -- (lock on, lose lock)

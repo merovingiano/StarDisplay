@@ -15,6 +15,7 @@
 #include <stdlib.h> 
 #include <iostream>
 #include "ICamera.hpp"
+#include <glm/gtc/matrix_access.hpp>
 
 
 using namespace Param;
@@ -134,15 +135,16 @@ CPredator::hunt& CPredator::hunt::operator+=(const CPredator::hunt& h)
 
 
 CPredator::CPredator(int ID, const glm::vec3& position, const glm::vec3& forward)
-: CBird(ID, position, forward),
-  attackTime_(0),
-  handleTime_(0),
-  dogFight_(0),
-  lockedOn_(0),
-  closestPrey_(0),
-  targetPrey_(0),
-  targetPoint_(0),
-  locks_(0)
+	: CBird(ID, position, forward),
+	attackTime_(0),
+	handleTime_(0),
+	dogFight_(0),
+	lockedOn_(0),
+	closestPrey_(0),
+	targetPrey_(0),
+	targetPoint_(0),
+	locks_(0),
+	N_(float(rand()) / (float(RAND_MAX) / 100))
 {
 }
 
@@ -266,7 +268,7 @@ void CPredator::update(float dt, const CFlock&)
 		if (GetAsyncKeyState(VK_NUMPAD0)) steering_ += 10.0f*B_[0];
 	}
 	steering_ += 10.0f*B_[0];
-	
+	if (position_.y < 1) steering_ += 5.0f*B_[1];
 	rand_ = float(rand()) / (float(RAND_MAX)*100) +0.8 * rand_;
 	//std::cout << "\n" << rand_;
 	//std::cout << "\n" << float(rand()) / (float(RAND_MAX));
@@ -401,7 +403,8 @@ void CPredator::steerToFlock()
   // Pursuit
   if (cohesion_neighbors_)
   {
-    PursuitCustom(aveHeading, aveVelocity);
+	  proportionalNavigation(aveHeading, aveVelocity);
+    //PursuitCustom(aveHeading, aveVelocity);
     //cohesion_ = H_ * (cohesion_ * H_);
     steering_ += cohesion_;
   }
@@ -516,6 +519,23 @@ void CPredator::PursuitCustom(const glm::vec3& targetHeading, const glm::vec3& t
     auto lock = Lua.LuaLock();
     this->pPred_.pursuit.hook(this, Sim.SimulationTime(), targetPoint_, targetHeading, targetVelocity);
   }
+}
+
+void CPredator::proportionalNavigation(const glm::vec3& targetHeading, const glm::vec3& targetVelocity)
+{
+
+	glm::vec3 r = targetPoint_ - position_;
+	glm::vec3 v = velocity_ - targetHeading*targetVelocity;
+	glm::vec3 wLOS = glm::cross(v, r) / glm::dot(r, r);
+	steering_ += N_ * glm::cross(wLOS, velocity_);
+
+	if (glm::dot(r, r) < 8)
+	{
+		glm::vec3 pHead = glm::vec3(glm::dot(r, glm::column(H_, 0)), glm::dot(r, glm::column(H_, 1)), glm::dot(r, glm::column(H_, 2)));
+		float phi = atan2(pHead.z, pHead.x);
+		bool blind = (abs(phi) - 3.14 < 0.8 && pHead.x < 0);
+		if (blind) EndHunt(false);
+	}
 }
 
 void CPredator::predatorIntegration(float dt)
