@@ -13,7 +13,7 @@
 #include "Params.hpp"
 #include "visitors.hpp"
 #include "Globals.hpp"
-
+#include <string>
 
 using namespace Param;
 
@@ -78,21 +78,21 @@ void EvolvePN::save(const char* fname, bool append) const
 	std::ofstream os(fname, std::ios_base::out | (append ? std::ios_base::app : std::ios_base::trunc));
 	for (size_t i = 0; i<alleles_.size(); ++i)
 	{
-		std::ostream_iterator<glm::vec4> oit(os, "\n");
+		std::string buf(" ");
+		buf.append(std::to_string(i));
+		buf.append(" \n");
+		std::ostream_iterator<glm::vec4> oit(os, buf.c_str());
 		std::copy(alleles_[i].begin(), alleles_[i].end(), oit);
 	}
 	if (Generation_ == 6)
 	{
 		const char* fname2 = "trajectory.txt";
 		CFlock::pred_iterator first(GFLOCKNC.predator_begin());
-		std::cout << "\n num vel: " << first->velocities.size();
+		std::cout << "\n num vel: " << first->positionsAndSpeed.size();
 		std::ofstream os2(fname2, std::ios_base::out | (append ? std::ios_base::app : std::ios_base::trunc));
-		for (size_t i = 0; i < first->velocities.size(); ++i)
-		{
-			std::ostream_iterator<glm::vec3> oit2(os2, "\n");
-			std::copy(first->velocities.begin(), first->velocities.end(), oit2);
-			std::copy(first->positions.begin(), first->positions.end(), oit2);
-		}
+			std::ostream_iterator<glm::vec4> oit2(os2, "\n");
+			std::copy(first->positionsAndSpeed.begin(), first->positionsAndSpeed.end(), oit2);
+		os << '\n';
 	}
 }
 
@@ -146,12 +146,13 @@ void EvolvePN::Shuffle()
 	//looping over the predators and placing all 
 	float meanN = 0;
 	float meanStartAltitude = 0;
+	float meanXDist = 0;
 	std::for_each(GFLOCK.predator_begin(), GFLOCK.predator_end(), [&allele](const CPredator& pred)
 	{
 		const glm::vec3& defl = pred.getDeflection();
 		float N = pred.get_N();
 		
-		allele.push_back(glm::vec4(N, pred.getStartAltitude(), pred.getGeneration(), pred.hunts().minDist));
+		allele.push_back(glm::vec4(N, pred.getStartAltitude(), pred.getStartXDist(), pred.hunts().minDist));
 	});
 	//resort on having the minimum distance
 	std::sort(allele.begin(), allele.end(), cmp_min_dist());
@@ -167,7 +168,8 @@ void EvolvePN::Shuffle()
 	for (unsigned i = (N >> 1); i < N; ++i)
 	{
 		allele[i].x += (1.0f / Generation_) * rnd(rnd_eng());
-		allele[i].y += (1.0f / Generation_) * rnd(rnd_eng());
+		allele[i].y += (1.0f / Generation_) * rnd(rnd_eng())*10;
+		allele[i].z += (1.0f / Generation_) * rnd(rnd_eng())*10;
 	}
 	CFlock::pred_iterator first(GFLOCKNC.predator_begin());
 	CFlock::pred_iterator last(GFLOCKNC.predator_end());
@@ -178,6 +180,7 @@ void EvolvePN::Shuffle()
 		first->setDeflection(*(const glm::vec3*)&allele[i]);
 		first->set_N(allele[i][0]);
 		first->setStartAltitude(allele[i][1]);
+		first->setStartXDist(allele[i][2]);
 		first->setGeneration(Generation_);
 		
 	}
@@ -197,6 +200,7 @@ void EvolvePN::Shuffle()
 		first->setDeflection(*(const glm::vec3*)&top1);
 		first->set_N(top1[0]);
 		first->setStartAltitude(top1[1]);
+		first->setStartXDist(top1[2]);
 	}
 	const float R = PROOST.Radius;
 
@@ -207,34 +211,45 @@ void EvolvePN::Shuffle()
 		if (Generation_ == 1)
 		{
 			first->set_N(float(rand()) / (float(RAND_MAX) / 100.0f));
-			first->setStartAltitude(float(rand()) / (float(RAND_MAX) / (100.0f * 4.0f)));
+			first->setStartAltitude(float(rand()) / (float(RAND_MAX) / (100.0f * 6.0f)));
+			first->setStartXDist(float(rand()) / (float(RAND_MAX) / (100.0f * 6.0f)));
 			first->setGeneration(Generation_);
+
+			//temporary code to get the positions:
+			//first->set_N(1.8);
+			//first->setStartAltitude(317.0f);
 		}
 
 		first->ResetHunt();
 		
 		first->setTrail(false);
 		first->position_.x = rand();
-		first->position_.z = rand();
+		first->position_.z = 0;
 		float length = glm::length(glm::vec2(first->position_.x, first->position_.z));
-		first->position_.x /= length*100;
-		first->position_.z /= length*100;
+		first->position_.x /= length/100.0f;
+		first->position_.z /= length/100.0f;
 
 		first->position_.y = first->getStartAltitude();
+		first->position_.x = first->getStartXDist();
 
+		first->B_[0] = glmutils::vec3_in_sphere(rnd_eng());
+		first->B_[0] /= glm::length(first->B_[0]);
+		first->velocity_ = 20.0f * first->B_[0];
 
 		// when not doing alt:
-		first->position_ = 100.0f*glmutils::vec3_in_sphere(rnd_eng());
-		first->position_.y += 120;
+		//first->position_ = 100.0f*glmutils::vec3_in_sphere(rnd_eng());
+		//first->position_.y += 120;
 
 
 		first->setTrail(true);
 		first->BeginHunt(); 
 		//std::cout << "\npred num " << first->id();
-		std::cout << "\nN :  " << first->get_N() << " startAltitude :  " << first->getStartAltitude() << " Generation: " << first->getGeneration();
+		std::cout << "\nN :  " << first->get_N() << " startAltitude :  " << first->getStartAltitude() << " startXDist :  " << first->getStartXDist() << " Generation: " << first->getGeneration();
 		meanN += first->get_N() * 1 / N;
 		meanStartAltitude += first->getStartAltitude() * 1 / N;
+		meanXDist += first->getStartXDist() * 1 / N;
 	};
 	GFLOCKNC.meanN = meanN;
 	GFLOCKNC.meanStartAltitude = meanStartAltitude;
+	GFLOCKNC.meanXDist = meanXDist;
 }

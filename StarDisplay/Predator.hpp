@@ -65,9 +65,11 @@ public:
   const CPrey* GetTargetPrey() const { return targetPrey_; }
   float get_N() const { return N_; }
   float getStartAltitude() const { return startAltitude_; }
+  float getStartXDist() const { return XDist_; }
   float getGeneration() const { return generation_; }
   void set_N(float N) {N_ = N; }
   void setStartAltitude(float start) { startAltitude_ = start; }
+  void setStartXDist(float XDist) { XDist_ = XDist; }
   void setGeneration(float generation) { generation_ = generation; }
   void SetTargetPrey(const CPrey*);
   const glm::vec3& TargetPoint() const { return targetPoint_; }
@@ -76,9 +78,8 @@ public:
   void EndHunt(bool success);
   void ResetHunt();
   
-  typedef std::vector<glm::vec3>   Storage;
-  Storage positions;
-  Storage velocities;
+  typedef std::vector<glm::vec4>   Storage;
+  Storage positionsAndSpeed;
 
   void setDefaultColorTex() const;
 
@@ -117,6 +118,7 @@ private:
   int              locks_;        // locks in current attack
   float            N_;
   float            startAltitude_;
+  float            XDist_;
   float            generation_;
 
   

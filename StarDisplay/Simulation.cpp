@@ -684,14 +684,14 @@ void Simulation::EnterGameLoop()
     lastFrameDuration = GlobalTimerSinceCopy(nowaitUpdate, frameBegin);
 
 	// specifically for evolution setting:
-	const char* fname = "exp_NnoALT.txt";
-	if (int(SimulationTime_) % 3 == 0 && done ==0)
+	const char* fname = "exp_PNandALTandX.txt";
+	if (int(SimulationTime_) % 25 == 0 && done ==0)
 	{
 		evolution.apply(5.0);
-		evolution.save(fname, 1);
+		evolution.save(fname, 0);
 		done = 1;
 	}
-	if (int(SimulationTime_) % 3 == 1 && done == 1)
+	if (int(SimulationTime_) % 25 == 1 && done == 1)
 	{
 		done = 0;
 	}

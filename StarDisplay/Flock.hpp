@@ -108,6 +108,7 @@ public:
   void update(float sim_dt, bool recluster);
   float meanN;
   float meanStartAltitude;
+  float meanXDist;
 
   unsigned height() const { return static_cast<unsigned>(rtree_.height()); }
   unsigned num_prey() const { return static_cast<unsigned>(prey_.size()); }

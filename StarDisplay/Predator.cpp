@@ -271,8 +271,8 @@ void CPredator::update(float dt, const CFlock&)
 	}
 	if (int(generation_) == 4 && GFLOCKNC.predator_begin()->id() == id_)
 	{
-			positions.push_back(position_);
-			velocities.push_back(velocity_);
+			positionsAndSpeed.push_back(glm::vec4(position_, glm::length(velocity_)));
+		
 			
 	}
 
