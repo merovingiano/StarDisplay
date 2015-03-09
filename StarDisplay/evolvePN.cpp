@@ -80,7 +80,19 @@ void EvolvePN::save(const char* fname, bool append) const
 	{
 		std::ostream_iterator<glm::vec4> oit(os, "\n");
 		std::copy(alleles_[i].begin(), alleles_[i].end(), oit);
-		os << '\n';
+	}
+	if (Generation_ == 6)
+	{
+		const char* fname2 = "trajectory.txt";
+		CFlock::pred_iterator first(GFLOCKNC.predator_begin());
+		std::cout << "\n num vel: " << first->velocities.size();
+		std::ofstream os2(fname2, std::ios_base::out | (append ? std::ios_base::app : std::ios_base::trunc));
+		for (size_t i = 0; i < first->velocities.size(); ++i)
+		{
+			std::ostream_iterator<glm::vec3> oit2(os2, "\n");
+			std::copy(first->velocities.begin(), first->velocities.end(), oit2);
+			std::copy(first->positions.begin(), first->positions.end(), oit2);
+		}
 	}
 }
 
