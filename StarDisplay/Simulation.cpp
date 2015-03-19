@@ -685,13 +685,13 @@ void Simulation::EnterGameLoop()
 
 	// specifically for evolution setting:
 	const char* fname = "exp_PNandALTandXNOTHRUST.txt";
-	if (int(SimulationTime_) % 25 == 0 && !done)
+	if (int(SimulationTime_) % 30 == 0 && !done)
 	{
 		evolution.apply(5.0);
 		evolution.save(fname, 0);
 		done = true;
 	}
-	if (int(SimulationTime_) % 25 == 1 && done)
+	if (int(SimulationTime_) % 30 == 1 && done)
 	{
 		done = false;
 	}

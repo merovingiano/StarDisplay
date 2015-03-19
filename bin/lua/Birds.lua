@@ -82,8 +82,8 @@ function Birds.Starling (p)
   bird.maxLift = 2      -- [N]
   bird.cruiseSpeed = CruiseSpeed(bird)      -- [m/s]
   -- for experiment
-  bird.cruiseSpeed = 0.001
-  bird.speedControl = 0.1		-- one over tau 
+  bird.cruiseSpeed = 10
+  bird.speedControl = 1/0.1		-- one over tau 
   bird.minSpeed = bird.cruiseSpeed 
   bird.maxSpeed = bird.cruiseSpeed
   bird.houjebek = 5
@@ -127,7 +127,7 @@ function Birds.Starling (p)
   prey.DetectionHemisphereFOV = 270        -- [deg]
 
   --prey.EvasionStrategy = { type = EvasionStrategies.Custom, hook = Wave(DropEx(5,10)) }
-  prey.EvasionStrategy = { type = EvasionStrategies.Drop, weight = 5.0, edges = glm.vec4(0, 2, 2, 2) }
+  --prey.EvasionStrategy = { type = EvasionStrategies.Drop, weight = 5.0, edges = glm.vec4(0, 2, 2, 2) }
 
   prey.IncurNeighborPanic = 2        -- absorb panic reaction from nth nearest neighbor
   prey.IncurLatency = 0.05           -- absortion is possible after IncurLatency seconds
@@ -176,6 +176,7 @@ function Birds.Falcon (p)
   bird.minSpeed = 5
   bird.maxSpeed = 40
   bird.maxForce = maxForce(bird)          -- max steering force [N]
+  bird.maxForce = 0
  
   print ("\nmaxForce:" .. maxForce(bird)  .."\n")
   -----------------------------------------------------------------------------

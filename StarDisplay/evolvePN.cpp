@@ -71,9 +71,9 @@ void EvolvePN::save(const char* fname, bool append) const
 		std::ostream_iterator<glm::vec4> oit(os, buf.c_str());
 		std::copy(alleles_[i].begin(), alleles_[i].end(), oit);
 	}
-	if (Generation_ == 6)
+	if (Generation_ == 31)
 	{
-		const char* fname2 = "trajectory.txt";
+		const char* fname2 = "trajectoryNOTHRUST.txt";
 		CFlock::pred_iterator first(GFLOCKNC.predator_begin());
 		std::cout << "\n num vel: " << first->positionsAndSpeed.size();
 		std::ofstream os2(fname2, std::ios_base::out | (append ? std::ios_base::app : std::ios_base::trunc));
@@ -199,7 +199,7 @@ void EvolvePN::Shuffle()
 			first->setGeneration(Generation_);
 
 			//temporary code to get the positions:
-			first->set_N(3.4f);
+			//first->set_N(3.4f);
 			//first->setStartAltitude(577.0f);
 			//first->setStartXDist(150.0f);
 		}

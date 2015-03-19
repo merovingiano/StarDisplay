@@ -269,7 +269,7 @@ void CPredator::update(float dt, const CFlock&)
 
 
 	}
-	if (int(generation_) == 4 && GFLOCKNC.predator_begin()->id() == id_)
+	if (int(generation_) == 30 && GFLOCKNC.predator_begin()->id() == id_)
 	{
 			positionsAndSpeed.push_back(glm::vec4(position_, glm::length(velocity_)));
 		
@@ -355,7 +355,7 @@ void CPredator::flightDynamic()
   const float pi = glm::pi<float>();
   const float CL = pBird_.CL;
   const float CDCL = 1.0f / ((pi * pBird_.wingAspectRatio) / CL);
-  float L = pBird_.bodyWeight * (speed_ * speed_) / (pBird_.cruiseSpeed * pBird_.cruiseSpeed) + forceInBody.y;  // Lift
+  float L = pBird_.bodyWeight * (speed_ * speed_) / (pBird_.cruiseSpeed * pBird_.cruiseSpeed) + forceInBody.y*0;  // Lift
   
 
 
@@ -368,7 +368,7 @@ void CPredator::flightDynamic()
   lift_ = B_[1] * std::min(L, desiredLift);
   
   //std::cout << "\nlift: " << L << ", desired Lift: " << desiredLift;
-  flightForce_ = lift_ + B_[0] * (CDCL * pBird_.bodyWeight - D + forceInBody.x); // apply clamped lift, drag and default thrust
+  flightForce_ = lift_ + B_[0] * (CDCL * pBird_.bodyWeight*0 - D + forceInBody.x*0); // apply clamped lift, drag and default thrust
   //std::cout << "default thrust: " <<CDCL * pBird_.bodyWeight;
   flightForce_.y -= pBird_.bodyWeight;        // apply gravity
 }
@@ -673,5 +673,6 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 
 	//beat cycle
 	beatCycle_ += dt*(8 + 3 * glm::length(force_));
+	if (Sim.SimulationTime() < 0.1) beatCycle_ += rand_;
 }
 
