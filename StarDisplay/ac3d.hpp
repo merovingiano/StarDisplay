@@ -29,7 +29,7 @@ struct ac3d_material
   float trans;
 };
 
-
+//! 
 struct ac3d_model
 {
   std::vector<T2F_N3F_V3F> vertices; 

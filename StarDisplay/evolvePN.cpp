@@ -55,21 +55,8 @@ void EvolvePN::apply(double stat_dt)
 	if (alleles_.empty())
 	{
 		alleles_.emplace_back();
-	}
-	allele_type& allele = alleles_.back();
-	allele.clear();
-	std::for_each(GFLOCK.predator_begin(), GFLOCK.predator_end(), [&allele](const CPredator& pred)
-	{
-		const glm::vec3& defl = pred.getDeflection();
-		pred.setCurrentColorTex(visit<FeatureMap::Default>(pred));
-		allele.push_back(glm::vec4(defl.x, defl.y, defl.z, pred.hunts().minDistLockedOn));
-	});
-	std::sort(allele.begin(), allele.end(), cmp_min_dist());
-
-		lastShuffle_ = Sim.SimulationTime();
+	}	
 		Shuffle();
-
-	
 }
 
 
@@ -149,9 +136,7 @@ void EvolvePN::Shuffle()
 	float meanXDist = 0;
 	std::for_each(GFLOCK.predator_begin(), GFLOCK.predator_end(), [&allele](const CPredator& pred)
 	{
-		const glm::vec3& defl = pred.getDeflection();
-		float N = pred.get_N();
-		
+		float N = pred.get_N();	
 		allele.push_back(glm::vec4(N, pred.getStartAltitude(), pred.getStartXDist(), pred.hunts().minDist));
 	});
 	//resort on having the minimum distance
@@ -168,7 +153,7 @@ void EvolvePN::Shuffle()
 	for (unsigned i = (N >> 1); i < N; ++i)
 	{
 		allele[i].x += (1.0f / Generation_) * rnd(rnd_eng());
-		allele[i].y += (1.0f / Generation_) * rnd(rnd_eng())*10;
+		allele[i].y += (1.0f / Generation_) * rnd(rnd_eng())*10; // more variation in x and y
 		allele[i].z += (1.0f / Generation_) * rnd(rnd_eng())*10;
 	}
 	CFlock::pred_iterator first(GFLOCKNC.predator_begin());
@@ -177,7 +162,6 @@ void EvolvePN::Shuffle()
 	//change all of the settings of the predators after mutation
 	for (unsigned i = 0; first != last; ++first, ++i)
 	{
-		first->setDeflection(*(const glm::vec3*)&allele[i]);
 		first->set_N(allele[i][0]);
 		first->setStartAltitude(allele[i][1]);
 		first->setStartXDist(allele[i][2]);
@@ -197,7 +181,6 @@ void EvolvePN::Shuffle()
 	//set the the last n to the average of the top 1%, This is possibly wrong, you want the sorted vector to be adapted
 	for (; first != last; ++first)
 	{
-		first->setDeflection(*(const glm::vec3*)&top1);
 		first->set_N(top1[0]);
 		first->setStartAltitude(top1[1]);
 		first->setStartXDist(top1[2]);
@@ -216,8 +199,9 @@ void EvolvePN::Shuffle()
 			first->setGeneration(Generation_);
 
 			//temporary code to get the positions:
-			//first->set_N(1.8);
-			//first->setStartAltitude(317.0f);
+			first->set_N(3.4f);
+			//first->setStartAltitude(577.0f);
+			//first->setStartXDist(150.0f);
 		}
 
 		first->ResetHunt();

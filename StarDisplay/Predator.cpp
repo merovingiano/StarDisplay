@@ -535,9 +535,9 @@ void CPredator::proportionalNavigation(const glm::vec3& targetHeading, const glm
 {
 
 	glm::vec3 r = targetPoint_ - position_;
-	glm::vec3 v = velocity_ - targetHeading*targetVelocity;
+	glm::vec3 v = velocity_ - targetVelocity;
 	glm::vec3 wLOS = glm::cross(v, r) / glm::dot(r, r);
-	steering_ += N_ * glm::cross(wLOS, velocity_);
+	steering_ += N_ * glm::cross(wLOS, velocity_)*pBird_.bodyMass;
 
 	if (glm::dot(r, r) < 8)
 	{
@@ -610,7 +610,7 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 	{
 		desiredLift_ = glm::length(Fl);
 		glm::vec3 Fl2 = glm::vec3(0, glm::dot(steering_, B_[1]), glm::dot(steering_, B_[2]));
-		if (glm::dot(Fl2, Fl2) > 500000000)
+		if (glm::dot(Fl2, Fl2) > 0)
 		{
 			
 			glm::vec3 weight = glm::vec3(0, pBird_.bodyWeight, 0);

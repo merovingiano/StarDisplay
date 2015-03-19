@@ -71,15 +71,15 @@ Simulation.ModelSet = {
   --{ name = "eagle3", LOD = { {acFile = "eagle3.ac", pxCoverage = 0} }, Scale = 0.7, texMix = 0.0 }, 
   --{ name = "Dove", LOD = { {acFile = "dove.ac", pxCoverage = 0} }, Scale = 1.5, texMix = 0.9 }, 
   --{ name = "Eagle", LOD = { {acFile = "eagle.ac", pxCoverage = 0} }, Scale = 1.5, texMix = 0.9 }, 
- 
-   -- { name = "Blancer", LOD = { {acFile = "blancer.ac", pxCoverage = 0} }, Scale = 0.165, texMix = 0.9 }, 
-  --{ name = "Rabbit", LOD = { {acFile = "rabbit.ac", pxCoverage = 0} }, Scale = 1.5, texMix = 0.9 }, 
-  { name = "Humbird", 
+   { name = "Humbird", 
     LOD = { 
       {acFile = "humbirdLOD1.ac", pxCoverage = 100},
       {acFile = "humbirdLOD2.ac", pxCoverage = 50},
       {acFile = "humbirdLOD3.ac", pxCoverage = 0},
     },
+    { name = "Blancer", LOD = { {acFile = "blancer.ac", pxCoverage = 0} }, Scale = 0.165, texMix = 0.9 }, 
+  { name = "Rabbit", LOD = { {acFile = "rabbit.ac", pxCoverage = 0} }, Scale = 1.5, texMix = 0.9 }, 
+
     Scale = 1.0, texMix = 0.9 
   },  
   { name = "Condor", LOD = { {acFile = "condor.ac", pxCoverage = 0} }, Scale = 1.5, texMix = 0.9 },

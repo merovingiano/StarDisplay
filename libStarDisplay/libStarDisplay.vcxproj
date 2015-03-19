@@ -148,7 +148,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>LUABIND_DYNAMIC_LINK;LUA_BUILD_AS_DLL;LUA_DLL;LUA_LIB_BUILD;WIN32;NDEBUG;_WINDOWS;_USRDLL;libStarDisplay_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4351;4251;4217;</DisableSpecificWarnings>
-      <AdditionalIncludeDirectories>$(SolutionDir)StarDisplay;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Flight Group\Desktop\Robin Mills\Cpp\boost_1_55_0;C:\Users\Flight Group\Desktop\Robin Mills\Cpp\common\libs\glm;C:\Users\Flight Group\Desktop\Robin Mills\Cpp\common\libs;$(SolutionDir)libStarDisplay;$(SolutionDir)libStarDisplay\luabind;$(SolutionDir)StarDisplay;$(SolutionDir)bin\$(Platform)\$(Configuration)\</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
     <Link>
@@ -156,6 +156,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>C:\Users\Flight Group\Desktop\Robin Mills\Cpp\boost_1_55_0\libs;C:\Users\Flight Group\Desktop\Robin Mills\Cpp\common\lib\v120\64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -168,7 +169,7 @@
       <PreprocessorDefinitions>LUABIND_DYNAMIC_LINK;LUA_BUILD_AS_DLL;WIN32;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CompileAs>Default</CompileAs>
       <DisableSpecificWarnings>4351;4251;4217;</DisableSpecificWarnings>
-      <AdditionalIncludeDirectories>$(SolutionDir)StarDisplay;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Flight Group\Desktop\Robin Mills\Cpp\boost_1_55_0;C:\Users\Flight Group\Desktop\Robin Mills\Cpp\common\libs\glm;C:\Users\Flight Group\Desktop\Robin Mills\Cpp\common\libs;$(SolutionDir)libStarDisplay;$(SolutionDir)libStarDisplay\luabind;$(SolutionDir)StarDisplay;$(SolutionDir)bin\$(Platform)\$(Configuration)\</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <OpenMPSupport>false</OpenMPSupport>
@@ -182,6 +183,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <ShowProgress>NotSet</ShowProgress>
       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\Flight Group\Desktop\Robin Mills\Cpp\boost_1_55_0\libs;C:\Users\Flight Group\Desktop\Robin Mills\Cpp\common\lib\v120\64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

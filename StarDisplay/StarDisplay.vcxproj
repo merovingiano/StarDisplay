@@ -186,7 +186,7 @@
       <DebugInformationFormat>
       </DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)libStarDisplay;$(SolutionDir)libStarDisplay\luabind;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Flight Group\Desktop\Robin Mills\Cpp\boost_1_55_0;C:\Users\Flight Group\Desktop\Robin Mills\Cpp\common\libs\glm;C:\Users\Flight Group\Desktop\Robin Mills\Cpp\common\libs;$(SolutionDir)libStarDisplay;$(SolutionDir)libStarDisplay\luabind;$(SolutionDir)StarDisplay;$(SolutionDir)bin\$(Platform)\$(Configuration)\</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
@@ -201,6 +201,7 @@
       </IgnoreSpecificDefaultLibraries>
       <Profile>true</Profile>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <AdditionalLibraryDirectories>C:\Users\Flight Group\Desktop\Robin Mills\Cpp\boost_1_55_0\libs;C:\Users\Flight Group\Desktop\Robin Mills\Cpp\common\lib\v120\64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <CustomBuildStep>
       <Command>call $(SolutionDir)copyDlls.bat $(LuaLibs)DLL\ $(OutDir) $(Configuration)</Command>
@@ -236,7 +237,7 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <DisableSpecificWarnings>4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <AdditionalIncludeDirectories>$(SolutionDir)libStarDisplay;$(SolutionDir)libStarDisplay\luabind;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Flight Group\Desktop\Robin Mills\Cpp\boost_1_55_0;C:\Users\Flight Group\Desktop\Robin Mills\Cpp\common\libs\glm;C:\Users\Flight Group\Desktop\Robin Mills\Cpp\common\libs;$(SolutionDir)libStarDisplay;$(SolutionDir)libStarDisplay\luabind;$(SolutionDir)StarDisplay;$(SolutionDir)bin\$(Platform)\$(Configuration)\</AdditionalIncludeDirectories>
       <AdditionalOptions>/Qvec-report:1 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -250,6 +251,7 @@
       <AdditionalDependencies>libStarDisplay.lib;%(AdditionalDependencies); Winmm.lib;</AdditionalDependencies>
       <Profile>false</Profile>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <AdditionalLibraryDirectories>C:\Users\Flight Group\Desktop\Robin Mills\Cpp\boost_1_55_0\libs;C:\Users\Flight Group\Desktop\Robin Mills\Cpp\common\lib\v120\64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <CustomBuildStep>
       <Command>
