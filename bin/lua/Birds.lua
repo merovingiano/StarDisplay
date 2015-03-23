@@ -79,13 +79,13 @@ function Birds.Starling (p)
   bird.CL = CL(bird)
 
   bird.maxForce = 2  -- max steering force [N] 
-  bird.maxLift = 2      -- [N]
+  bird.maxLift = 3      -- [N]
   bird.cruiseSpeed = CruiseSpeed(bird)      -- [m/s]
   -- for experiment
-  bird.cruiseSpeed = 10
-  bird.speedControl = 1/0.1		-- one over tau 
-  bird.minSpeed = bird.cruiseSpeed 
-  bird.maxSpeed = bird.cruiseSpeed
+  bird.cruiseSpeed = 50
+  bird.speedControl = 0.1		-- one over tau 
+  bird.minSpeed = bird.cruiseSpeed + 10
+  bird.maxSpeed = bird.cruiseSpeed - 5
   bird.houjebek = 5
   
   -----------------------------------------------------------------------------
@@ -109,9 +109,9 @@ function Birds.Starling (p)
   bird.separationWeight = 1 * glm.vec3(1, 1, 1)   -- forward, up, side
   bird.alignmentWeight = 1 * glm.vec2( 1, 1 )     -- usual, banking
   bird.cohesionWeight = 1 * glm.vec3( 1, 1, 1 )   -- forward, up, side
-  bird.randomWeight = 0.01                        
+  bird.randomWeight = 10                        
     
-  bird.boundaryWeight = glm.vec3(0.01, 0.05 , 0.01)  -- horizontal-x, vertical-y (indiv.), horizontal-z
+  bird.boundaryWeight = glm.vec3(0.01, 0.5 , 0.01)  -- horizontal-x, vertical-y (indiv.), horizontal-z
   bird.boundaryReflectAngle = 180                           -- [deg]
   bird.innerBoundary = 0   -- inner radius = (1 - innerBoundary) * Roost.Radius
   bird.altitude = 120         -- preferred altitude [m]  @Rolf only used at initialisation
@@ -176,7 +176,7 @@ function Birds.Falcon (p)
   bird.minSpeed = 5
   bird.maxSpeed = 40
   bird.maxForce = maxForce(bird)          -- max steering force [N]
-  bird.maxForce = 0
+
  
   print ("\nmaxForce:" .. maxForce(bird)  .."\n")
   -----------------------------------------------------------------------------

@@ -144,7 +144,7 @@ CPredator::CPredator(int ID, const glm::vec3& position, const glm::vec3& forward
 	targetPrey_(0),
 	targetPoint_(0),
 	locks_(0),
-	N_(float(rand()) / (float(RAND_MAX) / 100))
+	N_(0)
 {
 }
 
@@ -345,7 +345,7 @@ void CPredator::flightDynamic()
   //xForce = std::min(xForce, maxForce);
   //float yForce = sqrt(maxForce*maxForce - xForce *xForce);
 
-  glm::vec3 forceInBody = glm::vec3(glm::dot(B_[0], steering_), glm::dot(B_[1], steering_), 0);
+  glm::vec3 forceInBody = glm::vec3(glm::dot(B_[0], steering_), 0, 0);
   const float f2 = glm::length(forceInBody);
   if (f2 > pBird_.maxForce) {
 	  forceInBody /= f2;
@@ -368,7 +368,7 @@ void CPredator::flightDynamic()
   lift_ = B_[1] * std::min(L, desiredLift);
   
   //std::cout << "\nlift: " << L << ", desired Lift: " << desiredLift;
-  flightForce_ = lift_ + B_[0] * (CDCL * pBird_.bodyWeight*0 - D + forceInBody.x*0); // apply clamped lift, drag and default thrust
+  flightForce_ = lift_ + B_[0] * (CDCL * pBird_.bodyWeight - D + forceInBody.x); // apply clamped lift, drag and default thrust
   //std::cout << "default thrust: " <<CDCL * pBird_.bodyWeight;
   flightForce_.y -= pBird_.bodyWeight;        // apply gravity
 }

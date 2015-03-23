@@ -73,7 +73,7 @@ void EvolvePN::save(const char* fname, bool append) const
 	}
 	if (Generation_ == 31)
 	{
-		const char* fname2 = "trajectoryNOTHRUST.txt";
+		const char* fname2 = "trajectoryFORWARDTHRUSTMANPREY.txt";
 		CFlock::pred_iterator first(GFLOCKNC.predator_begin());
 		std::cout << "\n num vel: " << first->positionsAndSpeed.size();
 		std::ofstream os2(fname2, std::ios_base::out | (append ? std::ios_base::app : std::ios_base::trunc));
@@ -153,6 +153,7 @@ void EvolvePN::Shuffle()
 	for (unsigned i = (N >> 1); i < N; ++i)
 	{
 		allele[i].x += (1.0f / Generation_) * rnd(rnd_eng());
+		
 		allele[i].y += (1.0f / Generation_) * rnd(rnd_eng())*10; // more variation in x and y
 		allele[i].z += (1.0f / Generation_) * rnd(rnd_eng())*10;
 	}
@@ -193,15 +194,15 @@ void EvolvePN::Shuffle()
 	{
 		if (Generation_ == 1)
 		{
-			first->set_N(float(rand()) / (float(RAND_MAX) / 100.0f));
+			first->set_N((float(rand()) / (float(RAND_MAX) / 200.0f) ) - 100.0f);
 			first->setStartAltitude(float(rand()) / (float(RAND_MAX) / (100.0f * 6.0f)));
 			first->setStartXDist(float(rand()) / (float(RAND_MAX) / (100.0f * 6.0f)));
 			first->setGeneration(Generation_);
 
 			//temporary code to get the positions:
-			//first->set_N(3.4f);
-			//first->setStartAltitude(577.0f);
-			//first->setStartXDist(150.0f);
+			first->set_N(3.4f);
+			first->setStartAltitude(577.0f);
+			first->setStartXDist(150.0f);
 		}
 
 		first->ResetHunt();
@@ -229,6 +230,7 @@ void EvolvePN::Shuffle()
 		first->BeginHunt(); 
 		//std::cout << "\npred num " << first->id();
 		std::cout << "\nN :  " << first->get_N() << " startAltitude :  " << first->getStartAltitude() << " startXDist :  " << first->getStartXDist() << " Generation: " << first->getGeneration();
+		//std::cout << "\n" << rnd(rnd_eng());
 		meanN += first->get_N() * 1 / N;
 		meanStartAltitude += first->getStartAltitude() * 1 / N;
 		meanXDist += first->getStartXDist() * 1 / N;
