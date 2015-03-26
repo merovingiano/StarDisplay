@@ -7,6 +7,7 @@
 #include <luabind/luabind.hpp>
 #include "glmfwd.hpp"
 #include "Params.hpp"
+#include "evolvePN.hpp"
 
 
 class Simulation
@@ -16,7 +17,8 @@ public:
   ~Simulation();
 
   //Robin
- 
+  EvolvePN evolution;
+  bool done_;
   //
   void SetInitialParameter(const Param::Params&);
   void SetPFeatureMap(const Param::FeatureMap&);

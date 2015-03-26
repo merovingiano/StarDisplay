@@ -86,11 +86,18 @@ public:
   int getFlockId() const { return flockId_; }
   unsigned getFlockSize() const { return flockSize_; }
 
+
+  typedef std::vector<glm::vec4>   Storage;
+  Storage positionsAndSpeed;
+
+  Storage externalPos;
+
 private:
   friend struct find_neighbors_qf;
 
   //! Calculate flight forces
   void flightDynamic();
+  void flightExternal();
 
   //! Handles main social interaction rules
   void steerToFlock(struct fov_filter const& filter);

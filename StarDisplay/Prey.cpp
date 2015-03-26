@@ -15,7 +15,7 @@
 #include "Prey.hpp"
 #include "Flock.hpp"
 #include "Globals.hpp"
-
+#include <iostream>
 
 using namespace Param;
 namespace avx = glmutils::avx;
@@ -225,6 +225,14 @@ void CPrey::update(float dt, const CFlock& flock)
     steering_ += boundary_;
     steering_ += predatorForce_;
     steering_ += speedControl() * B_[0];
+
+	if (GFLOCKNC.prey_begin()->id() == id_ && Sim.Params().evolution.TrajectoryPrey)
+	{
+		positionsAndSpeed.push_back(glm::vec4(position_, glm::length(velocity_)));
+
+
+	}
+
     noise();    // add some noise
 
     avx::vec3 force(steering_);
@@ -242,8 +250,21 @@ void CPrey::update(float dt, const CFlock& flock)
   // Physics works in real time...
   alertnessRelaxation_ -= dt;
   returnRelaxation_ -= dt;
-  flightDynamic();
-  integration(dt);
+
+  if (Sim.Params().evolution.externalPrey)
+  {
+
+	  flightExternal();
+	  
+
+  }
+  else
+  {
+		flightDynamic();
+		integration(dt);
+  }
+  
+  
   regenerateLocalSpace(dt);
 
   appendTrail(trail_, position_, B_[2], color_tex_, dt);
@@ -270,6 +291,26 @@ void CPrey::flightDynamic()
   lift_ = B_[1] * std::min(L, pBird_.maxLift);
   flightForce_ = B_[1] * lift_ + B_[0] * (CDCL * pBird_.bodyWeight - D);  // apply lift, drag and default thrust
   flightForce_.y -= pBird_.bodyWeight;                                // apply gravity
+}
+
+
+
+void CPrey::flightExternal()
+{
+	if ((externalPos.size() > 1))
+	{
+		if (externalPos[1][3] < fmod(Sim.SimulationTime(), Sim.Params().evolution.durationGeneration))
+		{
+			externalPos.erase(externalPos.begin());
+		}
+		float time1 = externalPos[0][3];
+		float time2 = externalPos[1][3];
+		float timeNow = fmod(Sim.SimulationTime(), Sim.Params().evolution.durationGeneration);
+		float weight = (timeNow - time1) / (time2 - time1);
+		position_ = (1.0f - weight) * glm::vec3(externalPos[0].x, externalPos[0].z, externalPos[0].y) + weight *glm::vec3(externalPos[1].x, externalPos[1].z, externalPos[1].y);
+		position_.y += 120; 
+		//std::cout << "\nPosition: " << position_.x << " " << position_.y << " " << position_.z << " ";
+	}
 }
 
 

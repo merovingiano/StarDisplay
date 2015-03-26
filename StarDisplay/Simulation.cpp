@@ -551,6 +551,23 @@ void Simulation::UpdateSimulation(double sim_dt)
       UpdateCurrentStatistic(stat_dt);
       lastStatTime_ = SimulationTime_;
     }
+
+	// specifically for evolution setting:
+	if (params_.evolution.type == "PN")
+	{
+		if (int(SimulationTime_) % int(params_.evolution.durationGeneration) == 0 && !done_)
+		{
+			evolution.apply();
+			evolution.save(params_.evolution.fileName.c_str(), 0);
+			done_ = true;
+		}
+		if (int(SimulationTime_) % int(params_.evolution.durationGeneration) == 1 && done_)
+		{
+			done_ = false;
+		}
+	}
+	// end evolution setting
+
   }
   luabind::globals(Lua)["CameraUpdateHook"](luaCamera_, sim_dt);
   camera_->Update(sim_dt);
@@ -619,7 +636,7 @@ void Simulation::EnterGameLoop()
   bool done = 0;
   bool odd = true;
   int skippedFrame = 0;
-  EvolvePN evolution;
+  
   auto renderFun = [&] {
     if (odd) gl_->Flush(); else gl_->Render();
     odd = !odd;
@@ -683,19 +700,7 @@ void Simulation::EnterGameLoop()
     }
     lastFrameDuration = GlobalTimerSinceCopy(nowaitUpdate, frameBegin);
 
-	// specifically for evolution setting:
-	const char* fname = "exp_PNandALTandXFORWARDTHRUSTMANPREY.txt";
-	if (int(SimulationTime_) % 30 == 0 && !done)
-	{
-		evolution.apply(5.0);
-		evolution.save(fname, 0);
-		done = true;
-	}
-	if (int(SimulationTime_) % 30 == 1 && done)
-	{
-		done = false;
-	}
-	// end evolution setting
+	
 
 
 	}

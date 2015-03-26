@@ -252,7 +252,17 @@ namespace libParam
       cobj.ModelSet.push_back(FromLua<ModelDef>(*it));
     }
     cobj.renderFlags = FromLua<RenderFlags>(luaobj["RenderFlags"]);
-    return cobj;
+	cobj.evolution.durationGeneration = object_cast<float  >(luaobj["evolution"]["durationGeneration"]);
+	cobj.evolution.evolveAlt = object_cast<bool  >(luaobj["evolution"]["evolveAlt"]);
+	cobj.evolution.type = object_cast<std::string  >(luaobj["evolution"]["type"]);
+	cobj.evolution.fileName = object_cast<std::string  >(luaobj["evolution"]["fileName"]);
+	cobj.evolution.evolvePN = object_cast<bool  >(luaobj["evolution"]["evolvePN"]);
+	cobj.evolution.evolveX = object_cast<bool  >(luaobj["evolution"]["evolveX"]);
+	cobj.evolution.TrajectoryBestPredator = object_cast<bool  >(luaobj["evolution"]["TrajectoryBestPredator"]);
+	cobj.evolution.TrajectoryPrey = object_cast<bool  >(luaobj["evolution"]["TrajectoryPrey"]);
+	cobj.evolution.externalPreyFile = object_cast<std::string  >(luaobj["evolution"]["externalPreyFile"]);
+	cobj.evolution.externalPrey = object_cast<bool  >(luaobj["evolution"]["externalPrey"]);
+	return cobj;
   }
 
 

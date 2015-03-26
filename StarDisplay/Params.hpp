@@ -18,6 +18,20 @@ namespace Param {
     float maxRadius;
   };
 
+  struct Evolution
+  {
+	  std::string type;
+	  std::string fileName;
+	  float durationGeneration;
+	  bool evolvePN;
+	  bool evolveAlt;
+	  bool evolveX;
+	  bool TrajectoryBestPredator;
+	  bool TrajectoryPrey;
+	  bool externalPrey;
+	  std::string externalPreyFile;
+  };
+
 
   struct vaderJacob
   {
@@ -195,6 +209,7 @@ namespace Param {
     float innerBoundary;
     float altitude;
     GPWS gpws;
+	float bodyDrag;
   };
 
 
@@ -344,6 +359,7 @@ namespace Param {
     int   TrailSkip;
     FeatureMap featureMap;
     RenderFlags renderFlags;
+	Evolution evolution;
   };
 
 }

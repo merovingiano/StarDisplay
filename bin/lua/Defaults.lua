@@ -24,6 +24,18 @@ local Default = {
     MinFlockSize = 1
   },
 
+    evolution = {
+		type ="PN",
+		fileName = "default.txt",
+		durationGeneration = 25.0,   -- length in seconds in which one duration hunts
+		evolvePN = true,
+		evolveAlt = true,
+		evolveX = true,
+		TrajectoryBestPredator = true,
+		TrajectoryPrey = true,
+		externalPrey = true,
+		externalPreyFile = "pos_lure_flight1.txt"
+  },
 
   Trail = {
     Length = 5,           -- length in seconds (read-once)
@@ -151,6 +163,7 @@ Default.FeatureMap = {
     { title = "dummy mapping",                enable = false, dt = 0, hist = { -2, 2, 100 }, p ={}, colored = true }
   }
 }
+
 
 
 return Default

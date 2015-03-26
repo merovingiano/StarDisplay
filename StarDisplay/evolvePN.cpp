@@ -14,6 +14,10 @@
 #include "visitors.hpp"
 #include "Globals.hpp"
 #include <string>
+#include "Simulation.hpp"
+#include "Globals.hpp"
+#include <iostream>
+#include <sstream>
 
 using namespace Param;
 
@@ -40,29 +44,58 @@ EvolvePN::EvolvePN()
 
 void EvolvePN::Reset()
 {
-	lastShuffle_ = Sim.SimulationTime();
 	Generation_ = 0;
-	std::for_each(GFLOCKNC.predator_begin(), GFLOCKNC.predator_end(), [](CPredator& pred)
-	{
-		pred.ResetHunt();
-	});
 	alleles_.clear();
+	allPandS_.clear();
+	allPandSPrey_.clear();
 }
 
 
-void EvolvePN::apply(double stat_dt)
+void EvolvePN::apply()
 {
 	if (alleles_.empty())
 	{
 		alleles_.emplace_back();
+		allPandS_.emplace_back();
+		allPandSPrey_.emplace_back();
 	}	
 		Shuffle();
 }
+
+void EvolvePN::loadPositions(const char* fname) const
+{
+	std::vector <glm::vec4> data;
+	std::ifstream infile(fname);
+	CFlock::prey_iterator first = GFLOCKNC.prey_begin();
+	first->externalPos.clear();
+	while (!infile.eof())
+	{
+		glm::vec4 vector;
+		for (int i = 0; i < 4; i++)
+		{
+
+			infile >> vector[i];
+			std::cout<< "\n" << vector[i];
+		}
+		
+		data.push_back(vector);
+		first->externalPos.push_back(vector);
+	}
+	
+	
+}
+
 
 
 void EvolvePN::save(const char* fname, bool append) const
 {
 	std::ofstream os(fname, std::ios_base::out | (append ? std::ios_base::app : std::ios_base::trunc));
+	const char* fname2 = "trajectoryPredator.txt";
+	const char* fname3 = "trajectoryPrey.txt";
+	std::ofstream os2(fname2, std::ios_base::out | (append ? std::ios_base::app : std::ios_base::trunc));
+	std::ofstream os3(fname3, std::ios_base::out | (append ? std::ios_base::app : std::ios_base::trunc));
+	CFlock::pred_iterator first(GFLOCKNC.predator_begin());
+
 	for (size_t i = 0; i<alleles_.size(); ++i)
 	{
 		std::string buf(" ");
@@ -70,17 +103,26 @@ void EvolvePN::save(const char* fname, bool append) const
 		buf.append(" \n");
 		std::ostream_iterator<glm::vec4> oit(os, buf.c_str());
 		std::copy(alleles_[i].begin(), alleles_[i].end(), oit);
+		
 	}
-	if (Generation_ == 31)
+
+	for (size_t i = 0; i < allPandS_.size(); ++i)
 	{
-		const char* fname2 = "trajectoryFORWARDTHRUSTMANPREY.txt";
-		CFlock::pred_iterator first(GFLOCKNC.predator_begin());
-		std::cout << "\n num vel: " << first->positionsAndSpeed.size();
-		std::ofstream os2(fname2, std::ios_base::out | (append ? std::ios_base::app : std::ios_base::trunc));
-			std::ostream_iterator<glm::vec4> oit2(os2, "\n");
-			std::copy(first->positionsAndSpeed.begin(), first->positionsAndSpeed.end(), oit2);
-		os << '\n';
+	
+		std::string buf(" ");
+		buf.append(std::to_string(i));
+		buf.append(" \n");
+		std::ostream_iterator<glm::vec4> oit2(os2, buf.c_str());
+		std::copy(allPandS_[i].begin(), allPandS_[i].end(), oit2);
+
+		std::ostream_iterator<glm::vec4> oit3(os3, buf.c_str());
+		std::copy(allPandSPrey_[i].begin(), allPandSPrey_[i].end(), oit3);
+
 	}
+
+	os << '\n';
+	os2 << '\n';
+
 }
 
 
@@ -143,6 +185,7 @@ void EvolvePN::Shuffle()
 	std::sort(allele.begin(), allele.end(), cmp_min_dist());
 	// placing all alleles into the total bunch of alleles over time
 	alleles_.emplace_back(allele);
+	
 	//how big is the total amount of alleles in the population?
 	unsigned N = static_cast<unsigned>(allele.size());
 
@@ -160,6 +203,15 @@ void EvolvePN::Shuffle()
 	CFlock::pred_iterator first(GFLOCKNC.predator_begin());
 	CFlock::pred_iterator last(GFLOCKNC.predator_end());
 
+	CFlock::prey_iterator firstPrey(GFLOCKNC.prey_begin());
+
+
+	allPandS_.emplace_back(first->positionsAndSpeed);
+	first->positionsAndSpeed.clear();
+
+	allPandSPrey_.emplace_back(firstPrey->positionsAndSpeed);
+	firstPrey->positionsAndSpeed.clear();
+
 	//change all of the settings of the predators after mutation
 	for (unsigned i = 0; first != last; ++first, ++i)
 	{
@@ -167,6 +219,7 @@ void EvolvePN::Shuffle()
 		first->setStartAltitude(allele[i][1]);
 		first->setStartXDist(allele[i][2]);
 		first->setGeneration(Generation_);
+
 		
 	}
 	// Average of top 1%
@@ -234,7 +287,14 @@ void EvolvePN::Shuffle()
 		meanN += first->get_N() * 1 / N;
 		meanStartAltitude += first->getStartAltitude() * 1 / N;
 		meanXDist += first->getStartXDist() * 1 / N;
+
+	
 	};
+	if (Sim.Params().evolution.externalPrey)
+	{
+			loadPositions(Sim.Params().evolution.externalPreyFile.c_str());
+	}
+
 	GFLOCKNC.meanN = meanN;
 	GFLOCKNC.meanStartAltitude = meanStartAltitude;
 	GFLOCKNC.meanXDist = meanXDist;

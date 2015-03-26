@@ -269,7 +269,8 @@ void CPredator::update(float dt, const CFlock&)
 
 
 	}
-	if (int(generation_) == 30 && GFLOCKNC.predator_begin()->id() == id_)
+	
+	if (GFLOCKNC.predator_begin()->id() == id_  && Sim.Params().evolution.TrajectoryBestPredator)
 	{
 			positionsAndSpeed.push_back(glm::vec4(position_, glm::length(velocity_)));
 		
