@@ -95,7 +95,7 @@ template <typename LOD>
 void GLSLInstancingProg<LOD>::do_instance(const CBird& bird, size_t ofs, int lod, int ignoreId) const
 {
   if (ofs < (lod + 1) * MaxN_)
-  {
+  { 
     attrib_t* dst = ((attrib_t*)mAttrib_.get() + lod * MaxN_ + ofs);
     const float scale = (bird.id() == ignoreId) ? 0 : bird.wingSpan() * model_->modelScale();
     avx::vec4 c0(bird.forward(), scale);
