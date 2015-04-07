@@ -39,6 +39,7 @@ public:
     double lookTime;
     std::vector<unsigned> attackSize;
     std::vector<unsigned> catchSize;
+	//! add the miss distance of last attack too
     float lastMinDist;
 
   };
@@ -63,6 +64,7 @@ public:
   bool is_attacking() const { return attackTime_ > 0.0; }
   const CPrey* GetLockedOn() const { return lockedOn_; }
   const CPrey* GetTargetPrey() const { return targetPrey_; }
+  //! bunch of functions to set and get variables
   float get_N() const { return N_; }
   float getStartAltitude() const { return startAltitude_; }
   float getStartXDist() const { return XDist_; }
@@ -90,6 +92,7 @@ public:
 private:
   friend struct find_prey_qf;
 
+  void Accelerate();
   void flightDynamic();
   void steerToFlock();
   void ignoreFlock();
@@ -116,6 +119,7 @@ private:
   glm::vec3        targetPoint_;
   hunt             hunts_;
   int              locks_;        // locks in current attack
+  //! some new parameters, probably will move them to params
   float            N_;
   float            startAltitude_;
   float            XDist_;

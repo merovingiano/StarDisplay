@@ -15,6 +15,7 @@ struct T2F_N3F_V3F {
   glm::vec2 t;    
   glm::vec3 n;    
   glm::vec3 v;    
+  //! Another element to this struct
   float part;
 };
 
@@ -29,7 +30,7 @@ struct ac3d_material
   float trans;
 };
 
-//! 
+//!  added a loc file for indiviual parts of the bird
 struct ac3d_model
 {
   std::vector<T2F_N3F_V3F> vertices; 

@@ -126,45 +126,6 @@ void EvolvePN::save(const char* fname, bool append) const
 }
 
 
-void EvolvePN::Display() const
-{
-	if (alleles_.empty() || alleles_.back().empty())
-	{
-		return;
-	}
-	const allele_type& allele = alleles_.back();
-	GTEXT->print("\\monoface{}");
-	GTEXT->set_orig(glm::ivec2(GCAMERA.GetViewport()[2] - 300, GTEXT->base()));
-	GTEXT->set_tabsize(80);
-	GTEXT->print("\n");
-	char buf[256];
-	_snprintf_s(buf, 255, "Generation: %d\n\n", Generation_);
-	GTEXT->print(buf);
-	size_t n = std::min(size_t(25), allele.size());
-	for (size_t i = 0; i<n; ++i)
-	{
-		const glm::vec4& a = allele[i];
-		_snprintf_s(buf, 255, "%7.3f %7.3f %7.3f %7.3f\n", a.x, a.y, a.z, a.w);
-		GTEXT->print(buf);
-	}
-	GTEXT->print("\n");
-	n = allele.size() - 5;
-	for (size_t i = n; i<allele.size(); ++i)
-	{
-		const glm::vec4& a = allele[i];
-		_snprintf_s(buf, 255, "%7.3f %7.3f %7.3f %7.3f\n", a.x, a.y, a.z, a.w);
-		GTEXT->print(buf);
-	}
-	glm::vec4 ave(0);
-	for (size_t i = 0; i<allele.size(); ++i)
-	{
-		ave += allele[i];
-	}
-	ave /= allele.size();
-	_snprintf_s(buf, 255, "\n%7.3f %7.3f %7.3f %7.3f\n", ave.x, ave.y, ave.z, ave.w);
-	GTEXT->print(buf);
-}
-
 
 void EvolvePN::Shuffle()
 {
@@ -253,30 +214,45 @@ void EvolvePN::Shuffle()
 			first->setGeneration(Generation_);
 
 			//temporary code to get the positions:
-			first->set_N(3.4f);
-			first->setStartAltitude(377.0f);
-			first->setStartXDist(150.0f);
+			//first->set_N(3.4f);
+			//first->setStartAltitude(377.0f);
+			//first->setStartXDist(150.0f);
 		}
 
 		first->ResetHunt();
 		
 		first->setTrail(false);
-		first->position_.x = rand();
-		first->position_.z = 0;
-		float length = glm::length(glm::vec2(first->position_.x, first->position_.z));
-		first->position_.x /= length/100.0f;
-		first->position_.z /= length/100.0f;
+		first->position_ = 100.0f*glmutils::vec3_in_sphere(rnd_eng());
+		first->position_.y += 120;
+		if (Sim.Params().evolution.evolveAlt && !Sim.Params().evolution.evolveX)
+		{
+			first->position_.y = first->getStartAltitude();
+			first->position_.x = rand();
+			first->position_.z = rand();
+			float length = glm::length(glm::vec2(first->position_.x, first->position_.z));
+			first->position_.x /= length / 100.0f;
+			first->position_.z /= length / 100.0f;
+		}
+		if (Sim.Params().evolution.evolveAlt && Sim.Params().evolution.evolveX)
+		{
+			first->position_.y = first->getStartAltitude();
+			first->position_.x = first->getStartXDist();
 
-		first->position_.y = first->getStartAltitude();
-		first->position_.x = first->getStartXDist();
-
+		}
+		if (!Sim.Params().evolution.evolveAlt && Sim.Params().evolution.evolveX)
+		{
+			first->position_.y = rand();
+			first->position_.x = first->getStartXDist();;
+			first->position_.z = rand();
+			float length = glm::length(glm::vec2(first->position_.y, first->position_.z));
+			first->position_.y /= length / 100.0f;
+			first->position_.z /= length / 100.0f;
+		}
 		first->B_[0] = glmutils::vec3_in_sphere(rnd_eng());
 		first->B_[0] /= glm::length(first->B_[0]);
 		first->velocity_ = 20.0f * first->B_[0];
 
-		// when not doing alt:
-		//first->position_ = 100.0f*glmutils::vec3_in_sphere(rnd_eng());
-		//first->position_.y += 120;
+
 
 
 		first->setTrail(true);

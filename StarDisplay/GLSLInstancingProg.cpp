@@ -34,6 +34,7 @@ class GLSLInstancingProg : public IInstancingProg
 {
   struct attrib_t
   {
+	  //! one more
     avx::vec4 c[4];
   };
 
@@ -68,6 +69,7 @@ GLSLInstancingProg<LOD>::GLSLInstancingProg(unsigned ModelId, unsigned MaxN)
   pprog->uniform_block("Matrices")->binding(0);
 
   // Model vao still bound
+  //! more attributes
   mAttrib_.bind(GL_ARRAY_BUFFER);
   glEnableVertexAttribArray(3);
   glEnableVertexAttribArray(4);

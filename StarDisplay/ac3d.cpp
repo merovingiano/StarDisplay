@@ -76,6 +76,7 @@ namespace {
     std::string name;
     std::string texture;
     float crease;
+	//!more stuff here
     glm::mat3 rot;
     glm::vec3 loc[3];
     pos_vect vert;
@@ -195,6 +196,9 @@ namespace {
 
   void acParser::read_OBJECT() 
   {
+	  //! In my export function of Blender, I make the parts part of the same object, so things become drifting from normal ac3d layout here
+	  //! I want to include bones from blender, weights of attachment to bone. For now, the shader is just getting the movement right, but it's a mess :)
+
     objects_.emplace_back();
 	partIndex = 0;
 	startNumb[0] = 0;
@@ -210,6 +214,7 @@ namespace {
     }
 	acObject& obj(objects_.back());
 	startNumb[3] = obj.vert.size();
+	//! setting location for each part
 	for (int i = 0; i < partIndex; i++)
 	{
 		std::cout << "\nint i: "<< i;
@@ -361,6 +366,7 @@ namespace {
     if (obj.vert.empty()) return model;
     model.twoSided = obj.twoSided;
 	std::cout << "\n total vertices:  " << obj.vert.size() << "\n first: " << ptr[0] << "\n total triangles:  " << obj.triangles.size();
+	//! debugging variable
 	int countDouble = 0;
     for (long i=0; i<static_cast<long>(obj.triangles.size()); ++i)
     {
@@ -372,6 +378,7 @@ namespace {
         vertex[j].v = v[tri.vi[j]];
         vertex[j].t = glm::vec2(tri.tex[j].x, 1.0f - tri.tex[j].y);
         vertex[j].n = vertexNormal(obj, i, tri.vi[j]);
+		//!adding part info to the vertex data
 		vertex[j].part = obj.part[tri.vi[j]];
 		//std::cout << "\npart: " << obj.part[tri.vi[j]];
 		

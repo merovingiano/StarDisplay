@@ -252,7 +252,7 @@ void CPredator::update(float dt, const CFlock&)
     handleGPWS();
     steering_ += boundary_;
     steering_ += speedControl() * B_[0];
-
+	//! Controlling the bird. 
 	if ((GCAMERA.GetFocalBird())->id() == id_)
 	{
 
@@ -269,7 +269,7 @@ void CPredator::update(float dt, const CFlock&)
 
 
 	}
-	
+	//! saving the position of some predator in a genetic algorithm (will be more general code when I come back)
 	if (GFLOCKNC.predator_begin()->id() == id_  && Sim.Params().evolution.TrajectoryBestPredator)
 	{
 			positionsAndSpeed.push_back(glm::vec4(position_, glm::length(velocity_)));
@@ -277,14 +277,14 @@ void CPredator::update(float dt, const CFlock&)
 			
 	}
 
-
-	steering_ += 10.0f*B_[0];
+	//! handle acceleration
+	Accelerate();
+	//!Quick hack for StarDisplay problem in steering when too low to the ground
 	if (position_.y < 1) steering_ += 5.0f*B_[1];
+	//! used to mimick wind effects in graphics
 	rand_ = float(rand()) / (float(RAND_MAX)*100) +0.8 * rand_;
-	//std::cout << "\n" << rand_;
-	//std::cout << "\n" << float(rand()) / (float(RAND_MAX));
     noise();    // add some noise
-
+	//! Clamped force no longer used. Just for graphics
     avx::vec3 force(steering_);
     const float f2 = avx::length2(force);
     if (f2 > pBird_.maxForce * pBird_.maxForce) {
@@ -341,13 +341,16 @@ void CPredator::update(float dt, const CFlock&)
 }
 
 
+void CPredator::Accelerate()
+{
+	//! This will be clamped later. Idea: accelerate maximally unless PN dictates it should turn
+	steering_ += 10.0f*B_[0];
+}
+
+
 void CPredator::flightDynamic()
 {
-  //float xForce = glm::dot(B_[0], steering_);
-  //float maxForce = pBird_.maxForce;
-  //xForce = std::min(xForce, maxForce);
-  //float yForce = sqrt(maxForce*maxForce - xForce *xForce);
-
+  //! I'm leaving this in, although much more convoluted than necessary: it was used for thrust vectoring (may use it later to investigate differences with new approach)
   glm::vec3 forceInBody = glm::vec3(glm::dot(B_[0], steering_), 0, 0);
   const float f2 = glm::length(forceInBody);
   if (f2 > pBird_.maxForce) {
@@ -370,11 +373,9 @@ void CPredator::flightDynamic()
   liftMax_ = B_[1] * L;
   lift_ = B_[1] * std::min(L, desiredLift);
   
-  //std::cout << "\nlift: " << L << ", desired Lift: " << desiredLift;
+  //! Adding the x part of the force to the thrust
   flightForce_ = lift_ + B_[0] * (CDCL * pBird_.bodyWeight - D + forceInBody.x); // apply clamped lift, drag and default thrust
-  //std::cout << "default thrust: " <<CDCL * pBird_.bodyWeight;
   flightForce_.y -= pBird_.bodyWeight;        // apply gravity
-  //std::cout << "\n " << pBird_.bodyDrag;
 }
 
 
@@ -417,6 +418,7 @@ void CPredator::steerToFlock()
   // Pursuit
   if (cohesion_neighbors_)
   {
+	  //! Proportional navigation function in c++
 	  proportionalNavigation(aveHeading, aveVelocity);
     //PursuitCustom(aveHeading, aveVelocity);
     //cohesion_ = H_ * (cohesion_ * H_);
@@ -534,7 +536,7 @@ void CPredator::PursuitCustom(const glm::vec3& targetHeading, const glm::vec3& t
     this->pPred_.pursuit.hook(this, Sim.SimulationTime(), targetPoint_, targetHeading, targetVelocity);
   }
 }
-
+//! Prop Nav function
 void CPredator::proportionalNavigation(const glm::vec3& targetHeading, const glm::vec3& targetVelocity)
 {
 
@@ -542,7 +544,7 @@ void CPredator::proportionalNavigation(const glm::vec3& targetHeading, const glm
 	glm::vec3 v = velocity_ - targetVelocity;
 	glm::vec3 wLOS = glm::cross(v, r) / glm::dot(r, r);
 	steering_ += N_ * glm::cross(wLOS, velocity_)*pBird_.bodyMass;
-
+	//!stopping attack when in blind angle and close to prey
 	if (glm::dot(r, r) < 8)
 	{
 		glm::vec3 pHead = glm::vec3(glm::dot(r, glm::column(H_, 0)), glm::dot(r, glm::column(H_, 1)), glm::dot(r, glm::column(H_, 2)));
@@ -574,6 +576,7 @@ void CPredator::predatorIntegration(float dt)
 
 	// clip speed
 	speed_ = avx::length(velocity);
+	//! don't clamp speed: no stoop possible otherwise
 	//speed_ = avx::clamp(speed_, pBird_.minSpeed, pBird_.maxSpeed);
 	forward = velocity / speed_;
 
@@ -597,7 +600,7 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 	//steering += gyro;
 
 
-	//float Ll = glm::dot(lift_, H_[2]);
+	//!New steering method as discussed
 	glm::vec3 Fl = glm::vec3(0, glm::dot(steering2, B_[1]), glm::dot(steering2, B_[2]));
 
 
@@ -614,6 +617,7 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 	{
 		desiredLift_ = glm::length(Fl);
 		glm::vec3 Fl2 = glm::vec3(0, glm::dot(steering_, B_[1]), glm::dot(steering_, B_[2]));
+		//! What I am trying here(rescale the prop nav portion of the vector does not seem to increase performace, therefore it is not used for now
 		if (glm::dot(Fl2, Fl2) > 500000000)
 		{
 			
@@ -644,14 +648,15 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 
 	
 	glm::vec3 Ll = glm::vec3(0, glm::dot(lift_, B_[1]), glm::dot(lift_, B_[2]));
+	//! determine the size of the turn towards desired angle
 	float turn = asin(glm::cross(Ll, Fl).x / (glm::length(Ll) * glm::length(Fl)));
-	//std::cout << "\nturn: " << turn * dt;
-	//std::cout << "\nlift: " << Ll.x << "  " << Ll.y << "  " << Ll.z;
-	float beta = std::max(std::min((turn), 0.036f), -0.036f);
-	//std::cout << "\n beta: " << wBetaIn_.x;
-	//std::cout << "\nbeta: " << beta;
+	float rollrate = 10.0f;
+	//! Clamp anglular velocity 
+	float beta = std::max(std::min((turn), rollrate / dt), -rollrate / dt);
+
 	avx::vec3 bank = beta * side;
 
+	//! remove pitching (comment out)
 	//float phi = std::max(std::min((wBetaIn_.y * avx::dot(steering, up)), 0.0005f / dt), -0.0005f / dt);
 	//std::cout << "\nphi: " << phi;
 	//avx::vec3 pitch = (phi * dt) * up;
@@ -675,7 +680,7 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 	up.store(H_[1]);
 	side.store(H_[2]);
 
-
+	//! Doing the beat cycle for graphics
 	//beat cycle
 	beatCycle_ += dt*(8 + 3 * glm::length(force_));
 	if (Sim.SimulationTime() < 0.1) beatCycle_ += rand_;

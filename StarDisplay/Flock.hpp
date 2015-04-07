@@ -106,6 +106,7 @@ public:
   //! Required after number of prey changed
   void refresh();
   void update(float sim_dt, bool recluster);
+  //! Some more info about the flock
   float meanN;
   float meanStartAltitude;
   float meanXDist;

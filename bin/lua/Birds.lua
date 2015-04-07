@@ -83,10 +83,10 @@ function Birds.Starling (p)
   bird.maxLift = 3      -- [N]
   bird.cruiseSpeed = CruiseSpeed(bird)      -- [m/s]
   -- for experiment
-  bird.cruiseSpeed = 0.001
-  bird.speedControl = 1/10		-- one over tau 
-  bird.minSpeed = bird.cruiseSpeed 
-  bird.maxSpeed = bird.cruiseSpeed
+  bird.cruiseSpeed = 12
+  bird.speedControl = 0.1		-- one over tau 
+  bird.minSpeed = bird.cruiseSpeed +10
+  bird.maxSpeed = bird.cruiseSpeed - 10
   bird.houjebek = 5
   
   -----------------------------------------------------------------------------
@@ -110,9 +110,9 @@ function Birds.Starling (p)
   bird.separationWeight = 1 * glm.vec3(1, 1, 1)   -- forward, up, side
   bird.alignmentWeight = 1 * glm.vec2( 1, 1 )     -- usual, banking
   bird.cohesionWeight = 1 * glm.vec3( 1, 1, 1 )   -- forward, up, side
-  bird.randomWeight = 0                        
+  bird.randomWeight = 20                        
     
-  bird.boundaryWeight = glm.vec3(0.01, 0.001 , 0.01)  -- horizontal-x, vertical-y (indiv.), horizontal-z
+  bird.boundaryWeight = glm.vec3(0.01, 0.5 , 0.01)  -- horizontal-x, vertical-y (indiv.), horizontal-z
   bird.boundaryReflectAngle = 180                           -- [deg]
   bird.innerBoundary = 0   -- inner radius = (1 - innerBoundary) * Roost.Radius
   bird.altitude = 120         -- preferred altitude [m]  @Rolf only used at initialisation

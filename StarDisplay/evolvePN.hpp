@@ -14,7 +14,7 @@ public:
 	virtual void apply();
 	virtual void save(const char* fname, bool append) const;
 	virtual void loadPositions(const char* fname) const;
-	virtual void Display() const;
+
 
 private:
 	void Shuffle();
