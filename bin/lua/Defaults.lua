@@ -33,7 +33,7 @@ local Default = {
 		evolveX = true,
 		TrajectoryBestPredator = true,
 		TrajectoryPrey = true,
-		externalPrey = true,
+		externalPrey = false,
 		externalPreyFile = "pos_lure_flight1.txt"
   },
 

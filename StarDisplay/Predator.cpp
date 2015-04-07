@@ -356,7 +356,7 @@ void CPredator::flightDynamic()
   const float pi = glm::pi<float>();
   const float CL = pBird_.CL;
   const float CDCL = 1.0f / ((pi * pBird_.wingAspectRatio) / CL);
-  float L = pBird_.bodyWeight * (speed_ * speed_) / (pBird_.cruiseSpeed * pBird_.cruiseSpeed) + forceInBody.y*0;  // Lift
+  float L = pBird_.bodyWeight * (speed_ * speed_) / (pBird_.cruiseSpeed * pBird_.cruiseSpeed);  // Lift
   
 
 
@@ -372,6 +372,7 @@ void CPredator::flightDynamic()
   flightForce_ = lift_ + B_[0] * (CDCL * pBird_.bodyWeight - D + forceInBody.x); // apply clamped lift, drag and default thrust
   //std::cout << "default thrust: " <<CDCL * pBird_.bodyWeight;
   flightForce_.y -= pBird_.bodyWeight;        // apply gravity
+  //std::cout << "\n " << pBird_.bodyDrag;
 }
 
 
