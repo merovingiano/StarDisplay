@@ -254,7 +254,7 @@ void EvolvePN::Shuffle()
 
 			//temporary code to get the positions:
 			first->set_N(3.4f);
-			first->setStartAltitude(577.0f);
+			first->setStartAltitude(377.0f);
 			first->setStartXDist(150.0f);
 		}
 

@@ -336,6 +336,8 @@ void CPredator::update(float dt, const CFlock&)
   }
   
   appendTrail(trail_, position_, B_[2], color_tex_, dt);
+
+  //std::cout << "\n x: " << B_[0].x << " y: " <<  B_[0].y << " z: " <<B_[0].z;
 }
 
 
@@ -418,7 +420,7 @@ void CPredator::steerToFlock()
 	  proportionalNavigation(aveHeading, aveVelocity);
     //PursuitCustom(aveHeading, aveVelocity);
     //cohesion_ = H_ * (cohesion_ * H_);
-    steering_ += cohesion_;
+    //steering_ += cohesion_;
   }
   interaction_neighbors_ = cohesion_neighbors_;
 }
@@ -612,7 +614,7 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 	{
 		desiredLift_ = glm::length(Fl);
 		glm::vec3 Fl2 = glm::vec3(0, glm::dot(steering_, B_[1]), glm::dot(steering_, B_[2]));
-		if (glm::dot(Fl2, Fl2) > 0)
+		if (glm::dot(Fl2, Fl2) > 500000000)
 		{
 			
 			glm::vec3 weight = glm::vec3(0, pBird_.bodyWeight, 0);
@@ -643,9 +645,10 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 	
 	glm::vec3 Ll = glm::vec3(0, glm::dot(lift_, B_[1]), glm::dot(lift_, B_[2]));
 	float turn = asin(glm::cross(Ll, Fl).x / (glm::length(Ll) * glm::length(Fl)));
-	//std::cout << "\nturn: " << turn;
+	//std::cout << "\nturn: " << turn * dt;
 	//std::cout << "\nlift: " << Ll.x << "  " << Ll.y << "  " << Ll.z;
-	float beta = std::max(std::min(wBetaIn_.x * (turn)* dt, 0.036f), -0.036f);
+	float beta = std::max(std::min((turn), 0.036f), -0.036f);
+	//std::cout << "\n beta: " << wBetaIn_.x;
 	//std::cout << "\nbeta: " << beta;
 	avx::vec3 bank = beta * side;
 

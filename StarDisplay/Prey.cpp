@@ -268,6 +268,8 @@ void CPrey::update(float dt, const CFlock& flock)
   regenerateLocalSpace(dt);
 
   appendTrail(trail_, position_, B_[2], color_tex_, dt);
+
+  //std::cout << "\n x: " << B_[0].x << " y: " << B_[0].y << " z: " << B_[0].z;
 }
 
 
