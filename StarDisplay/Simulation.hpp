@@ -19,6 +19,7 @@ public:
   //Robin
   EvolvePN evolution;
   bool done_;
+  double timeSinceEvolution;
   //
   void SetInitialParameter(const Param::Params&);
   void SetPFeatureMap(const Param::FeatureMap&);

@@ -31,10 +31,12 @@ local Default = {
 		evolvePN = true,
 		evolveAlt = true,
 		evolveX = true,
-		TrajectoryBestPredator = true,
+		TrajectoryBestPredator = false,
 		TrajectoryPrey = true,
 		externalPrey = false,
-		externalPreyFile = "pos_lure_flight1.txt"
+		externalPreyFile = "pos_lure_flight1.txt",
+		title = "Default Title",
+		description = "default description"
   },
 
   Trail = {

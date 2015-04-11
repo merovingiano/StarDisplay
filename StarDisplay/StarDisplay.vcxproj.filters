@@ -352,6 +352,9 @@
     <ClInclude Include="evolvePN.hpp">
       <Filter>Analysis</Filter>
     </ClInclude>
+    <ClInclude Include="Save.hpp">
+      <Filter>Analysis</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Clock.cpp">
@@ -478,6 +481,9 @@
       <Filter>Analysis</Filter>
     </ClCompile>
     <ClCompile Include="evolvePN.cpp">
+      <Filter>Analysis</Filter>
+    </ClCompile>
+    <ClCompile Include="Save.cpp">
       <Filter>Analysis</Filter>
     </ClCompile>
   </ItemGroup>

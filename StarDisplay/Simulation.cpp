@@ -540,7 +540,6 @@ void Simulation::UpdateSimulation(double sim_dt)
   const double cluster_dt = SimulationTime_ - lastClusterTime_;
   const bool needStat = (!statisticsPaused_) && approx_ge(stat_dt, params_.featureMap.gCFME().dt);
   const bool recluster = approx_ge(cluster_dt, params_.ClusterDetectionTime);
-
   if (!paused_) 
   {
     UpdateBirds(static_cast<float>(sim_dt));
@@ -555,15 +554,12 @@ void Simulation::UpdateSimulation(double sim_dt)
 	// specifically for evolution setting:
 	if (params_.evolution.type == "PN")
 	{
-		if (int(SimulationTime_) % int(params_.evolution.durationGeneration) == 0 && !done_)
+		if (timeSinceEvolution > params_.evolution.durationGeneration)
 		{
 			evolution.apply();
 			evolution.save(params_.evolution.fileName.c_str(), 0);
-			done_ = true;
-		}
-		if (int(SimulationTime_) % int(params_.evolution.durationGeneration) == 1 && done_)
-		{
-			done_ = false;
+			std::cout << "\n test";
+			timeSinceEvolution = 0.0f;
 		}
 	}
 	// end evolution setting
@@ -677,6 +673,7 @@ void Simulation::EnterGameLoop()
     if (!paused_)
     {
       SimulationTime_ += dt;
+	  timeSinceEvolution += dt;
     }
     else
     {

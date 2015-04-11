@@ -419,7 +419,8 @@ void CPredator::steerToFlock()
   if (cohesion_neighbors_)
   {
 	  //! Proportional navigation function in c++
-	  proportionalNavigation(aveHeading, aveVelocity);
+	  if (pPred_.pursuit.type == 1) proportionalNavigation(aveHeading, aveVelocity);
+	  if (pPred_.pursuit.type == 2) DirectPursuit(aveHeading, aveVelocity);
     //PursuitCustom(aveHeading, aveVelocity);
     //cohesion_ = H_ * (cohesion_ * H_);
     //steering_ += cohesion_;
@@ -536,10 +537,35 @@ void CPredator::PursuitCustom(const glm::vec3& targetHeading, const glm::vec3& t
     this->pPred_.pursuit.hook(this, Sim.SimulationTime(), targetPoint_, targetHeading, targetVelocity);
   }
 }
+
+void CPredator::DirectPursuit(const glm::vec3& targetHeading, const glm::vec3& targetVelocity)
+{
+
+	glm::vec3 r = targetPoint_ - position_; 
+	glm::vec3 v = velocity_;
+	glm::vec3 omega = glm::cross(v, r) / glm::length(glm::cross(v, r)); 
+	float angle = asin(glm::length(glm::cross(v, r)) / (glm::length(v)*glm::length(r)));
+	omega *= angle;
+	omega *= glm::length(v);
+	omega = glm::cross(omega, v);
+	steering_ += omega * N_;
+	//std::cout << "\n omega: " << omega.x << "  " << omega.y << "  " << omega.z;
+	//std::cout << "\n v: " << v.x << "  " << v.y << "  " << v.z;
+	//std::cout << "\n angle: " << angle;
+	if (glm::dot(r, r) < 8)
+	{
+		glm::vec3 pHead = glm::vec3(glm::dot(r, glm::column(H_, 0)), glm::dot(r, glm::column(H_, 1)), glm::dot(r, glm::column(H_, 2)));
+		float phi = atan2(pHead.z, pHead.x);
+		bool blind = (abs(phi) - 3.14 < 0.8 && pHead.x < 0);
+		if (blind) EndHunt(false);
+	}
+}
+
+
 //! Prop Nav function
 void CPredator::proportionalNavigation(const glm::vec3& targetHeading, const glm::vec3& targetVelocity)
 {
-
+	
 	glm::vec3 r = targetPoint_ - position_;
 	glm::vec3 v = velocity_ - targetVelocity;
 	glm::vec3 wLOS = glm::cross(v, r) / glm::dot(r, r);
@@ -652,7 +678,7 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 	float turn = asin(glm::cross(Ll, Fl).x / (glm::length(Ll) * glm::length(Fl)));
 	float rollrate = 10.0f;
 	//! Clamp anglular velocity 
-	float beta = std::max(std::min((turn), rollrate / dt), -rollrate / dt);
+	float beta = std::max(std::min((turn), rollrate * dt), -rollrate * dt);
 
 	avx::vec3 bank = beta * side;
 

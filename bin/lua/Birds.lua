@@ -219,7 +219,7 @@ function Birds.Falcon (p)
   predator.PreySelection = PreySelections.Picked -- Auto, Picked, PickedTopo
   
   --predator.PursuitStrategy = { type = pursuits.Custom, hook = pursuits.DirectPursuit(10) }
-  predator.PursuitStrategy = { type = pursuits.Custom, hook = pursuits.ProportionalNavigation(5) }
+  predator.PursuitStrategy = { type = pursuits._DirectPursuit, hook = pursuits.ProportionalNavigation(5) }
 
   predator.AttackSpan = 6000                   -- max. attack time span w/o lock [s]
   predator.Dogfight = 20000                  -- max. attack time span after first lock [s]

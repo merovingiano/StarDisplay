@@ -30,6 +30,8 @@ namespace Param {
 	  bool TrajectoryPrey;
 	  bool externalPrey;
 	  std::string externalPreyFile;
+	  std::string title;
+	  std::string description;
   };
 
 

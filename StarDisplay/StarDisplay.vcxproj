@@ -361,6 +361,7 @@
     <ClInclude Include="Predator.hpp" />
     <ClInclude Include="PredatorStatistic.hpp" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Save.hpp" />
     <ClInclude Include="Simulation.hpp" />
     <ClInclude Include="IStatistic.hpp" />
     <ClInclude Include="HistogramStatistic.hpp" />
@@ -409,6 +410,7 @@
     <ClCompile Include="Predator.cpp" />
     <ClCompile Include="PredatorStatistic.cpp" />
     <ClCompile Include="Prey.cpp" />
+    <ClCompile Include="Save.cpp" />
     <ClCompile Include="Simulation.cpp" />
     <ClCompile Include="HistogramStatistic.cpp" />
     <ClCompile Include="TimeSeriesStatistic.cpp" />

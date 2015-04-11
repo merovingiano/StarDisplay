@@ -18,6 +18,7 @@
 #include "Globals.hpp"
 #include <iostream>
 #include <sstream>
+#include <time.h>
 
 using namespace Param;
 
@@ -89,21 +90,56 @@ void EvolvePN::loadPositions(const char* fname) const
 
 void EvolvePN::save(const char* fname, bool append) const
 {
-	std::ofstream os(fname, std::ios_base::out | (append ? std::ios_base::app : std::ios_base::trunc));
+	time_t     now = time(0);
+	struct tm  tstruct;
+	char       buf[80];
+	tstruct = *localtime(&now);
+	strftime(buf, sizeof(buf), "%d-%m-%Y", &tstruct);
+
+
+	std::string bufS("D:/ownCloud/2013-2014/phd\ hunting/dataStarDisplay/");
+	bufS.append(buf);
+	bufS.append("/");
+	CreateDirectory(bufS.c_str(), NULL);
+	bufS.append(fname);
+	
+	std::ofstream os(bufS.c_str(), std::ios_base::out | (append ? std::ios_base::app : std::ios_base::trunc));
 	const char* fname2 = "trajectoryPredator.txt";
 	const char* fname3 = "trajectoryPrey.txt";
 	std::ofstream os2(fname2, std::ios_base::out | (append ? std::ios_base::app : std::ios_base::trunc));
 	std::ofstream os3(fname3, std::ios_base::out | (append ? std::ios_base::app : std::ios_base::trunc));
 	CFlock::pred_iterator first(GFLOCKNC.predator_begin());
 
-	for (size_t i = 0; i<alleles_.size(); ++i)
+	os << "#" << Sim.Params().evolution.title << "\n";
+	os << "#" << Sim.Params().evolution.description << "\n";
+	os << "#";
+	for (size_t i = 0; i < namesParameters_.size(); ++i)
 	{
-		std::string buf(" ");
-		buf.append(std::to_string(i));
-		buf.append(" \n");
-		std::ostream_iterator<glm::vec4> oit(os, buf.c_str());
-		std::copy(alleles_[i].begin(), alleles_[i].end(), oit);
-		
+		os << namesParameters_[i] << " ";
+	}
+	os << "\n#";
+	for (size_t i = 0; i < namesParameters_.size(); ++i)
+	{
+		os << ValuesParameters_[i] << " ";
+	}
+	os << "\n";
+	for (size_t i = 0; i < names_.size(); ++i)
+	{
+		os << names_[i] << " ";
+	}
+
+	os << "\n";
+	for (size_t i = 0; i<save_data_.size(); ++i)
+	{
+
+		for (size_t ii = 0; ii < save_data_[i].size(); ++ii)
+		{
+			for (size_t iii = 0; iii < save_data_[i][ii].size(); ++iii)
+			{
+				os << save_data_[i][ii][iii] << " ";
+			}
+			os << "\n";
+		}
 	}
 
 	for (size_t i = 0; i < allPandS_.size(); ++i)
@@ -122,15 +158,140 @@ void EvolvePN::save(const char* fname, bool append) const
 
 	os << '\n';
 	os2 << '\n';
-
+	std::cout << "\n done__________________________________________";
 }
 
+void EvolvePN::PrepareSave()
+{
+	CFlock::pred_iterator first(GFLOCKNC.predator_begin());
+	CFlock::pred_iterator last(GFLOCKNC.predator_end());
+	CFlock::prey_iterator firstPrey(GFLOCKNC.prey_begin());
+	data_all_pred data_all_pred;
 
+	for (; first != last; ++first)
+	{
+		data_per_pred data;
+
+		
+		data.push_back(first->get_N());
+		data.push_back(first->getStartAltitude());
+		data.push_back(first->getStartXDist()); 
+		data.push_back(first->hunts().minDist);
+		data.push_back(first->getGeneration());
+		data.push_back(first->hunts().seqTime);
+		data.push_back(first->GetBirdParams().reactionTime);
+		data.push_back(first->GetBirdParams().cruiseSpeed);
+		data.push_back(float(first->GetPredParams().pursuit.type));
+		data_all_pred.push_back(data);
+
+	}
+	
+	save_data_.push_back(data_all_pred);
+
+	if (names_.empty())
+	{
+		names_.push_back("N");
+		names_.push_back("StartAltitude");
+		names_.push_back("StartXDist");
+		names_.push_back("minDist");
+		names_.push_back("Generation");
+		names_.push_back("seqTime");
+		names_.push_back("reactionTime");
+		names_.push_back("cruiseSpeed");
+		names_.push_back("PursuitType1pn2dp");
+	}
+	first = GFLOCKNC.predator_begin();
+	if (namesParameters_.empty())
+	{
+		namesParameters_.push_back("predAR"); ValuesParameters_.push_back(first->GetBirdParams().wingAspectRatio);
+		namesParameters_.push_back("predBodyDrag");  ValuesParameters_.push_back(first->GetBirdParams().bodyDrag);
+		namesParameters_.push_back("predMinSpeed"); ValuesParameters_.push_back(first->GetBirdParams().minSpeed);
+		namesParameters_.push_back("predCruiseSpeed"); ValuesParameters_.push_back(first->GetBirdParams().cruiseSpeed);
+		namesParameters_.push_back("predMaxSpeed"); ValuesParameters_.push_back(first->GetBirdParams().maxSpeed);
+		namesParameters_.push_back("predMaxLift"); ValuesParameters_.push_back(first->GetBirdParams().maxLift);
+		namesParameters_.push_back("predCL"); ValuesParameters_.push_back(first->GetBirdParams().CL);
+		namesParameters_.push_back("predCDCL"); ValuesParameters_.push_back(0.0f);
+		namesParameters_.push_back("predWingSpan"); ValuesParameters_.push_back(first->GetBirdParams().wingSpan);
+		namesParameters_.push_back("predMass"); ValuesParameters_.push_back(first->GetBirdParams().bodyMass);
+		namesParameters_.push_back("predMaxForce"); ValuesParameters_.push_back(first->GetBirdParams().maxForce);
+		namesParameters_.push_back("predRT"); ValuesParameters_.push_back(first->GetBirdParams().reactionTime);
+		namesParameters_.push_back("predRTStochastic"); ValuesParameters_.push_back(first->GetBirdParams().reactionStochastic);
+		namesParameters_.push_back("predBlindAngle"); ValuesParameters_.push_back(first->GetBirdParams().blindAngle);
+		namesParameters_.push_back("predNoiseWeight"); ValuesParameters_.push_back(first->GetBirdParams().randomWeight);
+		namesParameters_.push_back("predLockDistance"); ValuesParameters_.push_back(first->GetPredParams().LockDistance);
+		namesParameters_.push_back("predBlindAngleLock"); ValuesParameters_.push_back(first->GetPredParams().LockDistance);
+
+
+		namesParameters_.push_back("numPrey"); ValuesParameters_.push_back(GFLOCK.num_prey());
+		namesParameters_.push_back("dt"); ValuesParameters_.push_back(Sim.UpdateTime());
+		namesParameters_.push_back("EvolDuration"); ValuesParameters_.push_back(Sim.Params().evolution.durationGeneration);
+		namesParameters_.push_back("evolX"); ValuesParameters_.push_back(Sim.Params().evolution.evolveX);
+		namesParameters_.push_back("evolY"); ValuesParameters_.push_back(Sim.Params().evolution.evolveAlt);
+		namesParameters_.push_back("evolZ"); ValuesParameters_.push_back(2.0f);
+		namesParameters_.push_back("evolPN"); ValuesParameters_.push_back(Sim.Params().evolution.evolvePN);
+		namesParameters_.push_back("minRadius"); ValuesParameters_.push_back(Sim.Params().roost.minRadius);
+		namesParameters_.push_back("maxRadius"); ValuesParameters_.push_back(Sim.Params().roost.maxRadius);
+		namesParameters_.push_back("Radius");  ValuesParameters_.push_back(Sim.Params().roost.Radius);
+		namesParameters_.push_back("externalPrey"); ValuesParameters_.push_back(Sim.Params().evolution.externalPrey);
+		
+
+
+		namesParameters_.push_back("preyMaxForce"); ValuesParameters_.push_back(firstPrey->GetBirdParams().maxForce);
+		namesParameters_.push_back("preyAR"); ValuesParameters_.push_back(firstPrey->GetBirdParams().wingAspectRatio);
+		namesParameters_.push_back("preyCL"); ValuesParameters_.push_back(firstPrey->GetBirdParams().CL);
+		namesParameters_.push_back("preyCDCL"); ValuesParameters_.push_back(0.0f);
+		namesParameters_.push_back("preyWingSpan"); ValuesParameters_.push_back(firstPrey->GetBirdParams().wingSpan);
+		namesParameters_.push_back("preyCruiseSpeed"); ValuesParameters_.push_back(firstPrey->GetBirdParams().cruiseSpeed);
+		namesParameters_.push_back("preyMaxLift"); ValuesParameters_.push_back(firstPrey->GetBirdParams().maxLift);
+		namesParameters_.push_back("preyMaxSpeed"); ValuesParameters_.push_back(firstPrey->GetBirdParams().maxSpeed);
+		namesParameters_.push_back("preyMinSpeed"); ValuesParameters_.push_back(firstPrey->GetBirdParams().minSpeed);
+		namesParameters_.push_back("preyWBetaInRoll"); ValuesParameters_.push_back(firstPrey->GetBirdParams().wBetaIn.x);
+		namesParameters_.push_back("preyWBetaInPitch"); ValuesParameters_.push_back(firstPrey->GetBirdParams().wBetaIn.y);
+		namesParameters_.push_back("preyMaxRadius"); ValuesParameters_.push_back(firstPrey->GetBirdParams().maxRadius);
+		namesParameters_.push_back("preyMaxSeparationTopo"); ValuesParameters_.push_back(firstPrey->GetBirdParams().maxSeparationTopo);
+		namesParameters_.push_back("preyseparationWeightx"); ValuesParameters_.push_back(firstPrey->GetBirdParams().separationWeight.x);
+		namesParameters_.push_back("preyseparationWeighty"); ValuesParameters_.push_back(firstPrey->GetBirdParams().separationWeight.y);
+		namesParameters_.push_back("preyseparationWeightz"); ValuesParameters_.push_back(firstPrey->GetBirdParams().separationWeight.z);
+		namesParameters_.push_back("preyalignmentWeightx"); ValuesParameters_.push_back(firstPrey->GetBirdParams().alignmentWeight.x);
+		namesParameters_.push_back("preyalignmentWeighty"); ValuesParameters_.push_back(firstPrey->GetBirdParams().alignmentWeight.y);
+		namesParameters_.push_back("preycohesionWeightx"); ValuesParameters_.push_back(firstPrey->GetBirdParams().cohesionWeight.x);
+		namesParameters_.push_back("preycohesionWeighty"); ValuesParameters_.push_back(firstPrey->GetBirdParams().cohesionWeight.y);
+		namesParameters_.push_back("preycohesionWeightz"); ValuesParameters_.push_back(firstPrey->GetBirdParams().cohesionWeight.z);
+		namesParameters_.push_back("preyrandomWeight"); ValuesParameters_.push_back(firstPrey->GetBirdParams().randomWeight);
+		namesParameters_.push_back("preyBoundaryWeightx"); ValuesParameters_.push_back(firstPrey->GetBirdParams().boundaryWeight.x);
+		namesParameters_.push_back("preyBoundaryWeighty"); ValuesParameters_.push_back(firstPrey->GetBirdParams().boundaryWeight.y);
+		namesParameters_.push_back("preyBoundaryWeightz"); ValuesParameters_.push_back(firstPrey->GetBirdParams().boundaryWeight.z);
+		namesParameters_.push_back("preyAltitude"); ValuesParameters_.push_back(firstPrey->GetBirdParams().altitude);
+		namesParameters_.push_back("preyDetectCruising"); ValuesParameters_.push_back(firstPrey->GetPreyParams().DetectCruising);
+		namesParameters_.push_back("preyDetectionDistance"); ValuesParameters_.push_back(firstPrey->GetPreyParams().DetectionDistance);
+		namesParameters_.push_back("preyDetectionSurfaceProb"); ValuesParameters_.push_back(firstPrey->GetPreyParams().DetectionSurfaceProb);
+		namesParameters_.push_back("preyDetectionHemisphereFOV"); ValuesParameters_.push_back(firstPrey->GetPreyParams().DetectionHemisphereFOV);
+		namesParameters_.push_back("preyIncurNeighborPanic"); ValuesParameters_.push_back(firstPrey->GetPreyParams().IncurNeighborPanic);
+		namesParameters_.push_back("preyIncurLatency"); ValuesParameters_.push_back(firstPrey->GetPreyParams().IncurLatency);
+		namesParameters_.push_back("preyAlertnessRelexationx"); ValuesParameters_.push_back(firstPrey->GetPreyParams().AlertnessRelexation.x);
+		namesParameters_.push_back("preyAlertnessRelexationy"); ValuesParameters_.push_back(firstPrey->GetPreyParams().AlertnessRelexation.y);
+		namesParameters_.push_back("preyAlertedReactionTimeFactor"); ValuesParameters_.push_back(firstPrey->GetPreyParams().AlertedReactionTimeFactor);
+		namesParameters_.push_back("preyReturnRelaxation"); ValuesParameters_.push_back(firstPrey->GetPreyParams().ReturnRelaxation);
+		namesParameters_.push_back("preyReturnWeightx"); ValuesParameters_.push_back(firstPrey->GetPreyParams().ReturnWeight.x);
+		namesParameters_.push_back("preyReturnWeighty"); ValuesParameters_.push_back(firstPrey->GetPreyParams().ReturnWeight.y);
+		namesParameters_.push_back("preyReturnWeightz"); ValuesParameters_.push_back(firstPrey->GetPreyParams().ReturnWeight.z);
+		namesParameters_.push_back("preyReturnThresholdx"); ValuesParameters_.push_back(firstPrey->GetPreyParams().ReturnThreshold.x);
+		namesParameters_.push_back("preyReturnThresholdy"); ValuesParameters_.push_back(firstPrey->GetPreyParams().ReturnThreshold.y);
+		namesParameters_.push_back("preyRT"); ValuesParameters_.push_back(firstPrey->GetBirdParams().reactionTime);
+		namesParameters_.push_back("preyreactionStochastic"); ValuesParameters_.push_back(firstPrey->GetBirdParams().reactionStochastic);
+		namesParameters_.push_back("preyBlindAngle"); ValuesParameters_.push_back(firstPrey->GetBirdParams().blindAngle);
+		namesParameters_.push_back("preyBodyDrag"); ValuesParameters_.push_back(firstPrey->GetBirdParams().bodyDrag);
+		namesParameters_.push_back("preyMass"); ValuesParameters_.push_back(firstPrey->GetBirdParams().bodyMass);
+		
+
+	}
+}
 
 void EvolvePN::Shuffle()
 {
 	//next generation starts here
 	++Generation_;
+	PrepareSave();
 	// just a vector of type vec4 having three deflection parameters and the min distance
 	allele_type allele;
 	//looping over the predators and placing all 

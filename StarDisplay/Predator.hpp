@@ -108,6 +108,7 @@ private:
 
   void PursuitCustom(const glm::vec3& targetHeading, const glm::vec3& targetVelocity);
   void proportionalNavigation(const glm::vec3& targetHeading, const glm::vec3& targetVelocity);
+  void DirectPursuit(const glm::vec3& targetHeading, const glm::vec3& targetVelocity);
   Param::Predator  pPred_;
   float            attackTime_;
 

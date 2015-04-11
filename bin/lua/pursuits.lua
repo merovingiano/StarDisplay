@@ -5,6 +5,8 @@ local pursuits = {}
 
 
 pursuits.Custom = 0
+pursuits._ProportionalNavigation = 1
+pursuits._DirectPursuit = 2
 
 
 function pursuits.DirectPursuit(Weight)

@@ -67,10 +67,10 @@ namespace libParam
       }
       lua_pop(L, 1);
     }
-    else
-    {
-      cobj.deflection = object_cast<glm::vec3>(luaobj["deflection"]);
-    }
+    //else
+    //{
+    //  cobj.deflection = object_cast<glm::vec3>(luaobj["deflection"]);
+    //}
     return cobj;
   }
 
@@ -261,7 +261,9 @@ namespace libParam
 	cobj.evolution.TrajectoryBestPredator = object_cast<bool  >(luaobj["evolution"]["TrajectoryBestPredator"]);
 	cobj.evolution.TrajectoryPrey = object_cast<bool  >(luaobj["evolution"]["TrajectoryPrey"]);
 	cobj.evolution.externalPreyFile = object_cast<std::string  >(luaobj["evolution"]["externalPreyFile"]);
-	cobj.evolution.externalPrey = object_cast<bool  >(luaobj["evolution"]["externalPrey"]);
+	cobj.evolution.externalPrey = object_cast<bool>(luaobj["evolution"]["externalPrey"]);
+	cobj.evolution.title = object_cast<std::string>(luaobj["evolution"]["title"]);
+	cobj.evolution.description = object_cast<std::string >(luaobj["evolution"]["description"]);
 	return cobj;
   }
 
@@ -485,6 +487,7 @@ void luaopen_libParam(lua_State* L)
       .def_readonly("bodyWeight", &Bird::bodyWeight)
       .def_readwrite("wingSpan", &Bird::wingSpan)
       .def_readwrite("wingAspectRatio", &Bird::wingAspectRatio)
+	  .def_readwrite("bodyDrag", &Bird::bodyDrag)
       .def_readwrite("wingArea", &Bird::wingArea)
       .def_readwrite("CL", &Bird::CL)
       .def_readwrite("maxForce", &Bird::maxForce)

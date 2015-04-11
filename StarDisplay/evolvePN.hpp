@@ -4,7 +4,7 @@
 #include <vector>
 #include "glmfwd.hpp"
 #include "DefaultStatistic.hpp"
-
+#include <string>
 
 class EvolvePN : public DefaultStatistic
 {
@@ -18,6 +18,7 @@ public:
 
 private:
 	void Shuffle();
+	void PrepareSave(); 
 	double lastShuffle_;
 	int Generation_;
 	
@@ -28,6 +29,13 @@ private:
 	std::vector<allele_type> positionsAndSpeed_;
 	alleles_vect allPandS_;
 	alleles_vect allPandSPrey_;
+	typedef std::vector<float> data_per_pred;
+	typedef std::vector<data_per_pred> data_all_pred;
+	typedef std::vector<data_all_pred> data_all_generations;
+	data_all_generations save_data_;
+	std::vector<std::string> names_;
+	std::vector<std::string> namesParameters_;
+	std::vector<float> ValuesParameters_;
 };
 
 
