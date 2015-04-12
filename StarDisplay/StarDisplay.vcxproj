@@ -267,6 +267,7 @@
     <None Include="..\bin\average_wave.lua" />
     <None Include="..\bin\config.lua" />
     <None Include="..\bin\evasion.lua" />
+    <None Include="..\bin\experiments.lua" />
     <None Include="..\bin\lua\gpws.lua" />
     <None Include="..\bin\lua\inspect.lua" />
     <None Include="..\bin\lua\pursuits.lua" />

@@ -80,7 +80,7 @@ private:
   void OnLButtonDblClk(int x, int y);
   void OnMouseMove(int dx, int dy, bool LButtonPressed);
   void OnContextMenu(int menuEntry);
-
+  void copyBirdParam(luabind::object& obj, Param::Bird& bird);
 private:
   void EnterGameLoop();
 

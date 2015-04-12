@@ -10,10 +10,11 @@ require "wave"
 
 dofile(Simulation.WorkingPath .. "attacks.lua")
 dofile(Simulation.WorkingPath .. "evasion.lua")
+dofile(Simulation.WorkingPath .. "experiments.lua")
 
 -- Insert custom statistic
 
-
+doExperiments = 1
 -- Overwrite default initial parameter if required
 gParam.Roost = {
   numPrey = 50,
@@ -42,7 +43,7 @@ function InitHook ()
   camera:Use()
 
   sim.SetInitialParameter(gParam)
-  sim.GetExperimentSettings(experiments)
+ 
   local win = sim.Window()
   win:SetTitle("StarDisplay V" .. sim.Version .. " " .. sim.ConfigFile)
   win:SetClientRect(glm.vec4(0,0,1024,720))
@@ -58,6 +59,7 @@ function InitHook ()
   sim.AddKeyboardHook(VK.RETURN, true, false, false, KBH_ReloadParameter)
   sim.AddKeyboardHook(VK["D"], true, false, false, KBH_Debug)
 
+  
 end
 
 
@@ -138,33 +140,13 @@ end
 
 
 function TimeTickHook ()
-
+    if doExperiments == 1 then
+		Simulation.GetExperimentSettings(experiments)
+		doExperiments = 0
+	end
 end
 
 
-
-
-experiments = {}
-
-experiments[1] = 
-	{
-
-		Param = 
-		{
-	
-			evolution = 
-			{
-						fileName = "testString.txt",
-						TrajectoryBestPredator = true,
-						title = "PN" ,
-						description = "Here, I am testing how good the catch rate is when doing direct pursuit. Is it comparable to PN?",
-						terminationGeneration = 3,
-						durationGeneration = 5
-
-			}
-		}
-
-	}
 
 
 

@@ -292,6 +292,8 @@ namespace Param {
     enum PursuitStrategies
     {
       CUSTOM = 0,
+	  ProportionalNavigation = 1,
+	  DirectPursuit = 2,
       MaxPursuitStrategy__
     };
 
@@ -372,9 +374,16 @@ namespace Param {
 	Evolution evolution;
   };
 
+
+
+
   struct Experiment
   {
-	  Param::Params param;
+	  Params param;
+	  Bird preyBird;
+	  Bird predBird;
+	  Predator pred;
+	  Prey prey;
   };
 
 }

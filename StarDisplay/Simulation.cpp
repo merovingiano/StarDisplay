@@ -32,6 +32,7 @@
 #include "debug.hpp"
 #include "random.hpp"
 #include "Mmsystem.h"
+#include "libParam.hpp"
 
 
 using namespace Param;
@@ -114,7 +115,15 @@ void Simulation::GetExperimentSettings(const luabind::object& obj)
 
 	for (luabind::iterator i(experiments), end; i != end; ++i)
 	{
+		CFlock::prey_iterator Prey = GFLOCKNC.prey_begin();
+		CFlock::pred_iterator Pred = GFLOCKNC.predator_begin();
+
+		std::cout << "\n number of pred is: " << GFLOCKNC.num_pred();
 		Param::Experiment experiment;
+		experiment.pred = Pred->GetPredParams();
+		experiment.prey = Prey->GetPreyParams();
+		experiment.predBird = Pred->GetBirdParams();
+		experiment.preyBird = Prey->GetBirdParams();
 		experiment.param = params_;
 		int intKey = luabind::object_cast<int>(i.key());
 		luabind::object expnumb = obj[intKey];
@@ -162,10 +171,97 @@ void Simulation::GetExperimentSettings(const luabind::object& obj)
 
 				}
 			}
+			if (strKey2 == "preyBird" || strKey2 == "predBird")
+			{
+
+				luabind::object Bird = obj[intKey][strKey2];
+				if (strKey2 == "preyBird") copyBirdParam(Bird, experiment.preyBird);
+				if (strKey2 == "predBird") copyBirdParam(Bird, experiment.predBird);
+			}
+			
+			if (strKey2 == "prey")
+			{
+
+				luabind::object prey = obj[intKey][strKey2];
+				for (luabind::iterator iii(prey), end; iii != end; ++iii)
+				{
+					std::string strKey3 = luabind::object_cast<std::string>(iii.key());
+					if (strKey3 == "DetectCruising") experiment.prey.DetectCruising = luabind::object_cast<bool>(prey["DetectCruising"]);
+					if (strKey3 == "DetectionDistance") experiment.prey.DetectionDistance = luabind::object_cast<float>(prey["DetectionDistance"]);
+					if (strKey3 == "DetectionSurfaceProb") experiment.prey.DetectionSurfaceProb = luabind::object_cast<float>(prey["DetectionSurfaceProb"]);
+					if (strKey3 == "DetectionHemisphereFOV") experiment.prey.DetectionHemisphereFOV = luabind::object_cast<float>(prey["DetectionHemisphereFOV"]);
+					if (strKey3 == "IncurNeighborPanic") experiment.prey.IncurNeighborPanic = luabind::object_cast<int>(prey["IncurNeighborPanic"]);
+					if (strKey3 == "IncurLatency") experiment.prey.IncurLatency = luabind::object_cast<double>(prey["IncurLatency"]);
+					if (strKey3 == "AlertnessRelexation") experiment.prey.AlertnessRelexation = luabind::object_cast<glm::vec2>(prey["AlertnessRelexation"]);
+					if (strKey3 == "AlertedReactionTimeFactor") experiment.prey.AlertedReactionTimeFactor = luabind::object_cast<float>(prey["AlertedReactionTimeFactor"]);
+					if (strKey3 == "AlertedWBetaIn") experiment.prey.AlertedWBetaIn = luabind::object_cast<glm::vec3>(prey["AlertedWBetaIn"]);
+					if (strKey3 == "AlertedWBetaOut") experiment.prey.AlertedWBetaOut = luabind::object_cast<glm::vec3>(prey["DetectCruising"]);
+					if (strKey3 == "AlertedTopo") experiment.prey.AlertedTopo = luabind::object_cast<float>(prey["AlertedTopo"]);
+					if (strKey3 == "AlertedAlignmentWeight") experiment.prey.AlertedAlignmentWeight = luabind::object_cast<glm::vec2>(prey["AlertedAlignmentWeight"]);
+					if (strKey3 == "Return2Flock") experiment.prey.Return2Flock = luabind::object_cast<bool>(prey["Return2Flock"]);
+					if (strKey3 == "ReturnRelaxation") experiment.prey.ReturnRelaxation = luabind::object_cast<float>(prey["ReturnRelaxation"]);
+					if (strKey3 == "ReturnWeight") experiment.prey.ReturnWeight = luabind::object_cast<glm::vec3>(prey["ReturnWeight"]);
+					if (strKey3 == "ReturnThreshold") experiment.prey.ReturnThreshold = luabind::object_cast<glm::vec2>(prey["ReturnThreshold"]);
+					if (strKey3 == "EvasionStrategy")
+					{
+						Panic p = libParam::FromLua<Panic>(prey["EvasionStrategy"]);
+						experiment.prey.EvasionStrategy[p.type] = p;
+					}
+
+
+				}
+			}
+			if (strKey2 == "pred")
+			{
+
+				luabind::object pred = obj[intKey][strKey2];
+				for (luabind::iterator iii(pred), end; iii != end; ++iii)
+				{
+					std::string strKey3 = luabind::object_cast<std::string>(iii.key());
+					if (strKey3 == "StartAttack") {
+						int x = luabind::object_cast<int>(pred["StartAttack"]);
+						experiment.pred.StartAttack = static_cast<Param::Predator::StartAttacks>(x);
+					}
+					if (strKey3 == "PreySelection") {
+						int x = luabind::object_cast<int>(pred["PreySelection"]);
+						experiment.pred.PreySelection = static_cast<Param::Predator::PreySelections>(x);
+					}
+					if (strKey3 == "PursuitStrategy") 
+					{
+						Pursuit p = libParam::FromLua<Pursuit>(pred["PursuitStrategy"]);
+						experiment.pred.pursuit = p;
+						std::cout << "\n the pursuit is:   " << p.type;
+					}
+					
+					if (strKey3 == "AttackWBetaIn") experiment.pred.AttackWBetaIn = luabind::object_cast<glm::vec3>(pred["AttackWBetaIn"]);
+					if (strKey3 == "AttackWBetaOut") experiment.pred.AttackWBetaOut = luabind::object_cast<glm::vec3>(pred["AttackWBetaOut"]);
+					if (strKey3 == "CatchDistance") experiment.pred.CatchDistance = luabind::object_cast<float>(pred["CatchDistance"]);
+					if (strKey3 == "AttackSpan") experiment.pred.AttackSpan = luabind::object_cast<float>(pred["AttackSpan"]);
+					if (strKey3 == "Dogfight") experiment.pred.Dogfight = luabind::object_cast<float>(pred["Dogfight"]);
+					if (strKey3 == "HoldLock") experiment.pred.HoldLock = luabind::object_cast<bool>(pred["HoldLock"]);
+					if (strKey3 == "LockBlindAngle") experiment.pred.LockBlindAngle = luabind::object_cast<float>(pred["LockBlindAngle"]);
+					if (strKey3 == "LockDistance") experiment.pred.LockDistance = luabind::object_cast<float>(pred["LockDistance"]);
+					if (strKey3 == "maxLocks") experiment.pred.maxLocks = luabind::object_cast<int>(pred["maxLocks"]);
+					if (strKey3 == "ExposureThreshold") experiment.pred.ExposureThreshold = luabind::object_cast<glm::vec2>(pred["ExposureThreshold"]);
+					if (strKey3 == "AttractMix") experiment.pred.AttractMix = luabind::object_cast<float>(pred["AttractMix"]);
+					if (strKey3 == "HandleTime") experiment.pred.HandleTime = luabind::object_cast<float>(pred["HandleTime"]);
+
+
+				}
+			}
 		}
 		std::cout << "\n and it issss:::  " << experiment.param.evolution.fileName;
 		Sim.experiments.push_back(experiment);
 	}
+}
+
+void Simulation::copyBirdParam(luabind::object& obj, Param::Bird& bird)
+{
+	for (luabind::iterator iii(obj), end; iii != end; ++iii)
+	{
+		std::string strKey3 = luabind::object_cast<std::string>(iii.key());
+	}
+
 }
 
 void Simulation::SetPFeatureMap(const Param::FeatureMap& featureMap)

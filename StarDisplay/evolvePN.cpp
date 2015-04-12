@@ -54,6 +54,7 @@ void EvolvePN::Reset()
 	save_data_.clear();
 	names_.clear();
 	ValuesParameters_.clear();
+	StringParameters_.clear();
 	if (Sim.experiments.empty())
 	{
 		Sim.expNumb = 0;
@@ -61,11 +62,28 @@ void EvolvePN::Reset()
 	else
 	{
 		Sim.expNumb++;
+		CFlock::pred_iterator firstPred(GFLOCKNC.predator_begin());
+		CFlock::pred_iterator lastPred(GFLOCKNC.predator_end());
+		CFlock::prey_iterator firstPrey(GFLOCKNC.prey_begin());
+		CFlock::prey_iterator lastPrey(GFLOCKNC.prey_end());
 		std::cout << "\n Starting Simulation " << Sim.expNumb;
 		if (Sim.expNumb > Sim.experiments.size()) AppWindow.PostMessage(WM_CLOSE);
 		Param::Params p = Sim.experiments[Sim.expNumb-1].param;
-		std::cout << "\n till here?";
 		Sim.SetParams(p);
+		for (; firstPred != lastPred; ++firstPred)
+		{
+			firstPred->SetPredParams(Sim.experiments[Sim.expNumb - 1].pred);
+			firstPred->SetBirdParams(Sim.experiments[Sim.expNumb - 1].predBird);
+		}
+		for (; firstPrey != lastPrey; ++firstPrey)
+		{
+			firstPrey->SetPreyParams(Sim.experiments[Sim.expNumb - 1].prey);
+			firstPrey->SetBirdParams(Sim.experiments[Sim.expNumb - 1].preyBird);
+		}
+		CFlock::prey_iterator testfirstPrey(GFLOCKNC.prey_begin());
+		std::cout << "\n testing alterness relaxation: " << testfirstPrey->GetPreyParams().AlertnessRelexation.x << " " << testfirstPrey->GetPreyParams().AlertnessRelexation.y;
+
+
 	}
 	
 
@@ -476,7 +494,7 @@ void EvolvePN::Shuffle()
 		first->setTrail(true);
 		first->BeginHunt(); 
 		//std::cout << "\npred num " << first->id();
-		std::cout << "\nN :  " << first->get_N() << " startAltitude :  " << first->getStartAltitude() << " startXDist :  " << first->getStartXDist() << " Generation: " << first->getGeneration();
+		//std::cout << "\nN :  " << first->get_N() << " startAltitude :  " << first->getStartAltitude() << " startXDist :  " << first->getStartXDist() << " Generation: " << first->getGeneration();
 		//std::cout << "\n" << rnd(rnd_eng());
 		meanN += first->get_N() * 1 / N;
 		meanStartAltitude += first->getStartAltitude() * 1 / N;
