@@ -36,6 +36,7 @@ private:
 	std::vector<std::string> names_;
 	std::vector<std::string> namesParameters_;
 	std::vector<float> ValuesParameters_;
+	std::vector<std::string> StringParameters_;
 };
 
 

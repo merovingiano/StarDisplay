@@ -7,7 +7,7 @@ local random = require "Random"
 local pursuits = require "pursuits"
 local gpws = require "gpws"
 
-local Rolf = dofile(Simulation.WorkingPath .. "Rolf.lua")
+
 
 
 local rho = 1.2               -- air density [kg/m^3]
@@ -77,6 +77,8 @@ function Birds.Starling (p)
   bird.wingAspectRatio = 8.333
   bird.wingArea = bird.wingSpan * (bird.wingSpan / bird.wingAspectRatio)   -- [m^2]
   bird.CL = CL(bird)
+  bird.CDCL= CDCL(bird)
+  bird.controlCL = false
   bird.bodyDrag = 0
 
   bird.maxForce = 2  -- max steering force [N] 
@@ -130,6 +132,7 @@ function Birds.Starling (p)
   --prey.EvasionStrategy = { type = EvasionStrategies.Custom, hook = Wave(DropEx(5,10)) }
   --prey.EvasionStrategy = { type = EvasionStrategies.Drop, weight = 5.0, edges = glm.vec4(0, 2, 2, 2) }
 
+
   prey.IncurNeighborPanic = 2        -- absorb panic reaction from nth nearest neighbor
   prey.IncurLatency = 0.05           -- absortion is possible after IncurLatency seconds
     
@@ -169,6 +172,8 @@ function Birds.Falcon (p)
   bird.wingAspectRatio = 7.92
   bird.wingArea = bird.wingSpan * (bird.wingSpan / bird.wingAspectRatio)   -- [m^2]
   bird.CL = CL(bird)
+  bird.CDCL= CDCL(bird)
+  bird.controlCL = false
   bird.bodyDrag = 0.17
   
   bird.maxLift = 40           -- [N}
@@ -179,8 +184,7 @@ function Birds.Falcon (p)
   bird.maxSpeed = 40
   bird.maxForce = maxForce(bird)          -- max steering force [N]
 
- 
-  print ("\nmaxForce:" .. maxForce(bird)  .."\n")
+
   -----------------------------------------------------------------------------
   -- Steering
   -----------------------------------------------------------------------------
@@ -219,7 +223,7 @@ function Birds.Falcon (p)
   predator.PreySelection = PreySelections.Picked -- Auto, Picked, PickedTopo
   
   --predator.PursuitStrategy = { type = pursuits.Custom, hook = pursuits.DirectPursuit(10) }
-  predator.PursuitStrategy = { type = pursuits._DirectPursuit, hook = pursuits.ProportionalNavigation(5) }
+  predator.PursuitStrategy = { type = pursuits._ProportionalNavigation, hook = pursuits.ProportionalNavigation(5) }
 
   predator.AttackSpan = 6000                   -- max. attack time span w/o lock [s]
   predator.Dogfight = 20000                  -- max. attack time span after first lock [s]

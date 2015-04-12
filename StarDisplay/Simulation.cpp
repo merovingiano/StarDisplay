@@ -78,6 +78,12 @@ Simulation::~Simulation()
 }
 
 
+
+void Simulation::SetParams(const Param::Params& param)
+{
+	params_ = param;
+}
+
 void Simulation::SetInitialParameter(const Param::Params& param)
 {
   params_ = param;
@@ -91,6 +97,76 @@ void Simulation::SetInitialParameter(const Param::Params& param)
   SetPFeatureMap(param.featureMap);
 }
 
+
+void Simulation::GetExperimentSettings(const luabind::object& obj)
+{
+	std::cout << "\n HI..   ";
+	std::cout << "\n HI..   ";
+	std::cout << "\n HI..   ";
+	std::cout << "\n HI..   ";
+	std::cout << "\n HI..   ";
+	std::cout << "\n HI..   ";
+	std::cout << "\n HI..   ";
+	std::cout << "\n HI..   ";
+	std::cout << "\n HI..   ";
+
+	luabind::object experiments = obj;
+
+	for (luabind::iterator i(experiments), end; i != end; ++i)
+	{
+		Param::Experiment experiment;
+		experiment.param = params_;
+		int intKey = luabind::object_cast<int>(i.key());
+		luabind::object expnumb = obj[intKey];
+		for (luabind::iterator ii(expnumb), end; ii != end; ++ii)
+		{
+			std::string strKey2 = luabind::object_cast<std::string>(ii.key());
+			if (strKey2 == "Param")
+			{
+
+				luabind::object params = obj[intKey][strKey2];
+				for (luabind::iterator iii(params), end; iii != end; ++iii)
+				{
+					std::string strKey3 = luabind::object_cast<std::string>(iii.key());
+					std::cout << "\n" << intKey;
+					std::cout << "\n" << strKey2;
+					std::cout << "\n" << strKey3;
+
+					if (strKey3 == "evolution")
+
+					{
+						luabind::object evolution = obj[intKey][strKey2][strKey3];
+						for (luabind::iterator iiii(evolution), end; iiii != end; ++iiii)
+						{
+							std::string strKey4 = luabind::object_cast<std::string>(iiii.key());
+							if (strKey4 == "type") experiment.param.evolution.type = luabind::object_cast<std::string>(evolution["type"]);
+							if (strKey4 == "fileName") experiment.param.evolution.fileName = luabind::object_cast<std::string>(evolution["fileName"]);
+							if (strKey4 == "durationGeneration") experiment.param.evolution.durationGeneration = luabind::object_cast<float>(evolution["durationGeneration"]);
+							if (strKey4 == "evolvePN") experiment.param.evolution.evolvePN = luabind::object_cast<bool>(evolution["evolvePN"]);
+							if (strKey4 == "evolveAlt") experiment.param.evolution.evolveAlt = luabind::object_cast<bool>(evolution["evolveAlt"]);
+							if (strKey4 == "evolveX") experiment.param.evolution.evolveX = luabind::object_cast<bool>(evolution["evolveX"]);
+							if (strKey4 == "TrajectoryBestPredator") experiment.param.evolution.TrajectoryBestPredator = luabind::object_cast<bool>(evolution["TrajectoryBestPredator"]);
+							if (strKey4 == "TrajectoryPrey") experiment.param.evolution.TrajectoryPrey = luabind::object_cast<bool>(evolution["TrajectoryPrey"]);
+							if (strKey4 == "externalPrey") experiment.param.evolution.externalPrey = luabind::object_cast<bool>(evolution["externalPrey"]);
+							if (strKey4 == "externalPreyFile") experiment.param.evolution.externalPreyFile = luabind::object_cast<std::string>(evolution["externalPreyFile"]);
+							if (strKey4 == "title") experiment.param.evolution.title = luabind::object_cast<std::string>(evolution["title"]);
+							if (strKey4 == "description") experiment.param.evolution.description = luabind::object_cast<std::string>(evolution["description"]);
+							if (strKey4 == "terminationGeneration") experiment.param.evolution.terminationGeneration = luabind::object_cast<int>(evolution["terminationGeneration"]);
+
+
+
+						}
+
+
+					}
+
+				}
+			}
+		}
+		std::cout << "\n and it issss:::  " << experiment.param.evolution.fileName;
+		Sim.experiments.push_back(experiment);
+	}
+}
 
 void Simulation::SetPFeatureMap(const Param::FeatureMap& featureMap)
 {

@@ -19,6 +19,7 @@
 #include <iostream>
 #include <sstream>
 #include <time.h>
+#include <iomanip> 
 
 using namespace Param;
 
@@ -49,11 +50,32 @@ void EvolvePN::Reset()
 	alleles_.clear();
 	allPandS_.clear();
 	allPandSPrey_.clear();
+	namesParameters_.clear();
+	save_data_.clear();
+	names_.clear();
+	ValuesParameters_.clear();
+	if (Sim.experiments.empty())
+	{
+		Sim.expNumb = 0;
+	}
+	else
+	{
+		Sim.expNumb++;
+		std::cout << "\n Starting Simulation " << Sim.expNumb;
+		if (Sim.expNumb > Sim.experiments.size()) AppWindow.PostMessage(WM_CLOSE);
+		Param::Params p = Sim.experiments[Sim.expNumb-1].param;
+		std::cout << "\n till here?";
+		Sim.SetParams(p);
+	}
+	
+
+	
 }
 
 
 void EvolvePN::apply()
 {
+	if (Sim.expNumb == 0) Reset();
 	if (alleles_.empty())
 	{
 		alleles_.emplace_back();
@@ -61,6 +83,7 @@ void EvolvePN::apply()
 		allPandSPrey_.emplace_back();
 	}	
 		Shuffle();
+
 }
 
 void EvolvePN::loadPositions(const char* fname) const
@@ -95,7 +118,7 @@ void EvolvePN::save(const char* fname, bool append) const
 	char       buf[80];
 	tstruct = *localtime(&now);
 	strftime(buf, sizeof(buf), "%d-%m-%Y", &tstruct);
-
+	
 
 	std::string bufS("D:/ownCloud/2013-2014/phd\ hunting/dataStarDisplay/");
 	bufS.append(buf);
@@ -104,9 +127,11 @@ void EvolvePN::save(const char* fname, bool append) const
 	bufS.append(fname);
 	
 	std::ofstream os(bufS.c_str(), std::ios_base::out | (append ? std::ios_base::app : std::ios_base::trunc));
+	os.precision(7);
 	const char* fname2 = "trajectoryPredator.txt";
 	const char* fname3 = "trajectoryPrey.txt";
 	std::ofstream os2(fname2, std::ios_base::out | (append ? std::ios_base::app : std::ios_base::trunc));
+	os2.precision(7);
 	std::ofstream os3(fname3, std::ios_base::out | (append ? std::ios_base::app : std::ios_base::trunc));
 	CFlock::pred_iterator first(GFLOCKNC.predator_begin());
 
@@ -118,9 +143,13 @@ void EvolvePN::save(const char* fname, bool append) const
 		os << namesParameters_[i] << " ";
 	}
 	os << "\n#";
-	for (size_t i = 0; i < namesParameters_.size(); ++i)
+	for (size_t i = 0; i < ValuesParameters_.size(); ++i)
 	{
 		os << ValuesParameters_[i] << " ";
+	}
+	for (size_t i = 0; i < StringParameters_.size(); ++i)
+	{
+		os << StringParameters_[i] << " ";
 	}
 	os << "\n";
 	for (size_t i = 0; i < names_.size(); ++i)
@@ -159,6 +188,7 @@ void EvolvePN::save(const char* fname, bool append) const
 	os << '\n';
 	os2 << '\n';
 	std::cout << "\n done__________________________________________";
+	//if (!Sim.experiments.empty()) std::cout << "\n and is it working here..?  " << Sim.experiments[0].param.evolution.fileName;
 }
 
 void EvolvePN::PrepareSave()
@@ -205,12 +235,13 @@ void EvolvePN::PrepareSave()
 	{
 		namesParameters_.push_back("predAR"); ValuesParameters_.push_back(first->GetBirdParams().wingAspectRatio);
 		namesParameters_.push_back("predBodyDrag");  ValuesParameters_.push_back(first->GetBirdParams().bodyDrag);
+		namesParameters_.push_back("predControlCL");  ValuesParameters_.push_back(first->GetBirdParams().controlCL);
+		namesParameters_.push_back("predCDCL");  ValuesParameters_.push_back(first->GetBirdParams().CDCL);
 		namesParameters_.push_back("predMinSpeed"); ValuesParameters_.push_back(first->GetBirdParams().minSpeed);
 		namesParameters_.push_back("predCruiseSpeed"); ValuesParameters_.push_back(first->GetBirdParams().cruiseSpeed);
 		namesParameters_.push_back("predMaxSpeed"); ValuesParameters_.push_back(first->GetBirdParams().maxSpeed);
 		namesParameters_.push_back("predMaxLift"); ValuesParameters_.push_back(first->GetBirdParams().maxLift);
 		namesParameters_.push_back("predCL"); ValuesParameters_.push_back(first->GetBirdParams().CL);
-		namesParameters_.push_back("predCDCL"); ValuesParameters_.push_back(0.0f);
 		namesParameters_.push_back("predWingSpan"); ValuesParameters_.push_back(first->GetBirdParams().wingSpan);
 		namesParameters_.push_back("predMass"); ValuesParameters_.push_back(first->GetBirdParams().bodyMass);
 		namesParameters_.push_back("predMaxForce"); ValuesParameters_.push_back(first->GetBirdParams().maxForce);
@@ -223,7 +254,7 @@ void EvolvePN::PrepareSave()
 
 
 		namesParameters_.push_back("numPrey"); ValuesParameters_.push_back(GFLOCK.num_prey());
-		namesParameters_.push_back("dt"); ValuesParameters_.push_back(Sim.UpdateTime());
+		namesParameters_.push_back("dt"); ValuesParameters_.push_back(Sim.Params().IntegrationTimeStep);
 		namesParameters_.push_back("EvolDuration"); ValuesParameters_.push_back(Sim.Params().evolution.durationGeneration);
 		namesParameters_.push_back("evolX"); ValuesParameters_.push_back(Sim.Params().evolution.evolveX);
 		namesParameters_.push_back("evolY"); ValuesParameters_.push_back(Sim.Params().evolution.evolveAlt);
@@ -235,11 +266,9 @@ void EvolvePN::PrepareSave()
 		namesParameters_.push_back("externalPrey"); ValuesParameters_.push_back(Sim.Params().evolution.externalPrey);
 		
 
-
 		namesParameters_.push_back("preyMaxForce"); ValuesParameters_.push_back(firstPrey->GetBirdParams().maxForce);
 		namesParameters_.push_back("preyAR"); ValuesParameters_.push_back(firstPrey->GetBirdParams().wingAspectRatio);
 		namesParameters_.push_back("preyCL"); ValuesParameters_.push_back(firstPrey->GetBirdParams().CL);
-		namesParameters_.push_back("preyCDCL"); ValuesParameters_.push_back(0.0f);
 		namesParameters_.push_back("preyWingSpan"); ValuesParameters_.push_back(firstPrey->GetBirdParams().wingSpan);
 		namesParameters_.push_back("preyCruiseSpeed"); ValuesParameters_.push_back(firstPrey->GetBirdParams().cruiseSpeed);
 		namesParameters_.push_back("preyMaxLift"); ValuesParameters_.push_back(firstPrey->GetBirdParams().maxLift);
@@ -281,7 +310,35 @@ void EvolvePN::PrepareSave()
 		namesParameters_.push_back("preyreactionStochastic"); ValuesParameters_.push_back(firstPrey->GetBirdParams().reactionStochastic);
 		namesParameters_.push_back("preyBlindAngle"); ValuesParameters_.push_back(firstPrey->GetBirdParams().blindAngle);
 		namesParameters_.push_back("preyBodyDrag"); ValuesParameters_.push_back(firstPrey->GetBirdParams().bodyDrag);
+		namesParameters_.push_back("preyControlCL"); ValuesParameters_.push_back(firstPrey->GetBirdParams().controlCL);
+		namesParameters_.push_back("preyCDCL"); ValuesParameters_.push_back(firstPrey->GetBirdParams().CDCL);
 		namesParameters_.push_back("preyMass"); ValuesParameters_.push_back(firstPrey->GetBirdParams().bodyMass);
+		namesParameters_.push_back("preyEvMaximizeDist"); ValuesParameters_.push_back(firstPrey->GetPreyParams().EvasionStrategy[0].weight);
+		namesParameters_.push_back("preyEvTurnInward"); ValuesParameters_.push_back(firstPrey->GetPreyParams().EvasionStrategy[1].weight);
+		namesParameters_.push_back("preyEvTurnAway"); ValuesParameters_.push_back(firstPrey->GetPreyParams().EvasionStrategy[2].weight);
+		namesParameters_.push_back("preyEvDrop"); ValuesParameters_.push_back(firstPrey->GetPreyParams().EvasionStrategy[3].weight);
+		namesParameters_.push_back("preyEvMoveCentered"); ValuesParameters_.push_back(firstPrey->GetPreyParams().EvasionStrategy[4].weight);
+		namesParameters_.push_back("preyEvZig"); ValuesParameters_.push_back(firstPrey->GetPreyParams().EvasionStrategy[5].weight);
+
+		std::string EvasionNames[8] = {
+			"MaximizeDist",     // maximize distance of closest approach
+			"TurnInward",       // turn along circularity vector
+			"TurnAway",         // Turn in opposite direction (Chris)
+			"Drop",             // Drop out of sky
+			"MoveCentered",			// Move towards center
+			"Zig",              // Left-Right evasion. Parameter edge is reinterpreted as (TirgDist, t_left, t_right, t_handle)
+			"Custom",	  			  // Lua
+			"MaxEvasionStrategy__"
+		};
+
+		std::string GuidanceNames[3] = {
+			"Custom",    
+			"ProportionalNavigation",       
+			"DirectPursuit",         
+		};
+
+		namesParameters_.push_back("predGuidance"); StringParameters_.push_back(GuidanceNames[first->GetPredParams().pursuit.type]);
+
 		
 
 	}
@@ -317,10 +374,10 @@ void EvolvePN::Shuffle()
 	//each generation the mutation becomes less..
 	for (unsigned i = (N >> 1); i < N; ++i)
 	{
-		allele[i].x += (1.0f / Generation_) * rnd(rnd_eng());
+		allele[i].x += (1.0f / Generation_) * rnd(rnd_eng()) * 5 + 1.0f * rnd(rnd_eng());
 		
-		allele[i].y += (1.0f / Generation_) * rnd(rnd_eng())*10; // more variation in x and y
-		allele[i].z += (1.0f / Generation_) * rnd(rnd_eng())*10;
+		allele[i].y += (1.0f / Generation_) * rnd(rnd_eng()) * 10 + 5.0f * rnd(rnd_eng()); // more variation in x and y
+		allele[i].z += (1.0f / Generation_) * rnd(rnd_eng()) * 10 + 5.0f * rnd(rnd_eng());
 	}
 	CFlock::pred_iterator first(GFLOCKNC.predator_begin());
 	CFlock::pred_iterator last(GFLOCKNC.predator_end());
@@ -432,7 +489,17 @@ void EvolvePN::Shuffle()
 			loadPositions(Sim.Params().evolution.externalPreyFile.c_str());
 	}
 
+	
+	CFlock::prey_iterator lastPrey(GFLOCKNC.prey_end());
+
+	for (; firstPrey != lastPrey; ++firstPrey)
+	{
+		firstPrey->position_ = glm::vec3(0, 120, 0);
+	};
+
 	GFLOCKNC.meanN = meanN;
 	GFLOCKNC.meanStartAltitude = meanStartAltitude;
 	GFLOCKNC.meanXDist = meanXDist;
+
+	if (Generation_ >= Sim.Params().evolution.terminationGeneration) Reset();
 }

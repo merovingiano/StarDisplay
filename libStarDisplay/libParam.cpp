@@ -2,7 +2,7 @@
 #include <luabind/adopt_policy.hpp>
 #include "libParam.hpp"
 #include "libGLM.hpp"
-
+#include <iostream>
 
 namespace libParam
 {
@@ -260,10 +260,15 @@ namespace libParam
 	cobj.evolution.evolveX = object_cast<bool  >(luaobj["evolution"]["evolveX"]);
 	cobj.evolution.TrajectoryBestPredator = object_cast<bool  >(luaobj["evolution"]["TrajectoryBestPredator"]);
 	cobj.evolution.TrajectoryPrey = object_cast<bool  >(luaobj["evolution"]["TrajectoryPrey"]);
+	cobj.evolution.terminationGeneration = object_cast<int  >(luaobj["evolution"]["terminationGeneration"]);
 	cobj.evolution.externalPreyFile = object_cast<std::string  >(luaobj["evolution"]["externalPreyFile"]);
 	cobj.evolution.externalPrey = object_cast<bool>(luaobj["evolution"]["externalPrey"]);
 	cobj.evolution.title = object_cast<std::string>(luaobj["evolution"]["title"]);
 	cobj.evolution.description = object_cast<std::string >(luaobj["evolution"]["description"]);
+
+	
+
+
 	return cobj;
   }
 
@@ -488,6 +493,8 @@ void luaopen_libParam(lua_State* L)
       .def_readwrite("wingSpan", &Bird::wingSpan)
       .def_readwrite("wingAspectRatio", &Bird::wingAspectRatio)
 	  .def_readwrite("bodyDrag", &Bird::bodyDrag)
+	  .def_readwrite("controlCL", &Bird::controlCL)
+	  .def_readwrite("CDCL", &Bird::CDCL)
       .def_readwrite("wingArea", &Bird::wingArea)
       .def_readwrite("CL", &Bird::CL)
       .def_readwrite("maxForce", &Bird::maxForce)

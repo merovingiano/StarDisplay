@@ -25,6 +25,7 @@ EvasionStrategies =
   MoveCentered = 4,
   Zig = 5,
   Custom = 6,
+  None = 7,
 }
 
 -- Used as bitset

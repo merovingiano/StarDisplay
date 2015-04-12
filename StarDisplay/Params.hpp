@@ -28,11 +28,15 @@ namespace Param {
 	  bool evolveX;
 	  bool TrajectoryBestPredator;
 	  bool TrajectoryPrey;
+	  int terminationGeneration;
 	  bool externalPrey;
 	  std::string externalPreyFile;
 	  std::string title;
 	  std::string description;
   };
+
+
+
 
 
   struct vaderJacob
@@ -212,6 +216,8 @@ namespace Param {
     float altitude;
     GPWS gpws;
 	float bodyDrag;
+	bool controlCL;
+	float CDCL;
   };
 
 
@@ -227,6 +233,7 @@ namespace Param {
   struct Prey {
     enum EvasionStrategies
     {
+		//! important: when adding new evasion strategies, don't forget to change the names as well!
       MaximizeDist,     // maximize distance of closest approach
       TurnInward,       // turn along circularity vector
       TurnAway,         // Turn in opposite direction (Chris)
@@ -236,6 +243,7 @@ namespace Param {
       Custom,	  			  // Lua
       MaxEvasionStrategy__
     };
+
     Panic EvasionStrategy[MaxEvasionStrategy__];
     bool DetectCruising;
     float DetectionDistance;
@@ -362,6 +370,11 @@ namespace Param {
     FeatureMap featureMap;
     RenderFlags renderFlags;
 	Evolution evolution;
+  };
+
+  struct Experiment
+  {
+	  Param::Params param;
   };
 
 }

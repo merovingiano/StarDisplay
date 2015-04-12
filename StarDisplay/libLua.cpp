@@ -110,6 +110,11 @@ namespace liblua {
   { 
     Sim.SetInitialParameter(FromLua<Params>(obj)); 
   }
+
+  void GetExperimentSettings(const object& obj)
+  {
+	  Sim.GetExperimentSettings(obj);
+  }
     
   double SimulationTime() 
   { 
@@ -310,6 +315,7 @@ namespace liblua {
   {
     module(Lua, "Simulation")[
       def("SetInitialParameter", &SetInitialParameter),
+		  def("GetExperimentSettings", &GetExperimentSettings),
       def("Window", &Window),
       def("CreateCamera", &CreateCamera, adopt(result)),
       def("GetActiveCamera", &GetActiveCamera),

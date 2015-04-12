@@ -15,7 +15,7 @@ Simulation.concurrency_num_threads = Simulation.hardware_concurrency
 Simulation.concurrency_dynamic = true       -- dynamic adjustment (see OpenMP definition)
 
 
-Simulation.DebugLevel = 100
+Simulation.DebugLevel = 0
 Simulation.DebugLogOnce = true
 Simulation.DebugLogStackLevel = 0
 

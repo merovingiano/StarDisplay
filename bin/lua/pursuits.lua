@@ -4,6 +4,7 @@ print("  sourcing pursuit.lua")
 local pursuits = {}
 
 
+-- don't forget to alter the PNSave guidance names!
 pursuits.Custom = 0
 pursuits._ProportionalNavigation = 1
 pursuits._DirectPursuit = 2

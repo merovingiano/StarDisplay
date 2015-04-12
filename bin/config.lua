@@ -12,7 +12,7 @@ dofile(Simulation.WorkingPath .. "attacks.lua")
 dofile(Simulation.WorkingPath .. "evasion.lua")
 
 -- Insert custom statistic
-Simulation.CustomStatistic = require "RobinStat"
+
 
 -- Overwrite default initial parameter if required
 gParam.Roost = {
@@ -23,11 +23,12 @@ gParam.Roost = {
   maxRadius = 10000.0,
 }
 
-gParam.evolution.fileName = "NewTest.txt"
+gParam.evolution.fileName = "PNmutation.txt"
 --gParam.evolution.type = "noEvol"
 gParam.evolution.TrajectoryBestPredator = true
-gParam.evolution.title = "Direct Pursuit" 
-gParam.evolution.description = "Here, I am testing how good the catch rate is when doing direct pursuit. Is it comparable to PN?"
+gParam.evolution.title = "PN new mutation test" 
+gParam.evolution.durationGeneration = 3
+gParam.evolution.description = "I've added a new extra mutation, allowing it to vary more. I want to see the long term effects of this. "
 
 function InitHook ()
   local sim = Simulation
@@ -41,6 +42,7 @@ function InitHook ()
   camera:Use()
 
   sim.SetInitialParameter(gParam)
+  sim.GetExperimentSettings(experiments)
   local win = sim.Window()
   win:SetTitle("StarDisplay V" .. sim.Version .. " " .. sim.ConfigFile)
   win:SetClientRect(glm.vec4(0,0,1024,720))
@@ -108,12 +110,6 @@ PredatorFactory = PredatorFactory or function ()
     predator:SetTrail(true)
     predator:SetTargetPrey(Simulation.GetActiveCamera():GetFocalPrey())
     predator:StartAttack()
-	if predData ~= nil then
-		predData[predator.id] = {["position"] = predator.position}
-		predData[predator.id]["MeasuredN"] = 0
-		predData[predator.id]["MeasuredNcount"] = 0
-		predData[predator.id]["preyStrat"] = preyStrat
-	end
     return predator
   end
 end
@@ -144,6 +140,37 @@ end
 function TimeTickHook ()
 
 end
+
+
+
+
+experiments = {}
+
+experiments[1] = 
+	{
+
+		Param = 
+		{
+	
+			evolution = 
+			{
+						fileName = "testString.txt",
+						TrajectoryBestPredator = true,
+						title = "PN" ,
+						description = "Here, I am testing how good the catch rate is when doing direct pursuit. Is it comparable to PN?",
+						terminationGeneration = 3,
+						durationGeneration = 5
+
+			}
+		}
+
+	}
+
+
+
+
+
+
 
 
 

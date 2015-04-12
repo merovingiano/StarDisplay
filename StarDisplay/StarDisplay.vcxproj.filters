@@ -54,9 +54,6 @@
     <None Include="..\bin\shader\shader.glsl">
       <Filter>Graphics\glsl\shader</Filter>
     </None>
-    <None Include="..\bin\keymaps.lua">
-      <Filter>Lua</Filter>
-    </None>
     <None Include="..\bin\lua\StarDisplay.lua">
       <Filter>Lua\lua</Filter>
     </None>
@@ -96,31 +93,7 @@
     <None Include="..\bin\evasion.lua">
       <Filter>Lua</Filter>
     </None>
-    <None Include="..\bin\lua\GUI.lua">
-      <Filter>Lua\lua</Filter>
-    </None>
-    <None Include="..\bin\statistic.lua">
-      <Filter>Lua</Filter>
-    </None>
     <None Include="..\bin\travelDist.lua">
-      <Filter>Lua</Filter>
-    </None>
-    <None Include="..\bin\meta_config.lua">
-      <Filter>Lua</Filter>
-    </None>
-    <None Include="..\bin\egbert_statistic.lua">
-      <Filter>Lua</Filter>
-    </None>
-    <None Include="..\bin\lars_statistic.lua">
-      <Filter>Lua</Filter>
-    </None>
-    <None Include="..\bin\triggerPanic.lua">
-      <Filter>Lua</Filter>
-    </None>
-    <None Include="..\bin\lars_config.lua">
-      <Filter>Lua</Filter>
-    </None>
-    <None Include="..\bin\meta_config_repeated_attacks.lua">
       <Filter>Lua</Filter>
     </None>
     <None Include="..\bin\lua\pursuits.lua">
@@ -132,41 +105,14 @@
     <None Include="..\bin\lua\inspect.lua">
       <Filter>Lua\lua</Filter>
     </None>
-    <None Include="..\bin\lua\RollRateStatistic.lua">
-      <Filter>Lua\lua</Filter>
-    </None>
     <None Include="..\bin\wave.lua">
       <Filter>Lua</Filter>
     </None>
     <None Include="..\bin\lua\gpws.lua">
       <Filter>Lua\lua</Filter>
     </None>
-    <None Include="..\bin\turn_statistic.lua">
-      <Filter>Lua</Filter>
-    </None>
     <None Include="..\bin\lua\valarray.lua">
       <Filter>Lua\lua</Filter>
-    </None>
-    <None Include="..\bin\TA.lua">
-      <Filter>Lua</Filter>
-    </None>
-    <None Include="..\bin\TA_config.lua">
-      <Filter>Lua</Filter>
-    </None>
-    <None Include="..\bin\TA_Birds.lua">
-      <Filter>Lua</Filter>
-    </None>
-    <None Include="..\bin\diffusion.lua">
-      <Filter>Lua</Filter>
-    </None>
-    <None Include="..\bin\marijke.lua">
-      <Filter>Lua</Filter>
-    </None>
-    <None Include="..\bin\terror_waves_config.lua">
-      <Filter>Lua</Filter>
-    </None>
-    <None Include="..\bin\Rolf.lua">
-      <Filter>Lua</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

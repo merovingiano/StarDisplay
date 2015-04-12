@@ -36,7 +36,8 @@ local Default = {
 		externalPrey = false,
 		externalPreyFile = "pos_lure_flight1.txt",
 		title = "Default Title",
-		description = "default description"
+		description = "default description",
+		terminationGeneration = 100000000,
   },
 
   Trail = {

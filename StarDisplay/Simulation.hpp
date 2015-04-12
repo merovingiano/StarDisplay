@@ -8,7 +8,7 @@
 #include "glmfwd.hpp"
 #include "Params.hpp"
 #include "evolvePN.hpp"
-
+#include <vector>
 
 class Simulation
 {
@@ -22,6 +22,8 @@ public:
   double timeSinceEvolution;
   //
   void SetInitialParameter(const Param::Params&);
+  void SetParams(const Param::Params&);
+  void GetExperimentSettings(const luabind::object& obj);
   void SetPFeatureMap(const Param::FeatureMap&);
   void SetPRoost(const Param::Roost&);
   void SetPRenderFlags(const Param::RenderFlags&);
@@ -59,7 +61,9 @@ public:
   class ICamera const&       ccamera() const { return *camera_; }
   class trail_buffer_pool&   trails() const { return *(trails_); }
 
-
+  //experiments
+  std::vector <Param::Experiment> experiments;
+  int expNumb;
   
 private:
   const class CBird* PickNearestBird2Ray(const glm::vec3& ray_position, const glm::vec3& ray_direction);
@@ -101,6 +105,8 @@ private:
 
   // Parameter records
   Param::Params params_;
+
+ 
 
   // Registered callbacks
   luabind::object PreyFactory_;
