@@ -421,6 +421,7 @@ void CPredator::steerToFlock()
 	  //! Proportional navigation function in c++
 	  if (pPred_.pursuit.type == 1) proportionalNavigation(aveHeading, aveVelocity);
 	  if (pPred_.pursuit.type == 2) DirectPursuit(aveHeading, aveVelocity);
+	  if (pPred_.pursuit.type == 3) DirectPursuit2(aveHeading, aveVelocity);
     //PursuitCustom(aveHeading, aveVelocity);
     //cohesion_ = H_ * (cohesion_ * H_);
     //steering_ += cohesion_;
@@ -549,9 +550,22 @@ void CPredator::DirectPursuit(const glm::vec3& targetHeading, const glm::vec3& t
 	omega *= glm::length(v);
 	omega = glm::cross(omega, v);
 	steering_ += omega * N_;
-	//std::cout << "\n omega: " << omega.x << "  " << omega.y << "  " << omega.z;
-	//std::cout << "\n v: " << v.x << "  " << v.y << "  " << v.z;
-	//std::cout << "\n angle: " << angle;
+	if (glm::dot(r, r) < 8)
+	{
+		glm::vec3 pHead = glm::vec3(glm::dot(r, glm::column(H_, 0)), glm::dot(r, glm::column(H_, 1)), glm::dot(r, glm::column(H_, 2)));
+		float phi = atan2(pHead.z, pHead.x);
+		bool blind = (abs(phi) - 3.14 < 0.8 && pHead.x < 0);
+		if (blind) EndHunt(false);
+	}
+}
+
+
+void CPredator::DirectPursuit2(const glm::vec3& targetHeading, const glm::vec3& targetVelocity)
+{
+
+	glm::vec3 r = targetPoint_ - position_;
+	steering_ += glm::normalize(r) * N_;
+
 	if (glm::dot(r, r) < 8)
 	{
 		glm::vec3 pHead = glm::vec3(glm::dot(r, glm::column(H_, 0)), glm::dot(r, glm::column(H_, 1)), glm::dot(r, glm::column(H_, 2)));

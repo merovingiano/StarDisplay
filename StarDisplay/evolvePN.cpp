@@ -269,7 +269,26 @@ void EvolvePN::PrepareSave()
 		namesParameters_.push_back("predNoiseWeight"); ValuesParameters_.push_back(first->GetBirdParams().randomWeight);
 		namesParameters_.push_back("predLockDistance"); ValuesParameters_.push_back(first->GetPredParams().LockDistance);
 		namesParameters_.push_back("predBlindAngleLock"); ValuesParameters_.push_back(first->GetPredParams().LockDistance);
-
+		namesParameters_.push_back("predskipRightHemisphere"); ValuesParameters_.push_back(first->GetBirdParams().skipRightHemisphere);
+		namesParameters_.push_back("predrho"); ValuesParameters_.push_back(first->GetBirdParams().rho);
+		namesParameters_.push_back("predspeedControl"); ValuesParameters_.push_back(first->GetBirdParams().speedControl);
+		namesParameters_.push_back("predmaxRadius"); ValuesParameters_.push_back(first->GetBirdParams().maxRadius);
+		namesParameters_.push_back("predneighborLerp"); ValuesParameters_.push_back(first->GetBirdParams().neighborLerp);
+		namesParameters_.push_back("predtopologicalRange"); ValuesParameters_.push_back(first->GetBirdParams().topologicalRange);
+		namesParameters_.push_back("predcircularityInc"); ValuesParameters_.push_back(first->GetBirdParams().circularityInc);
+		namesParameters_.push_back("predbinocularOverlap"); ValuesParameters_.push_back(first->GetBirdParams().binocularOverlap);
+		namesParameters_.push_back("predseparationStepx"); ValuesParameters_.push_back(first->GetBirdParams().separationStep.x);
+		namesParameters_.push_back("predseparationStepy"); ValuesParameters_.push_back(first->GetBirdParams().separationStep.y);
+		namesParameters_.push_back("predseparationWeightx"); ValuesParameters_.push_back(first->GetBirdParams().separationWeight.x);
+		namesParameters_.push_back("predseparationWeighty"); ValuesParameters_.push_back(first->GetBirdParams().separationWeight.y);
+		namesParameters_.push_back("predseparationWeightz"); ValuesParameters_.push_back(first->GetBirdParams().separationWeight.z);
+		namesParameters_.push_back("predalignmentWeightx"); ValuesParameters_.push_back(first->GetBirdParams().alignmentWeight.x);
+		namesParameters_.push_back("predalignmentWeighty"); ValuesParameters_.push_back(first->GetBirdParams().alignmentWeight.y);
+		namesParameters_.push_back("predcohesionWeightx"); ValuesParameters_.push_back(first->GetBirdParams().cohesionWeight.x);
+		namesParameters_.push_back("predcohesionWeighty"); ValuesParameters_.push_back(first->GetBirdParams().cohesionWeight.y);
+		namesParameters_.push_back("predcohesionWeightz"); ValuesParameters_.push_back(first->GetBirdParams().cohesionWeight.z);
+		namesParameters_.push_back("predAltitude"); ValuesParameters_.push_back(first->GetBirdParams().altitude);
+		namesParameters_.push_back("predrandomWeight"); ValuesParameters_.push_back(first->GetBirdParams().randomWeight);
 
 		namesParameters_.push_back("numPrey"); ValuesParameters_.push_back(GFLOCK.num_prey());
 		namesParameters_.push_back("dt"); ValuesParameters_.push_back(Sim.Params().IntegrationTimeStep);
@@ -308,6 +327,8 @@ void EvolvePN::PrepareSave()
 		namesParameters_.push_back("preyBoundaryWeightx"); ValuesParameters_.push_back(firstPrey->GetBirdParams().boundaryWeight.x);
 		namesParameters_.push_back("preyBoundaryWeighty"); ValuesParameters_.push_back(firstPrey->GetBirdParams().boundaryWeight.y);
 		namesParameters_.push_back("preyBoundaryWeightz"); ValuesParameters_.push_back(firstPrey->GetBirdParams().boundaryWeight.z);
+		namesParameters_.push_back("preyOuterBoundary"); ValuesParameters_.push_back(firstPrey->GetBirdParams().outerBoundary);
+		namesParameters_.push_back("preyInnerBoundary"); ValuesParameters_.push_back(firstPrey->GetBirdParams().innerBoundary);
 		namesParameters_.push_back("preyAltitude"); ValuesParameters_.push_back(firstPrey->GetBirdParams().altitude);
 		namesParameters_.push_back("preyDetectCruising"); ValuesParameters_.push_back(firstPrey->GetPreyParams().DetectCruising);
 		namesParameters_.push_back("preyDetectionDistance"); ValuesParameters_.push_back(firstPrey->GetPreyParams().DetectionDistance);
@@ -349,10 +370,11 @@ void EvolvePN::PrepareSave()
 			"MaxEvasionStrategy__"
 		};
 
-		std::string GuidanceNames[3] = {
+		std::string GuidanceNames[4] = {
 			"Custom",    
 			"ProportionalNavigation",       
-			"DirectPursuit",         
+			"DirectPursuit",      
+			"DirectPursuit2",
 		};
 
 		namesParameters_.push_back("predGuidance"); StringParameters_.push_back(GuidanceNames[first->GetPredParams().pursuit.type]);

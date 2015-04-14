@@ -294,6 +294,7 @@ namespace Param {
       CUSTOM = 0,
 	  ProportionalNavigation = 1,
 	  DirectPursuit = 2,
+	  DirectPursuit2 = 3,
       MaxPursuitStrategy__
     };
 

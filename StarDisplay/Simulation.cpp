@@ -273,8 +273,8 @@ void Simulation::copyBirdParam(luabind::object& obj, Param::Bird& bird)
 		std::string strKey3 = luabind::object_cast<std::string>(iii.key());
 		if (strKey3 == "reactionTime") bird.reactionTime = luabind::object_cast<float>(obj["reactionTime"]);
 		if (strKey3 == "reactionStochastic") bird.reactionStochastic = luabind::object_cast<float>(obj["reactionStochastic"]);
-		if (strKey3 == "skipLeftHemisphere") bird.skipLeftHemisphere = luabind::object_cast<float>(obj["skipLeftHemisphere"]);
-		if (strKey3 == "skipRightHemisphere") bird.skipRightHemisphere = luabind::object_cast<float>(obj["skipRightHemisphere"]);
+		if (strKey3 == "skipLeftHemisphere") bird.skipLeftHemisphere = luabind::object_cast<int>(obj["skipLeftHemisphere"]);
+		if (strKey3 == "skipRightHemisphere") bird.skipRightHemisphere = luabind::object_cast<int>(obj["skipRightHemisphere"]);
 		if (strKey3 == "rho") bird.rho = luabind::object_cast<float>(obj["rho"]);
 		if (strKey3 == "bodyMass") bird.bodyMass = luabind::object_cast<float>(obj["bodyMass"]);
 		if (strKey3 == "bodyWeight") bird.bodyWeight = luabind::object_cast<float>(obj["bodyWeight"]);
@@ -288,28 +288,28 @@ void Simulation::copyBirdParam(luabind::object& obj, Param::Bird& bird)
 		if (strKey3 == "speedControl") bird.speedControl = luabind::object_cast<float>(obj["speedControl"]);
 		if (strKey3 == "maxSpeed") bird.maxSpeed = luabind::object_cast<float>(obj["maxSpeed"]);
 		if (strKey3 == "minSpeed") bird.minSpeed = luabind::object_cast<float>(obj["minSpeed"]);
-		if (strKey3 == "wBetaOut") bird.wBetaOut = luabind::object_cast<float>(obj["wBetaOut"]);
-		if (strKey3 == "wBetaIn") bird.wBetaIn = luabind::object_cast<float>(obj["wBetaIn"]);
+		if (strKey3 == "wBetaOut") bird.wBetaOut = luabind::object_cast<glm::vec3>(obj["wBetaOut"]);
+		if (strKey3 == "wBetaIn") bird.wBetaIn = luabind::object_cast<glm::vec3>(obj["wBetaIn"]);
 		if (strKey3 == "maxRadius") bird.maxRadius = luabind::object_cast<float>(obj["maxRadius"]);
 		if (strKey3 == "neighborLerp") bird.neighborLerp = luabind::object_cast<float>(obj["neighborLerp"]);
 		if (strKey3 == "topologicalRange") bird.topologicalRange = luabind::object_cast<float>(obj["topologicalRange"]);
 		if (strKey3 == "circularityInc") bird.circularityInc = luabind::object_cast<float>(obj["circularityInc"]);
 		if (strKey3 == "binocularOverlap") bird.binocularOverlap = luabind::object_cast<float>(obj["binocularOverlap"]);
 		if (strKey3 == "blindAngle") bird.blindAngle = luabind::object_cast<float>(obj["blindAngle"]);
-		if (strKey3 == "maxSeparationTopo") bird.maxSeparationTopo = luabind::object_cast<float>(obj["maxSeparationTopo"]);
-		if (strKey3 == "separationStep") bird.separationStep = luabind::object_cast<float>(obj["separationStep"]);
-		if (strKey3 == "separationWeight") bird.separationWeight = luabind::object_cast<float>(obj["separationWeight"]);
-		if (strKey3 == "alignmentWeight") bird.alignmentWeight = luabind::object_cast<float>(obj["alignmentWeight"]);
-		if (strKey3 == "cohesionWeight") bird.cohesionWeight = luabind::object_cast<float>(obj["cohesionWeight"]);
+		if (strKey3 == "maxSeparationTopo") bird.maxSeparationTopo = luabind::object_cast<int>(obj["maxSeparationTopo"]);
+		if (strKey3 == "separationStep") bird.separationStep = luabind::object_cast<glm::vec2>(obj["separationStep"]);
+		if (strKey3 == "separationWeight") bird.separationWeight = luabind::object_cast<glm::vec3>(obj["separationWeight"]);
+		if (strKey3 == "alignmentWeight") bird.alignmentWeight = luabind::object_cast<glm::vec2>(obj["alignmentWeight"]);
+		if (strKey3 == "cohesionWeight") bird.cohesionWeight = luabind::object_cast<glm::vec3>(obj["cohesionWeight"]);
 		if (strKey3 == "randomWeight") bird.randomWeight = luabind::object_cast<float>(obj["randomWeight"]);
-		if (strKey3 == "boundaryWeight") bird.boundaryWeight = luabind::object_cast<float>(obj["boundaryWeight"]);
+		if (strKey3 == "boundaryWeight") bird.boundaryWeight = luabind::object_cast<glm::vec3>(obj["boundaryWeight"]);
 		if (strKey3 == "boundaryReflectAngle") bird.boundaryReflectAngle = luabind::object_cast<float>(obj["boundaryReflectAngle"]);
 		if (strKey3 == "outerBoundary") bird.outerBoundary = luabind::object_cast<float>(obj["outerBoundary"]);
 		if (strKey3 == "innerBoundary") bird.innerBoundary = luabind::object_cast<float>(obj["innerBoundary"]);
 		if (strKey3 == "altitude") bird.altitude = luabind::object_cast<float>(obj["altitude"]);
 		//if (strKey3 == "gpws") bird.gpws = luabind::object_cast<float>(obj["gpws"]);
 		if (strKey3 == "bodyDrag") bird.bodyDrag = luabind::object_cast<float>(obj["bodyDrag"]);
-		if (strKey3 == "controlCL") bird.controlCL = luabind::object_cast<float>(obj["controlCL"]);
+		if (strKey3 == "controlCL") bird.controlCL = luabind::object_cast<bool>(obj["controlCL"]);
 		if (strKey3 == "CDCL") bird.CDCL = luabind::object_cast<float>(obj["CDCL"]);
 
 	}
