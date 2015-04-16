@@ -4,7 +4,7 @@
 #include <fstream>
 #include <glmutils/ostream.hpp>
 #include <glmutils/random.hpp>
-#include "EvolvePN.hpp"
+
 #include "random.hpp"
 #include "Flock.hpp"
 #include "IText.hpp"
@@ -20,22 +20,62 @@
 #include <sstream>
 #include <time.h>
 #include <iomanip> 
+#include "Params.hpp"
+#include <iostream>
+#include "EvolvePN.hpp"
 
 using namespace Param;
 
-
+typedef std::vector<float> one_allele;
 namespace {
 
 	struct cmp_min_dist
 	{
-		bool operator () (const glm::vec4& a, const glm::vec4& b) const
+		bool operator () (const one_allele a, const one_allele b) const
 		{
-			return a.w < b.w;
+			return a[a.size() - 1] < b[b.size() - 1];
 		}
 	};
 
 }
 
+
+void SetGetAlleles(one_allele& allele, CFlock::pred_iterator pred, int type)
+{
+
+	Param::Predator predParam = pred->GetPredParams();
+	Param::Bird bird = pred->GetBirdParams();
+	int index = 0;
+	if (type == 2) pred->setGeneration(Sim.evolution.getGeneration()); 
+	if (type == 1) allele.push_back(pred->get_N()); else if (Sim.Params().evolution.evolvePN) pred->set_N(allele[index]); index++; 
+	if (type == 1) allele.push_back(pred->getDPAdjParam()); else if (Sim.Params().evolution.evolveDPAdjParam) pred->setDPAdjParam(allele[index]); index++;
+	if (type == 1) allele.push_back(pred->getStartAltitude()); else if (Sim.Params().evolution.evolveAlt) pred->setStartAltitude(allele[index]); index++; 
+	if (type == 1) allele.push_back(pred->getStartXDist()); else if (Sim.Params().evolution.evolveX) pred->setStartXDist(allele[index]); index++; 
+	if (type == 1) allele.push_back(pred->getStartZDist()); else if (Sim.Params().evolution.evolveZ) pred->setStartZDist(allele[index]); index++; 
+	if (type == 1) allele.push_back(pred->GetBirdParams().CL); else if (Sim.Params().evolution.evolveCL) bird.CL = allele[index]; index++; 
+	if (type == 1) allele.push_back(pred->GetBirdParams().wingAspectRatio); else if (Sim.Params().evolution.evolvewingAspectRatio) bird.wingAspectRatio = allele[index]; index++;
+	if (type == 1) allele.push_back(pred->GetBirdParams().maxForce); else if (Sim.Params().evolution.evolvemaxForce) bird.maxForce = allele[index]; index++;
+	if (type == 1) allele.push_back(pred->GetBirdParams().wingSpan); else if (Sim.Params().evolution.evolvewingSpan) bird.wingSpan = allele[index]; index++; 
+	if (type == 1) allele.push_back(pred->GetBirdParams().bodyMass); else if (Sim.Params().evolution.evolvebodyMass) bird.bodyMass = allele[index]; index++; 
+	if (type == 1) allele.push_back(pred->GetBirdParams().controlCL); else if (Sim.Params().evolution.evolvecontrolCL) bird.controlCL = allele[index]; index++; 
+	if (type == 1) allele.push_back(pred->GetBirdParams().cruiseSpeed); else if (Sim.Params().evolution.evolvecruiseSpeed) bird.cruiseSpeed = allele[index]; index++; 
+	if (type == 1) allele.push_back(pred->GetBirdParams().maxLift); else if (Sim.Params().evolution.evolvemaxLift) bird.maxLift = allele[index]; index++; 
+	if (type == 1) allele.push_back(pred->GetBirdParams().maxSpeed); else 	if (Sim.Params().evolution.evolvemaxSpeed) bird.maxSpeed = allele[index]; index++; 
+	if (type == 1) allele.push_back(pred->GetBirdParams().minSpeed); else 	if (Sim.Params().evolution.evolveminSpeed) bird.minSpeed = allele[index]; index++;
+	if (type == 1) allele.push_back(pred->GetBirdParams().reactionTime); else if (Sim.Params().evolution.evolvereactionTime) bird.reactionTime = allele[index]; index++; 
+	if (type == 1) allele.push_back(pred->GetBirdParams().alignmentWeight.x); else if (Sim.Params().evolution.evolvealignmentWeight) bird.alignmentWeight.x = allele[index]; index++; 
+	if (type == 1) allele.push_back(pred->GetBirdParams().alignmentWeight.y); else if (Sim.Params().evolution.evolvecohesionWeight) bird.alignmentWeight.y = allele[index]; index++; 
+	if (type == 1) allele.push_back(pred->GetBirdParams().cohesionWeight.x); else if (Sim.Params().evolution.evolvecohesionWeight) bird.cohesionWeight.x = allele[index]; index++; 
+	if (type == 1) allele.push_back(pred->GetBirdParams().cohesionWeight.y); else if (Sim.Params().evolution.evolvecohesionWeight) bird.cohesionWeight.y = allele[index]; index++; 
+	if (type == 1) allele.push_back(pred->GetBirdParams().cohesionWeight.z); else if (Sim.Params().evolution.evolvecohesionWeight) bird.cohesionWeight.z = allele[index]; index++; 
+	if (type == 1) allele.push_back(pred->GetPredParams().HandleTime); else if (Sim.Params().evolution.evolveHandleTime) predParam.HandleTime = allele[index]; index++; 
+	if (type == 1) allele.push_back(pred->GetPredParams().LockDistance); else if (Sim.Params().evolution.evolveLockDistance) predParam.LockDistance = allele[index]; index++; 
+	if (type == 1) allele.push_back(pred->hunts().minDist); else
+	{
+		pred->SetPredParams(predParam);
+		pred->SetBirdParams(bird);
+	}
+}
 
 EvolvePN::EvolvePN()
 	: DefaultStatistic()
@@ -195,6 +235,7 @@ void EvolvePN::save(const char* fname, bool append) const
 		std::string buf(" ");
 		buf.append(std::to_string(i));
 		buf.append(" \n");
+
 		std::ostream_iterator<glm::vec4> oit2(os2, buf.c_str());
 		std::copy(allPandS_[i].begin(), allPandS_[i].end(), oit2);
 
@@ -222,9 +263,12 @@ void EvolvePN::PrepareSave()
 
 		
 		data.push_back(first->get_N());
+		data.push_back(first->getDPAdjParam());
 		data.push_back(first->getStartAltitude());
 		data.push_back(first->getStartXDist()); 
 		data.push_back(first->hunts().minDist);
+		data.push_back(first->hunts().velocityMinDist);
+		data.push_back(first->GetBirdParams().maxForce);
 		data.push_back(first->getGeneration());
 		data.push_back(first->hunts().seqTime);
 		data.push_back(first->GetBirdParams().reactionTime);
@@ -239,9 +283,12 @@ void EvolvePN::PrepareSave()
 	if (names_.empty())
 	{
 		names_.push_back("N");
+		names_.push_back("DPAdjParam");
 		names_.push_back("StartAltitude");
 		names_.push_back("StartXDist");
 		names_.push_back("minDist");
+		names_.push_back("velocityMinDist");
+		names_.push_back("maxForce");
 		names_.push_back("Generation");
 		names_.push_back("seqTime");
 		names_.push_back("reactionTime");
@@ -295,8 +342,25 @@ void EvolvePN::PrepareSave()
 		namesParameters_.push_back("EvolDuration"); ValuesParameters_.push_back(Sim.Params().evolution.durationGeneration);
 		namesParameters_.push_back("evolX"); ValuesParameters_.push_back(Sim.Params().evolution.evolveX);
 		namesParameters_.push_back("evolY"); ValuesParameters_.push_back(Sim.Params().evolution.evolveAlt);
-		namesParameters_.push_back("evolZ"); ValuesParameters_.push_back(2.0f);
+		namesParameters_.push_back("evolZ"); ValuesParameters_.push_back(Sim.Params().evolution.evolveZ);
+		namesParameters_.push_back("evolveCL"); ValuesParameters_.push_back(int(Sim.Params().evolution.evolveCL));
+		namesParameters_.push_back("evolvewingAspectRatio"); ValuesParameters_.push_back(Sim.Params().evolution.evolvewingAspectRatio);
+		namesParameters_.push_back("evolvemaxForce"); ValuesParameters_.push_back(Sim.Params().evolution.evolvemaxForce);
+
+		namesParameters_.push_back("evolvewingSpan"); ValuesParameters_.push_back(Sim.Params().evolution.evolvewingSpan);
+		namesParameters_.push_back("evolvebodyMass"); ValuesParameters_.push_back(Sim.Params().evolution.evolvebodyMass);
+		namesParameters_.push_back("evolvecontrolCL"); ValuesParameters_.push_back(Sim.Params().evolution.evolvecontrolCL);
+		namesParameters_.push_back("evolvecruiseSpeed"); ValuesParameters_.push_back(Sim.Params().evolution.evolvecruiseSpeed);
+		namesParameters_.push_back("evolvemaxLift"); ValuesParameters_.push_back(Sim.Params().evolution.evolvemaxLift);
+		namesParameters_.push_back("evolvemaxSpeed"); ValuesParameters_.push_back(Sim.Params().evolution.evolvemaxSpeed);
+		namesParameters_.push_back("evolveminSpeed"); ValuesParameters_.push_back(Sim.Params().evolution.evolveminSpeed);
+		namesParameters_.push_back("evolvereactionTime"); ValuesParameters_.push_back(Sim.Params().evolution.evolvereactionTime);
+		namesParameters_.push_back("evolvealignmentWeight"); ValuesParameters_.push_back(Sim.Params().evolution.evolvealignmentWeight);
+		namesParameters_.push_back("evolvecohesionWeight"); ValuesParameters_.push_back(Sim.Params().evolution.evolvecohesionWeight);
+		namesParameters_.push_back("evolveHandleTime"); ValuesParameters_.push_back(Sim.Params().evolution.evolveHandleTime);
+		namesParameters_.push_back("evolveLockDistance"); ValuesParameters_.push_back(Sim.Params().evolution.evolveLockDistance);
 		namesParameters_.push_back("evolPN"); ValuesParameters_.push_back(Sim.Params().evolution.evolvePN);
+		namesParameters_.push_back("evolveDPAdjParam"); ValuesParameters_.push_back(Sim.Params().evolution.evolveDPAdjParam);
 		namesParameters_.push_back("minRadius"); ValuesParameters_.push_back(Sim.Params().roost.minRadius);
 		namesParameters_.push_back("maxRadius"); ValuesParameters_.push_back(Sim.Params().roost.maxRadius);
 		namesParameters_.push_back("Radius");  ValuesParameters_.push_back(Sim.Params().roost.Radius);
@@ -370,11 +434,12 @@ void EvolvePN::PrepareSave()
 			"MaxEvasionStrategy__"
 		};
 
-		std::string GuidanceNames[4] = {
+		std::string GuidanceNames[5] = {
 			"Custom",    
 			"ProportionalNavigation",       
 			"DirectPursuit",      
 			"DirectPursuit2",
+			"PNDP",
 		};
 
 		namesParameters_.push_back("predGuidance"); StringParameters_.push_back(GuidanceNames[first->GetPredParams().pursuit.type]);
@@ -395,11 +460,20 @@ void EvolvePN::Shuffle()
 	float meanN = 0;
 	float meanStartAltitude = 0;
 	float meanXDist = 0;
-	std::for_each(GFLOCK.predator_begin(), GFLOCK.predator_end(), [&allele](const CPredator& pred)
-	{
-		float N = pred.get_N();	
-		allele.push_back(glm::vec4(N, pred.getStartAltitude(), pred.getStartXDist(), pred.hunts().minDist));
-	});
+
+	
+	Param::Evolution evol;
+	
+	CFlock::pred_iterator thefirst(GFLOCKNC.predator_begin());
+	CFlock::pred_iterator thelast(GFLOCKNC.predator_end());
+	for (; thefirst != thelast; ++thefirst)
+	{	
+		one_allele anAllele;
+		SetGetAlleles(anAllele, thefirst, 1);
+		allele.push_back(anAllele);
+	};
+
+
 	//resort on having the minimum distance
 	std::sort(allele.begin(), allele.end(), cmp_min_dist());
 	// placing all alleles into the total bunch of alleles over time
@@ -414,10 +488,11 @@ void EvolvePN::Shuffle()
 	//each generation the mutation becomes less..
 	for (unsigned i = (N >> 1); i < N; ++i)
 	{
-		allele[i].x += (1.0f / Generation_) * rnd(rnd_eng()) * 5 + 1.0f * rnd(rnd_eng());
-		
-		allele[i].y += (1.0f / Generation_) * rnd(rnd_eng()) * 10 + 5.0f * rnd(rnd_eng()); // more variation in x and y
-		allele[i].z += (1.0f / Generation_) * rnd(rnd_eng()) * 10 + 5.0f * rnd(rnd_eng());
+
+		for (int ii = 0; ii < allele[i].size(); ii++)
+		{
+			allele[i][ii] += (1.0f / Generation_) * rnd(rnd_eng()) * 5 + 1.0f * rnd(rnd_eng());
+		}
 	}
 	CFlock::pred_iterator first(GFLOCKNC.predator_begin());
 	CFlock::pred_iterator last(GFLOCKNC.predator_end());
@@ -434,29 +509,35 @@ void EvolvePN::Shuffle()
 	//change all of the settings of the predators after mutation
 	for (unsigned i = 0; first != last; ++first, ++i)
 	{
-		first->set_N(allele[i][0]);
-		first->setStartAltitude(allele[i][1]);
-		first->setStartXDist(allele[i][2]);
-		first->setGeneration(Generation_);
-
-		
+		SetGetAlleles(allele[i], first,2);
 	}
 	// Average of top 1%
 	unsigned n = unsigned(double(allele.size()) * 0.01);
-	glm::vec4 top1(0);
+	one_allele top1;
+	
+	for (int ii = 0; ii < allele[0].size(); ++ii)
+	{
+
+		top1.push_back(0.0f);
+	}
 	for (unsigned i = 0; i<n; ++i)
 	{
-		top1 += allele[i];
+		for (int ii = 0; ii < top1.size(); ++ii)
+		{
+			top1[ii] += allele[i][ii];
+		}
 	}
-	top1 /= n;
+	for (int ii = 0; ii < top1.size(); ++ii)
+	{
+		top1[ii] /= n;
+	}
+
 
 	first = GFLOCKNC.predator_end() - n;
 	//set the the last n to the average of the top 1%, This is possibly wrong, you want the sorted vector to be adapted
 	for (; first != last; ++first)
 	{
-		first->set_N(top1[0]);
-		first->setStartAltitude(top1[1]);
-		first->setStartXDist(top1[2]);
+		SetGetAlleles(top1, first, 2);
 	}
 	const float R = PROOST.Radius;
 
@@ -466,7 +547,9 @@ void EvolvePN::Shuffle()
 	{
 		if (Generation_ == 1)
 		{
-			first->set_N((float(rand()) / (float(RAND_MAX) / 200.0f) ) - 100.0f);
+			if (Sim.Params().evolution.evolvePN) first->set_N((float(rand()) / (float(RAND_MAX) / 200.0f) ) - 100.0f);
+			if (Sim.Params().evolution.evolveDPAdjParam) first->setDPAdjParam((float(rand()) / (float(RAND_MAX) / 200.0f)) - 100.0f);
+			if (Sim.Params().evolution.evolvemaxForce) first->GetBirdParams().maxForce = ((float(rand()) / (float(RAND_MAX) / 100.0f)));
 			first->setStartAltitude(float(rand()) / (float(RAND_MAX) / (100.0f * 6.0f)));
 			first->setStartXDist(float(rand()) / (float(RAND_MAX) / (100.0f * 6.0f)));
 			first->setGeneration(Generation_);
@@ -516,8 +599,9 @@ void EvolvePN::Shuffle()
 		first->setTrail(true);
 		first->BeginHunt(); 
 		//std::cout << "\npred num " << first->id();
-		//std::cout << "\nN :  " << first->get_N() << " startAltitude :  " << first->getStartAltitude() << " startXDist :  " << first->getStartXDist() << " Generation: " << first->getGeneration();
+		std::cout << "\nN :  " << first->get_N() << " startAltitude :  " << first->getStartAltitude() << " startXDist :  " << first->getStartXDist() << " maxForce :  " << first->GetBirdParams().maxForce << " DPadjParam :  " << first->getDPAdjParam() << " Generation: " << first->getGeneration();
 		//std::cout << "\n" << rnd(rnd_eng());
+
 		meanN += first->get_N() * 1 / N;
 		meanStartAltitude += first->getStartAltitude() * 1 / N;
 		meanXDist += first->getStartXDist() * 1 / N;
@@ -543,3 +627,5 @@ void EvolvePN::Shuffle()
 
 	if (Generation_ >= Sim.Params().evolution.terminationGeneration) Reset();
 }
+
+

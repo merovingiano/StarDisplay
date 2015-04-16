@@ -226,7 +226,7 @@ void CBird::integration(float dt)
 
    // clip speed
   speed_ = avx::length(velocity);
-  //speed_ = avx::clamp(speed_, pBird_.minSpeed, pBird_.maxSpeed);
+  speed_ = avx::clamp(speed_, pBird_.minSpeed, pBird_.maxSpeed);
   forward = velocity / speed_;
 
   // interesting: This keeps it always aligned with the forward velocity. This has great impact on the turning behavior.

@@ -34,6 +34,7 @@ public:
     int locks;
     int success;
     float minDist;
+	float velocityMinDist;
     float minDistLockedOn;
     double seqTime;
     double lookTime;
@@ -66,12 +67,16 @@ public:
   const CPrey* GetTargetPrey() const { return targetPrey_; }
   //! bunch of functions to set and get variables
   float get_N() const { return N_; }
+  float getDPAdjParam() const { return DPAdjParam_; }
   float getStartAltitude() const { return startAltitude_; }
   float getStartXDist() const { return XDist_; }
+  float getStartZDist() const { return ZDist_; }
   float getGeneration() const { return generation_; }
   void set_N(float N) {N_ = N; }
+  void setDPAdjParam(float DPAdjParam) { DPAdjParam_ = DPAdjParam; }
   void setStartAltitude(float start) { startAltitude_ = start; }
   void setStartXDist(float XDist) { XDist_ = XDist; }
+  void setStartZDist(float ZDist) { ZDist_ = ZDist; }
   void setGeneration(float generation) { generation_ = generation; }
   void SetTargetPrey(const CPrey*);
   const glm::vec3& TargetPoint() const { return targetPoint_; }
@@ -108,6 +113,7 @@ private:
 
   void PursuitCustom(const glm::vec3& targetHeading, const glm::vec3& targetVelocity);
   void proportionalNavigation(const glm::vec3& targetHeading, const glm::vec3& targetVelocity);
+  void PNDP(const glm::vec3& targetHeading, const glm::vec3& targetVelocity);
   void DirectPursuit(const glm::vec3& targetHeading, const glm::vec3& targetVelocity);
   void DirectPursuit2(const glm::vec3& targetHeading, const glm::vec3& targetVelocity);
   Param::Predator  pPred_;
@@ -123,8 +129,10 @@ private:
   int              locks_;        // locks in current attack
   //! some new parameters, probably will move them to params
   float            N_;
+  float			   DPAdjParam_;
   float            startAltitude_;
   float            XDist_;
+  float            ZDist_;
   float            generation_;
 
   

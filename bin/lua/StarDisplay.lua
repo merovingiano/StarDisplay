@@ -3,7 +3,7 @@ print("  sourcing StarDisplay.lua")
 -- some limits
 -- 
 Simulation.maxPrey = 50000
-Simulation.maxPredators = 1024
+Simulation.maxPredators = 10000
 Simulation.maxTopologicalRange = 16     -- memory optimization, keep it small
 
 

@@ -300,6 +300,7 @@
     <ClInclude Include="Bird.hpp" />
     <ClInclude Include="bounding_box.hpp" />
     <ClInclude Include="color32.hpp" />
+    <ClInclude Include="equations.hpp" />
     <ClInclude Include="filesystem.hpp" />
     <ClInclude Include="evolvePN.hpp" />
     <ClInclude Include="ICamera.hpp" />

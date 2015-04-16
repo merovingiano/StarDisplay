@@ -304,6 +304,9 @@
     <ClInclude Include="Save.hpp">
       <Filter>Analysis</Filter>
     </ClInclude>
+    <ClInclude Include="equations.hpp">
+      <Filter>Analysis</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Clock.cpp">

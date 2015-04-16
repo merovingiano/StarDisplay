@@ -24,8 +24,25 @@ namespace Param {
 	  std::string fileName;
 	  float durationGeneration;
 	  bool evolvePN;
+	  bool evolveDPAdjParam;
 	  bool evolveAlt;
 	  bool evolveX;
+	  bool evolveZ;
+	  bool evolveCL;
+	  bool evolvewingAspectRatio;
+	  bool evolvemaxForce;
+	  bool evolvewingSpan;
+	  bool evolvebodyMass;
+	  bool evolvecontrolCL;
+	  bool evolvecruiseSpeed;
+	  bool evolvemaxLift;
+	  bool evolvemaxSpeed;
+	  bool evolveminSpeed;
+	  bool evolvereactionTime;
+	  bool evolvealignmentWeight;
+	  bool evolvecohesionWeight;
+	  bool evolveHandleTime;
+	  bool evolveLockDistance;
 	  bool TrajectoryBestPredator;
 	  bool TrajectoryPrey;
 	  int terminationGeneration;
@@ -295,6 +312,7 @@ namespace Param {
 	  ProportionalNavigation = 1,
 	  DirectPursuit = 2,
 	  DirectPursuit2 = 3,
+	  PNDP = 4,
       MaxPursuitStrategy__
     };
 

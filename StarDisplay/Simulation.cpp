@@ -101,15 +101,6 @@ void Simulation::SetInitialParameter(const Param::Params& param)
 
 void Simulation::GetExperimentSettings(const luabind::object& obj)
 {
-	std::cout << "\n HI..   ";
-	std::cout << "\n HI..   ";
-	std::cout << "\n HI..   ";
-	std::cout << "\n HI..   ";
-	std::cout << "\n HI..   ";
-	std::cout << "\n HI..   ";
-	std::cout << "\n HI..   ";
-	std::cout << "\n HI..   ";
-	std::cout << "\n HI..   ";
 
 	luabind::object experiments = obj;
 
@@ -163,8 +154,24 @@ void Simulation::GetExperimentSettings(const luabind::object& obj)
 							if (strKey4 == "fileName") experiment.param.evolution.fileName = luabind::object_cast<std::string>(evolution["fileName"]);
 							if (strKey4 == "durationGeneration") experiment.param.evolution.durationGeneration = luabind::object_cast<float>(evolution["durationGeneration"]);
 							if (strKey4 == "evolvePN") experiment.param.evolution.evolvePN = luabind::object_cast<bool>(evolution["evolvePN"]);
+							if (strKey4 == "evolveDPAdjParam") experiment.param.evolution.evolveDPAdjParam = luabind::object_cast<bool>(evolution["evolveDPAdjParam"]);
 							if (strKey4 == "evolveAlt") experiment.param.evolution.evolveAlt = luabind::object_cast<bool>(evolution["evolveAlt"]);
-							if (strKey4 == "evolveX") experiment.param.evolution.evolveX = luabind::object_cast<bool>(evolution["evolveX"]);
+							if (strKey4 == "evolveZ") experiment.param.evolution.evolveZ = luabind::object_cast<bool>(evolution["evolveZ"]);
+							if (strKey4 == "evolveCL") experiment.param.evolution.evolveCL = luabind::object_cast<bool>(evolution["evolveCL"]);
+							if (strKey4 == "evolvewingAspectRatio") experiment.param.evolution.evolvewingAspectRatio = luabind::object_cast<bool>(evolution["evolvewingAspectRatio"]);
+							if (strKey4 == "evolvemaxForce") experiment.param.evolution.evolvewingAspectRatio = luabind::object_cast<bool>(evolution["evolvemaxForce"]);
+							if (strKey4 == "evolvewingSpan") experiment.param.evolution.evolvewingSpan = luabind::object_cast<bool>(evolution["evolvewingSpan"]);
+							if (strKey4 == "evolvebodyMass") experiment.param.evolution.evolvebodyMass = luabind::object_cast<bool>(evolution["evolvebodyMass"]);
+							if (strKey4 == "evolvecontrolCL") experiment.param.evolution.evolvecontrolCL = luabind::object_cast<bool>(evolution["evolvecontrolCL"]);
+							if (strKey4 == "evolvecruiseSpeed") experiment.param.evolution.evolvecruiseSpeed = luabind::object_cast<bool>(evolution["evolvecruiseSpeed"]);
+							if (strKey4 == "evolvemaxLift") experiment.param.evolution.evolvemaxLift = luabind::object_cast<bool>(evolution["evolvemaxLift"]);
+							if (strKey4 == "evolvemaxSpeed") experiment.param.evolution.evolvemaxSpeed = luabind::object_cast<bool>(evolution["evolvemaxSpeed"]);
+							if (strKey4 == "evolveminSpeed") experiment.param.evolution.evolveminSpeed = luabind::object_cast<bool>(evolution["evolveminSpeed"]);
+							if (strKey4 == "evolvereactionTime") experiment.param.evolution.evolvereactionTime = luabind::object_cast<bool>(evolution["evolvereactionTime"]);
+							if (strKey4 == "evolvealignmentWeight") experiment.param.evolution.evolvealignmentWeight = luabind::object_cast<bool>(evolution["evolvealignmentWeight"]);
+							if (strKey4 == "evolvecohesionWeight") experiment.param.evolution.evolvecohesionWeight = luabind::object_cast<bool>(evolution["evolvecohesionWeight"]);
+							if (strKey4 == "evolveHandleTime") experiment.param.evolution.evolveHandleTime = luabind::object_cast<bool>(evolution["evolveHandleTime"]);
+							if (strKey4 == "evolveLockDistance") experiment.param.evolution.evolveLockDistance = luabind::object_cast<bool>(evolution["evolveLockDistance"]);
 							if (strKey4 == "TrajectoryBestPredator") experiment.param.evolution.TrajectoryBestPredator = luabind::object_cast<bool>(evolution["TrajectoryBestPredator"]);
 							if (strKey4 == "TrajectoryPrey") experiment.param.evolution.TrajectoryPrey = luabind::object_cast<bool>(evolution["TrajectoryPrey"]);
 							if (strKey4 == "externalPrey") experiment.param.evolution.externalPrey = luabind::object_cast<bool>(evolution["externalPrey"]);
@@ -180,6 +187,22 @@ void Simulation::GetExperimentSettings(const luabind::object& obj)
 
 					}
 
+					if (strKey3 == "roost")
+
+					{
+						luabind::object roost = obj[intKey][strKey2][strKey3];
+						for (luabind::iterator iiii(roost), end; iiii != end; ++iiii)
+						{
+							std::string strKey4 = luabind::object_cast<std::string>(iiii.key());
+							if (strKey4 == "numPrey") experiment.param.roost.numPrey = luabind::object_cast<unsigned>(roost["numPrey"]);
+							if (strKey4 == "numPredators") experiment.param.roost.numPredators = luabind::object_cast<unsigned>(roost["numPredators"]);
+							if (strKey4 == "Radius") experiment.param.roost.Radius = luabind::object_cast<float>(roost["Radius"]);
+							if (strKey4 == "minRadius") experiment.param.roost.numPrey = luabind::object_cast<float>(roost["minRadius"]);
+							if (strKey4 == "maxRadius") experiment.param.roost.numPrey = luabind::object_cast<float>(roost["maxRadius"]);
+
+						}
+
+					}
 				}
 			}
 			if (strKey2 == "preyBird" || strKey2 == "predBird")

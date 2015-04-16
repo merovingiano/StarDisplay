@@ -174,6 +174,7 @@ void CPrey::update(float dt, const CFlock& flock)
       }
     }
     handleEvasion();
+	
     if (0 == (predatorReaction_ & PredationReactions::Panic)) 
     {
       return2Flock(flock); 
@@ -221,7 +222,7 @@ void CPrey::update(float dt, const CFlock& flock)
       // alertness relaxation over.
       predatorReaction_ &= ~PredationReactions::Alerted;
     }
-
+	maneuver();
     steering_ += boundary_;
     steering_ += predatorForce_;
     steering_ += speedControl() * B_[0];
@@ -296,6 +297,11 @@ void CPrey::flightDynamic()
 }
 
 
+void CPrey::maneuver()
+{
+	if (fmod(Sim.SimulationTime(), 2) < 1) steering_ += H_[2] * 5.0f; else steering_ += H_[2] * -5.0f;
+	if (fmod(Sim.SimulationTime(), 4) < 2) steering_ += H_[1] * 5.0f; else steering_ += H_[1] * -5.0f;
+}
 
 void CPrey::flightExternal()
 {

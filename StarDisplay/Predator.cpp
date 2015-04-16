@@ -123,6 +123,7 @@ CPredator::hunt& CPredator::hunt::operator+=(const CPredator::hunt& h)
   sequences += h.sequences;
   locks += h.locks;
   success += h.success;
+  if (minDist < h.minDist) velocityMinDist = h.velocityMinDist;
   minDist = std::min(minDist, h.minDist);
   lastMinDist = h.minDist;
   minDistLockedOn = std::min(minDistLockedOn, h.minDistLockedOn);
@@ -311,6 +312,7 @@ void CPredator::update(float dt, const CFlock&)
 	if (distance < hunts_.minDist)
 	{
 		hunts_.minDist = distance;
+		hunts_.velocityMinDist = glm::length(velocity_);
 		
 	}
 	if (distance < hunts_.lastMinDist)
@@ -344,7 +346,7 @@ void CPredator::update(float dt, const CFlock&)
 void CPredator::Accelerate()
 {
 	//! This will be clamped later. Idea: accelerate maximally unless PN dictates it should turn
-	steering_ += 10.0f*B_[0];
+	steering_ += pBird_.maxForce*B_[0];
 }
 
 
@@ -422,6 +424,7 @@ void CPredator::steerToFlock()
 	  if (pPred_.pursuit.type == 1) proportionalNavigation(aveHeading, aveVelocity);
 	  if (pPred_.pursuit.type == 2) DirectPursuit(aveHeading, aveVelocity);
 	  if (pPred_.pursuit.type == 3) DirectPursuit2(aveHeading, aveVelocity);
+	  if (pPred_.pursuit.type == 4) PNDP(aveHeading, aveVelocity);
     //PursuitCustom(aveHeading, aveVelocity);
     //cohesion_ = H_ * (cohesion_ * H_);
     //steering_ += cohesion_;
@@ -542,10 +545,13 @@ void CPredator::PursuitCustom(const glm::vec3& targetHeading, const glm::vec3& t
 void CPredator::DirectPursuit(const glm::vec3& targetHeading, const glm::vec3& targetVelocity)
 {
 
-	glm::vec3 r = targetPoint_ - position_; 
+	glm::vec3 r = targetPoint_ - position_;
+	glm::vec3 rp = r;
+
+	if(Sim.Params().evolution.evolveDPAdjParam)	rp += DPAdjParam_ * targetVelocity; 
 	glm::vec3 v = velocity_;
-	glm::vec3 omega = glm::cross(v, r) / glm::length(glm::cross(v, r)); 
-	float angle = asin(glm::length(glm::cross(v, r)) / (glm::length(v)*glm::length(r)));
+	glm::vec3 omega = glm::cross(v, rp) / glm::length(glm::cross(v, rp));
+	float angle = asin(glm::length(glm::cross(v, rp)) / (glm::length(v)*glm::length(rp)));
 	omega *= angle;
 	omega *= glm::length(v);
 	omega = glm::cross(omega, v);
@@ -564,7 +570,9 @@ void CPredator::DirectPursuit2(const glm::vec3& targetHeading, const glm::vec3& 
 {
 
 	glm::vec3 r = targetPoint_ - position_;
-	steering_ += glm::normalize(r) * N_;
+	glm::vec3 rp = r;
+	if (Sim.Params().evolution.evolveDPAdjParam)	rp += DPAdjParam_ * targetVelocity;
+	steering_ += glm::normalize(rp) * N_ * 100.0f;
 
 	if (glm::dot(r, r) < 8)
 	{
@@ -573,6 +581,13 @@ void CPredator::DirectPursuit2(const glm::vec3& targetHeading, const glm::vec3& 
 		bool blind = (abs(phi) - 3.14 < 0.8 && pHead.x < 0);
 		if (blind) EndHunt(false);
 	}
+}
+
+void CPredator::PNDP(const glm::vec3& targetHeading, const glm::vec3& targetVelocity)
+{
+	glm::vec3 r = targetPoint_ - position_;
+	if (glm::length(r) > 300) DirectPursuit2(targetHeading, targetVelocity);
+	else proportionalNavigation(targetHeading, targetVelocity);
 }
 
 
