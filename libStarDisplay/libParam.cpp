@@ -263,11 +263,13 @@ namespace libParam
 	cobj.evolution.evolveCL = object_cast<bool  >(luaobj["evolution"]["evolveCL"]);
 	cobj.evolution.evolvewingAspectRatio = object_cast<bool  >(luaobj["evolution"]["evolvewingAspectRatio"]);
 	cobj.evolution.evolvewingSpan = object_cast<bool  >(luaobj["evolution"]["evolvewingSpan"]);
+	cobj.evolution.evolvemaxForce = object_cast<bool  >(luaobj["evolution"]["evolvemaxForce"]);
 	cobj.evolution.evolvebodyMass = object_cast<bool  >(luaobj["evolution"]["evolvebodyMass"]);
 	cobj.evolution.evolvecontrolCL = object_cast<bool  >(luaobj["evolution"]["evolvecontrolCL"]);
 	cobj.evolution.evolvecruiseSpeed = object_cast<bool  >(luaobj["evolution"]["evolvecruiseSpeed"]);
 	cobj.evolution.evolvemaxLift = object_cast<bool  >(luaobj["evolution"]["evolvemaxLift"]);
 	cobj.evolution.evolvemaxSpeed = object_cast<bool  >(luaobj["evolution"]["evolvemaxSpeed"]);
+	cobj.evolution.evolverollRate = object_cast<bool  >(luaobj["evolution"]["evolverollRate"]);
 	cobj.evolution.evolveminSpeed = object_cast<bool  >(luaobj["evolution"]["evolveminSpeed"]);
 	cobj.evolution.evolvereactionTime = object_cast<bool  >(luaobj["evolution"]["evolvereactionTime"]);
 	cobj.evolution.evolvealignmentWeight = object_cast<bool  >(luaobj["evolution"]["evolvealignmentWeight"]);
@@ -519,6 +521,7 @@ void luaopen_libParam(lua_State* L)
       .def_readwrite("cruiseSpeed", &Bird::cruiseSpeed)
       .def_readwrite("speedControl", &Bird::speedControl)
       .def_readwrite("maxSpeed", &Bird::maxSpeed)
+	  .def_readwrite("rollRate", &Bird::rollRate)
       .def_readwrite("minSpeed", &Bird::minSpeed)
       .def_readwrite("wBetaOut", &Bird::wBetaOut)
       .def_readwrite("wBetaIn", &Bird::wBetaIn)

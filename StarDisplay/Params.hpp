@@ -37,6 +37,7 @@ namespace Param {
 	  bool evolvecruiseSpeed;
 	  bool evolvemaxLift;
 	  bool evolvemaxSpeed;
+	  bool evolverollRate;
 	  bool evolveminSpeed;
 	  bool evolvereactionTime;
 	  bool evolvealignmentWeight;
@@ -211,6 +212,7 @@ namespace Param {
     float speedControl;
 	float houjebek;
     float maxSpeed;
+	float rollRate;
     float minSpeed;
     glm::vec3 wBetaOut;
     glm::vec3 wBetaIn;

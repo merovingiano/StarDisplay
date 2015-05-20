@@ -116,6 +116,8 @@ private:
   void PNDP(const glm::vec3& targetHeading, const glm::vec3& targetVelocity);
   void DirectPursuit(const glm::vec3& targetHeading, const glm::vec3& targetVelocity);
   void DirectPursuit2(const glm::vec3& targetHeading, const glm::vec3& targetVelocity);
+  void checkEndHunt(const glm::vec3& targetHeading, const glm::vec3& targetVelocity);
+
   Param::Predator  pPred_;
   float            attackTime_;
 

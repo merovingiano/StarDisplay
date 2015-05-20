@@ -159,13 +159,14 @@ void Simulation::GetExperimentSettings(const luabind::object& obj)
 							if (strKey4 == "evolveZ") experiment.param.evolution.evolveZ = luabind::object_cast<bool>(evolution["evolveZ"]);
 							if (strKey4 == "evolveCL") experiment.param.evolution.evolveCL = luabind::object_cast<bool>(evolution["evolveCL"]);
 							if (strKey4 == "evolvewingAspectRatio") experiment.param.evolution.evolvewingAspectRatio = luabind::object_cast<bool>(evolution["evolvewingAspectRatio"]);
-							if (strKey4 == "evolvemaxForce") experiment.param.evolution.evolvewingAspectRatio = luabind::object_cast<bool>(evolution["evolvemaxForce"]);
+							if (strKey4 == "evolvemaxForce") experiment.param.evolution.evolvemaxForce = luabind::object_cast<bool>(evolution["evolvemaxForce"]);
 							if (strKey4 == "evolvewingSpan") experiment.param.evolution.evolvewingSpan = luabind::object_cast<bool>(evolution["evolvewingSpan"]);
 							if (strKey4 == "evolvebodyMass") experiment.param.evolution.evolvebodyMass = luabind::object_cast<bool>(evolution["evolvebodyMass"]);
 							if (strKey4 == "evolvecontrolCL") experiment.param.evolution.evolvecontrolCL = luabind::object_cast<bool>(evolution["evolvecontrolCL"]);
 							if (strKey4 == "evolvecruiseSpeed") experiment.param.evolution.evolvecruiseSpeed = luabind::object_cast<bool>(evolution["evolvecruiseSpeed"]);
 							if (strKey4 == "evolvemaxLift") experiment.param.evolution.evolvemaxLift = luabind::object_cast<bool>(evolution["evolvemaxLift"]);
 							if (strKey4 == "evolvemaxSpeed") experiment.param.evolution.evolvemaxSpeed = luabind::object_cast<bool>(evolution["evolvemaxSpeed"]);
+							if (strKey4 == "evolverollRate") experiment.param.evolution.evolverollRate = luabind::object_cast<bool>(evolution["evolverollRate"]);
 							if (strKey4 == "evolveminSpeed") experiment.param.evolution.evolveminSpeed = luabind::object_cast<bool>(evolution["evolveminSpeed"]);
 							if (strKey4 == "evolvereactionTime") experiment.param.evolution.evolvereactionTime = luabind::object_cast<bool>(evolution["evolvereactionTime"]);
 							if (strKey4 == "evolvealignmentWeight") experiment.param.evolution.evolvealignmentWeight = luabind::object_cast<bool>(evolution["evolvealignmentWeight"]);
@@ -310,6 +311,7 @@ void Simulation::copyBirdParam(luabind::object& obj, Param::Bird& bird)
 		if (strKey3 == "cruiseSpeed") bird.cruiseSpeed = luabind::object_cast<float>(obj["cruiseSpeed"]);
 		if (strKey3 == "speedControl") bird.speedControl = luabind::object_cast<float>(obj["speedControl"]);
 		if (strKey3 == "maxSpeed") bird.maxSpeed = luabind::object_cast<float>(obj["maxSpeed"]);
+		if (strKey3 == "rollRate") bird.rollRate = luabind::object_cast<float>(obj["rollRate"]);
 		if (strKey3 == "minSpeed") bird.minSpeed = luabind::object_cast<float>(obj["minSpeed"]);
 		if (strKey3 == "wBetaOut") bird.wBetaOut = luabind::object_cast<glm::vec3>(obj["wBetaOut"]);
 		if (strKey3 == "wBetaIn") bird.wBetaIn = luabind::object_cast<glm::vec3>(obj["wBetaIn"]);

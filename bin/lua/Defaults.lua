@@ -42,6 +42,7 @@ local Default = {
 		evolvecruiseSpeed= false,
 		evolvemaxLift= false,
 		evolvemaxSpeed= false,
+		evolverollRate= false,
 		evolveminSpeed= false,
 		evolvereactionTime= false,
 		evolvealignmentWeight= false,

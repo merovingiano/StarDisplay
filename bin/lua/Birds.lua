@@ -16,7 +16,7 @@ local rho = 1.2               -- air density [kg/m^3]
 -- CL after Van Dijk (1964)
 --
 local CL = function (bird, alpha)
-  alpha = alpha or 1
+  alpha = alpha or 0.28
   local AR = bird.wingAspectRatio
   local piAR = math.pi * AR
   local CL = 2*math.pi * alpha /
@@ -42,8 +42,13 @@ local CDCL = function (bird)
 	return cdcl
 end
 
+local CDCL2 = function (bird)
+	local cdcl = 1.0 / ((math.pi * bird.wingAspectRatio) / CL(bird,1))
+	return cdcl
+end
+
 local maxForce = function (bird)
-	local maxForce = (bird.maxSpeed^2 / bird.cruiseSpeed^2) * bird.bodyMass * 9.81 * CDCL(bird) - CDCL(bird)* bird.bodyMass * 9.81 
+	local maxForce = (bird.maxSpeed^2 / bird.cruiseSpeed^2) * bird.bodyMass * 9.81 * (CDCL(bird) + bird.bodyDrag/CL(bird)) -- removed:  - CDCL(bird)* bird.bodyMass * 9.81 
 	return maxForce
 end 
 
@@ -76,8 +81,8 @@ function Birds.Starling (p)
   bird.wingSpan = 0.4         -- [m]
   bird.wingAspectRatio = 8.333
   bird.wingArea = bird.wingSpan * (bird.wingSpan / bird.wingAspectRatio)   -- [m^2]
-  bird.CL = CL(bird)
-  bird.CDCL= CDCL(bird)
+  bird.CL = CL(bird,1)
+  bird.CDCL= CDCL2(bird)
   bird.controlCL = false
   bird.bodyDrag = 0
 
@@ -90,6 +95,7 @@ function Birds.Starling (p)
   bird.minSpeed = bird.cruiseSpeed -5
   bird.maxSpeed = bird.cruiseSpeed + 5
   bird.houjebek = 5
+  bird.rollRate= 10
   
   -----------------------------------------------------------------------------
   -- Steering
@@ -130,7 +136,7 @@ function Birds.Starling (p)
   prey.DetectionHemisphereFOV = 270        -- [deg]
 
   --prey.EvasionStrategy = { type = EvasionStrategies.Custom, hook = Wave(DropEx(5,10)) }
-  --prey.EvasionStrategy = { type = EvasionStrategies.Drop, weight = 5.0, edges = glm.vec4(0, 2, 2, 2) }
+  prey.EvasionStrategy = { type = EvasionStrategies.MaximizeDist, weight = 5.0, edges = glm.vec4(0, 2, 2, 2) }
 
 
   prey.IncurNeighborPanic = 2        -- absorb panic reaction from nth nearest neighbor
@@ -174,7 +180,7 @@ function Birds.Falcon (p)
   bird.CL = CL(bird)
   bird.CDCL= CDCL(bird)
   bird.controlCL = false
-  bird.bodyDrag = 0.17
+  bird.bodyDrag = 0.017
   
   bird.maxLift = 40           -- [N}
 
@@ -182,6 +188,7 @@ function Birds.Falcon (p)
   --bird.speedControl = 1 / 1000   -- one over tau 
   bird.minSpeed = 5
   bird.maxSpeed = 40
+  bird.rollrate=10
   bird.maxForce = maxForce(bird)          -- max steering force [N]
 
 
@@ -233,7 +240,7 @@ function Birds.Falcon (p)
   predator.maxLocks = 10000                       -- max locks per attack
   predator.ExposureThreshold = glm.vec2(0.35, 0.20) -- (lock on, lose lock)
   predator.AttractMix = 0.1                   -- mix between distance (1) and exposure - factor (0)
-  predator.HandleTime = 1
+  predator.HandleTime = 100
 
   if p ~= nil then
     p.BirdParams = bird

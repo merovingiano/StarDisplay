@@ -61,6 +61,7 @@ void SetGetAlleles(one_allele& allele, CFlock::pred_iterator pred, int type)
 	if (type == 1) allele.push_back(pred->GetBirdParams().cruiseSpeed); else if (Sim.Params().evolution.evolvecruiseSpeed) bird.cruiseSpeed = allele[index]; index++; 
 	if (type == 1) allele.push_back(pred->GetBirdParams().maxLift); else if (Sim.Params().evolution.evolvemaxLift) bird.maxLift = allele[index]; index++; 
 	if (type == 1) allele.push_back(pred->GetBirdParams().maxSpeed); else 	if (Sim.Params().evolution.evolvemaxSpeed) bird.maxSpeed = allele[index]; index++; 
+	if (type == 1) allele.push_back(pred->GetBirdParams().rollRate); else 	if (Sim.Params().evolution.evolverollRate) bird.rollRate = allele[index]; index++;
 	if (type == 1) allele.push_back(pred->GetBirdParams().minSpeed); else 	if (Sim.Params().evolution.evolveminSpeed) bird.minSpeed = allele[index]; index++;
 	if (type == 1) allele.push_back(pred->GetBirdParams().reactionTime); else if (Sim.Params().evolution.evolvereactionTime) bird.reactionTime = allele[index]; index++; 
 	if (type == 1) allele.push_back(pred->GetBirdParams().alignmentWeight.x); else if (Sim.Params().evolution.evolvealignmentWeight) bird.alignmentWeight.x = allele[index]; index++; 
@@ -305,6 +306,7 @@ void EvolvePN::PrepareSave()
 		namesParameters_.push_back("predMinSpeed"); ValuesParameters_.push_back(first->GetBirdParams().minSpeed);
 		namesParameters_.push_back("predCruiseSpeed"); ValuesParameters_.push_back(first->GetBirdParams().cruiseSpeed);
 		namesParameters_.push_back("predMaxSpeed"); ValuesParameters_.push_back(first->GetBirdParams().maxSpeed);
+		namesParameters_.push_back("predRollRate"); ValuesParameters_.push_back(first->GetBirdParams().rollRate);
 		namesParameters_.push_back("predMaxLift"); ValuesParameters_.push_back(first->GetBirdParams().maxLift);
 		namesParameters_.push_back("predCL"); ValuesParameters_.push_back(first->GetBirdParams().CL);
 		namesParameters_.push_back("predWingSpan"); ValuesParameters_.push_back(first->GetBirdParams().wingSpan);
@@ -353,6 +355,7 @@ void EvolvePN::PrepareSave()
 		namesParameters_.push_back("evolvecruiseSpeed"); ValuesParameters_.push_back(Sim.Params().evolution.evolvecruiseSpeed);
 		namesParameters_.push_back("evolvemaxLift"); ValuesParameters_.push_back(Sim.Params().evolution.evolvemaxLift);
 		namesParameters_.push_back("evolvemaxSpeed"); ValuesParameters_.push_back(Sim.Params().evolution.evolvemaxSpeed);
+		namesParameters_.push_back("evolverollRate"); ValuesParameters_.push_back(Sim.Params().evolution.evolverollRate);
 		namesParameters_.push_back("evolveminSpeed"); ValuesParameters_.push_back(Sim.Params().evolution.evolveminSpeed);
 		namesParameters_.push_back("evolvereactionTime"); ValuesParameters_.push_back(Sim.Params().evolution.evolvereactionTime);
 		namesParameters_.push_back("evolvealignmentWeight"); ValuesParameters_.push_back(Sim.Params().evolution.evolvealignmentWeight);
@@ -374,6 +377,7 @@ void EvolvePN::PrepareSave()
 		namesParameters_.push_back("preyCruiseSpeed"); ValuesParameters_.push_back(firstPrey->GetBirdParams().cruiseSpeed);
 		namesParameters_.push_back("preyMaxLift"); ValuesParameters_.push_back(firstPrey->GetBirdParams().maxLift);
 		namesParameters_.push_back("preyMaxSpeed"); ValuesParameters_.push_back(firstPrey->GetBirdParams().maxSpeed);
+		namesParameters_.push_back("preyRollRate"); ValuesParameters_.push_back(firstPrey->GetBirdParams().rollRate);
 		namesParameters_.push_back("preyMinSpeed"); ValuesParameters_.push_back(firstPrey->GetBirdParams().minSpeed);
 		namesParameters_.push_back("preyWBetaInRoll"); ValuesParameters_.push_back(firstPrey->GetBirdParams().wBetaIn.x);
 		namesParameters_.push_back("preyWBetaInPitch"); ValuesParameters_.push_back(firstPrey->GetBirdParams().wBetaIn.y);

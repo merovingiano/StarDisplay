@@ -309,6 +309,7 @@ void CPredator::update(float dt, const CFlock&)
   {
     // Check for collisions in real-time
     const float distance = glm::distance(position_, closestPrey_->position());
+	checkEndHunt(closestPrey_->velocity(), closestPrey_->forward());
 	if (distance < hunts_.minDist)
 	{
 		hunts_.minDist = distance;
@@ -331,6 +332,7 @@ void CPredator::update(float dt, const CFlock&)
     // Check for catches in real-time
     const float distance = glm::distance(position_, lockedOn_->position());
     if (distance < hunts_.minDistLockedOn) hunts_.minDistLockedOn = distance;
+	checkEndHunt(lockedOn_->velocity(), lockedOn_->forward());
     if (distance <= pPred_.CatchDistance)
     {
       // EndHunt(true);
@@ -371,12 +373,12 @@ void CPredator::flightDynamic()
   glm::vec3 down = glm::vec3(0, 0, -pBird_.bodyWeight);
   const float desiredLift = desiredLift_;
 
-  const float D = CDCL * L;   // Drag
+  const float D = (CDCL + pBird_.bodyDrag / CL) * L;   // Drag
   liftMax_ = B_[1] * L;
   lift_ = B_[1] * std::min(L, desiredLift);
   
   //! Adding the x part of the force to the thrust
-  flightForce_ = lift_ + B_[0] * (CDCL * pBird_.bodyWeight - D + forceInBody.x); // apply clamped lift, drag and default thrust
+  flightForce_ = lift_ + B_[0] * ( - D + forceInBody.x); // apply clamped lift, drag and default thrust. (removed CDCL * pBird_.bodyWeight)
   flightForce_.y -= pBird_.bodyWeight;        // apply gravity
 }
 
@@ -556,15 +558,29 @@ void CPredator::DirectPursuit(const glm::vec3& targetHeading, const glm::vec3& t
 	omega *= glm::length(v);
 	omega = glm::cross(omega, v);
 	steering_ += omega * N_;
-	if (glm::dot(r, r) < 8)
+}
+
+void CPredator::checkEndHunt(const glm::vec3& targetHeading, const glm::vec3& targetVelocity)
+{
+	glm::vec3 r = targetPoint_ - position_;
+
+	if (hunts_.minDist< 5)
 	{
 		glm::vec3 pHead = glm::vec3(glm::dot(r, glm::column(H_, 0)), glm::dot(r, glm::column(H_, 1)), glm::dot(r, glm::column(H_, 2)));
 		float phi = atan2(pHead.z, pHead.x);
 		bool blind = (abs(phi) - 3.14 < 0.8 && pHead.x < 0);
-		if (blind) EndHunt(false);
+		if (glm::length(r) > 10) {
+			EndHunt(false);
+			//std::cout << "\n" << "should end";
+		}
+		if (blind) {
+			EndHunt(false);
+			//std::cout << "\n" <<glm::length(r);
+		}
 	}
-}
 
+
+}
 
 void CPredator::DirectPursuit2(const glm::vec3& targetHeading, const glm::vec3& targetVelocity)
 {
@@ -574,13 +590,6 @@ void CPredator::DirectPursuit2(const glm::vec3& targetHeading, const glm::vec3& 
 	if (Sim.Params().evolution.evolveDPAdjParam)	rp += DPAdjParam_ * targetVelocity;
 	steering_ += glm::normalize(rp) * N_ * 100.0f;
 
-	if (glm::dot(r, r) < 8)
-	{
-		glm::vec3 pHead = glm::vec3(glm::dot(r, glm::column(H_, 0)), glm::dot(r, glm::column(H_, 1)), glm::dot(r, glm::column(H_, 2)));
-		float phi = atan2(pHead.z, pHead.x);
-		bool blind = (abs(phi) - 3.14 < 0.8 && pHead.x < 0);
-		if (blind) EndHunt(false);
-	}
 }
 
 void CPredator::PNDP(const glm::vec3& targetHeading, const glm::vec3& targetVelocity)
@@ -600,13 +609,6 @@ void CPredator::proportionalNavigation(const glm::vec3& targetHeading, const glm
 	glm::vec3 wLOS = glm::cross(v, r) / glm::dot(r, r);
 	steering_ += N_ * glm::cross(wLOS, velocity_)*pBird_.bodyMass;
 	//!stopping attack when in blind angle and close to prey
-	if (glm::dot(r, r) < 8)
-	{
-		glm::vec3 pHead = glm::vec3(glm::dot(r, glm::column(H_, 0)), glm::dot(r, glm::column(H_, 1)), glm::dot(r, glm::column(H_, 2)));
-		float phi = atan2(pHead.z, pHead.x);
-		bool blind = (abs(phi) - 3.14 < 0.8 && pHead.x < 0);
-		if (blind) EndHunt(false);
-	}
 }
 
 void CPredator::predatorIntegration(float dt)
@@ -705,7 +707,7 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 	glm::vec3 Ll = glm::vec3(0, glm::dot(lift_, B_[1]), glm::dot(lift_, B_[2]));
 	//! determine the size of the turn towards desired angle
 	float turn = asin(glm::cross(Ll, Fl).x / (glm::length(Ll) * glm::length(Fl)));
-	float rollrate = 10.0f;
+	float rollrate = pBird_.rollRate;
 	//! Clamp anglular velocity 
 	float beta = std::max(std::min((turn), rollrate * dt), -rollrate * dt);
 
