@@ -23,6 +23,7 @@
 #include "Params.hpp"
 #include <iostream>
 #include "EvolvePN.hpp"
+#include <boost/filesystem.hpp>
 
 using namespace Param;
 
@@ -71,7 +72,7 @@ void SetGetAlleles(one_allele& allele, CFlock::pred_iterator pred, int type)
 	if (type == 1) allele.push_back(pred->GetBirdParams().cohesionWeight.z); else if (Sim.Params().evolution.evolvecohesionWeight) bird.cohesionWeight.z = allele[index]; index++; 
 	if (type == 1) allele.push_back(pred->GetPredParams().HandleTime); else if (Sim.Params().evolution.evolveHandleTime) predParam.HandleTime = allele[index]; index++; 
 	if (type == 1) allele.push_back(pred->GetPredParams().LockDistance); else if (Sim.Params().evolution.evolveLockDistance) predParam.LockDistance = allele[index]; index++; 
-	if (type == 1) allele.push_back(pred->hunts().minDist); else
+	if (type == 1) allele.push_back(std::max(pred->hunts().minDist,0.1f)); else
 	{
 		pred->SetPredParams(predParam);
 		pred->SetBirdParams(bird);
@@ -96,6 +97,12 @@ void EvolvePN::Reset()
 	names_.clear();
 	ValuesParameters_.clear();
 	StringParameters_.clear();
+
+	if (Sim.Params().evolution.load)
+	{
+
+		loadFiles();
+	}
 	if (Sim.experiments.empty())
 	{
 		Sim.expNumb = 0;
@@ -130,6 +137,27 @@ void EvolvePN::Reset()
 
 	
 }
+
+
+void EvolvePN::loadFiles()
+{
+
+	std::string p = "D:/ownCloud/2013-2014/phd hunting/dataStarDisplay/25-05-2015/";
+	if (boost::filesystem::is_directory(p))
+	{
+		for (boost::filesystem::directory_iterator itr(p); itr != boost::filesystem::directory_iterator(); ++itr)
+		{
+			std::cout << itr->path().filename() << ' '; // display filename only
+			if (is_regular_file(itr->status())) std::cout << " [" << file_size(itr->path()) << ']';
+			std::cout << '\n';
+		}
+	}
+	else std::cout << (boost::filesystem::exists(p)? "Found: " : "Not found: ") << p << '\n';
+
+
+
+}
+
 
 
 void EvolvePN::apply()
@@ -342,6 +370,8 @@ void EvolvePN::PrepareSave()
 		namesParameters_.push_back("numPrey"); ValuesParameters_.push_back(GFLOCK.num_prey());
 		namesParameters_.push_back("dt"); ValuesParameters_.push_back(Sim.Params().IntegrationTimeStep);
 		namesParameters_.push_back("EvolDuration"); ValuesParameters_.push_back(Sim.Params().evolution.durationGeneration);
+		namesParameters_.push_back("load"); ValuesParameters_.push_back(Sim.Params().evolution.load);
+		namesParameters_.push_back("startGen"); ValuesParameters_.push_back(Sim.Params().evolution.startGen);
 		namesParameters_.push_back("evolX"); ValuesParameters_.push_back(Sim.Params().evolution.evolveX);
 		namesParameters_.push_back("evolY"); ValuesParameters_.push_back(Sim.Params().evolution.evolveAlt);
 		namesParameters_.push_back("evolZ"); ValuesParameters_.push_back(Sim.Params().evolution.evolveZ);

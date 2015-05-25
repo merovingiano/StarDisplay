@@ -153,6 +153,8 @@ void Simulation::GetExperimentSettings(const luabind::object& obj)
 							if (strKey4 == "type") experiment.param.evolution.type = luabind::object_cast<std::string>(evolution["type"]);
 							if (strKey4 == "fileName") experiment.param.evolution.fileName = luabind::object_cast<std::string>(evolution["fileName"]);
 							if (strKey4 == "durationGeneration") experiment.param.evolution.durationGeneration = luabind::object_cast<float>(evolution["durationGeneration"]);
+							if (strKey4 == "startGen") experiment.param.evolution.startGen = luabind::object_cast<int>(evolution["startGen"]);
+							if (strKey4 == "load") experiment.param.evolution.load = luabind::object_cast<bool>(evolution["load"]);
 							if (strKey4 == "evolvePN") experiment.param.evolution.evolvePN = luabind::object_cast<bool>(evolution["evolvePN"]);
 							if (strKey4 == "evolveDPAdjParam") experiment.param.evolution.evolveDPAdjParam = luabind::object_cast<bool>(evolution["evolveDPAdjParam"]);
 							if (strKey4 == "evolveAlt") experiment.param.evolution.evolveAlt = luabind::object_cast<bool>(evolution["evolveAlt"]);

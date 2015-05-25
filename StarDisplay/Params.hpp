@@ -23,6 +23,8 @@ namespace Param {
 	  std::string type;
 	  std::string fileName;
 	  float durationGeneration;
+	  int startGen;
+	  bool load;
 	  bool evolvePN;
 	  bool evolveDPAdjParam;
 	  bool evolveAlt;

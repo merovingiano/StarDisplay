@@ -15,6 +15,7 @@ public:
 	EvolvePN();
 	virtual void Reset();
 	virtual void apply();
+	virtual void loadFiles();
 	virtual void save(const char* fname, bool append) const;
 	virtual void loadPositions(const char* fname) const;
 	int getGeneration()	{ return Generation_; };

@@ -253,6 +253,8 @@ namespace libParam
     }
     cobj.renderFlags = FromLua<RenderFlags>(luaobj["RenderFlags"]);
 	cobj.evolution.durationGeneration = object_cast<float  >(luaobj["evolution"]["durationGeneration"]);
+	cobj.evolution.startGen = object_cast<int >(luaobj["evolution"]["startGen"]);
+	cobj.evolution.load = object_cast<bool>(luaobj["evolution"]["load"]);
 	cobj.evolution.evolveAlt = object_cast<bool  >(luaobj["evolution"]["evolveAlt"]);
 	cobj.evolution.type = object_cast<std::string  >(luaobj["evolution"]["type"]);
 	cobj.evolution.fileName = object_cast<std::string  >(luaobj["evolution"]["fileName"]);
