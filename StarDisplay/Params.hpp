@@ -25,6 +25,7 @@ namespace Param {
 	  float durationGeneration;
 	  int startGen;
 	  bool load;
+	  std::string loadFolder;
 	  bool evolvePN;
 	  bool evolveDPAdjParam;
 	  bool evolveAlt;

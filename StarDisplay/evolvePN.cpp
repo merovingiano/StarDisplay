@@ -98,9 +98,9 @@ void EvolvePN::Reset()
 	ValuesParameters_.clear();
 	StringParameters_.clear();
 
-	if (Sim.Params().evolution.load)
+	if (Sim.Params().evolution.load & Sim.experiments.empty())
 	{
-
+		std::cout <<"\n load folder: " << Sim.Params().evolution.loadFolder;
 		loadFiles();
 	}
 	if (Sim.experiments.empty())
@@ -117,6 +117,7 @@ void EvolvePN::Reset()
 		std::cout << "\n Starting Simulation " << Sim.expNumb;
 		if (Sim.expNumb > Sim.experiments.size()) AppWindow.PostMessage(WM_CLOSE);
 		Param::Params p = Sim.experiments[Sim.expNumb-1].param;
+		p.evolution.terminationGeneration = 500;
 		Sim.SetParams(p);
 		for (; firstPred != lastPred; ++firstPred)
 		{
@@ -128,6 +129,12 @@ void EvolvePN::Reset()
 			firstPrey->SetPreyParams(Sim.experiments[Sim.expNumb - 1].prey);
 			firstPrey->SetBirdParams(Sim.experiments[Sim.expNumb - 1].preyBird);
 		}
+		std::string tmp = Sim.Params().evolution.loadFolder;
+		tmp.append(Sim.experiments[Sim.expNumb - 1].param.evolution.title);
+		
+		loadOldData(tmp);
+		std::cout << "\n Generation: " << Generation_;
+
 		CFlock::prey_iterator testfirstPrey(GFLOCKNC.prey_begin());
 		std::cout << "\n testing alterness relaxation: " << testfirstPrey->GetPreyParams().AlertnessRelexation.x << " " << testfirstPrey->GetPreyParams().AlertnessRelexation.y;
 
@@ -139,22 +146,269 @@ void EvolvePN::Reset()
 }
 
 
+void EvolvePN::loadOldData(std::string filename)
+{
+	std::ifstream infile(filename);
+	std::string tmp;
+	int linecounter = 0;
+	while (!infile.eof())
+	{
+		std::getline(infile, tmp);
+		if (tmp[0] == '#')
+		{
+
+			while (tmp[0] == '#')
+			{
+				std::getline(infile, tmp);
+				std::cout << tmp;
+			}
+			std::getline(infile, tmp);
+		}
+
+		CFlock::pred_iterator first(GFLOCKNC.predator_begin());
+		CFlock::pred_iterator last(GFLOCKNC.predator_end());
+		CFlock::prey_iterator firstPrey(GFLOCKNC.prey_begin());
+		data_all_pred data_all_pred;
+
+		float tempFloat;
+		for (; first != last; ++first)
+		{
+			data_per_pred data;
+			infile >> tempFloat; first->set_N(tempFloat); data.push_back(tempFloat);
+			
+			infile >> tempFloat; first->setDPAdjParam(tempFloat); data.push_back(tempFloat);
+			infile >> tempFloat; first->setStartAltitude(tempFloat); data.push_back(tempFloat);
+			infile >> tempFloat; first->setStartXDist(tempFloat); data.push_back(tempFloat);
+
+
+
+			infile >> tempFloat;  data.push_back(tempFloat);
+			infile >> tempFloat;  data.push_back(tempFloat);
+			infile >> tempFloat;  data.push_back(tempFloat);
+			infile >> tempFloat; first->setGeneration(tempFloat); data.push_back(tempFloat); Generation_ = std::max(int(tempFloat),Generation_); 
+			infile >> tempFloat;  data.push_back(tempFloat);
+			infile >> tempFloat;  data.push_back(tempFloat);
+			infile >> tempFloat;  data.push_back(tempFloat);
+			infile >> tempFloat;  data.push_back(tempFloat);
+			data_all_pred.push_back(data);
+
+		}
+		
+
+		save_data_.push_back(data_all_pred);
+
+	}
+}
+
 void EvolvePN::loadFiles()
 {
 
-	std::string p = "D:/ownCloud/2013-2014/phd hunting/dataStarDisplay/25-05-2015/";
+	std::string p = Sim.Params().evolution.loadFolder;
 	if (boost::filesystem::is_directory(p))
 	{
 		for (boost::filesystem::directory_iterator itr(p); itr != boost::filesystem::directory_iterator(); ++itr)
 		{
-			std::cout << itr->path().filename() << ' '; // display filename only
-			if (is_regular_file(itr->status())) std::cout << " [" << file_size(itr->path()) << ']';
 			std::cout << '\n';
+			std::cout << itr->path().filename() << ' '; // display filename only
+			std::cout <<  '\n'<< itr->path() << ' ';
+
+			CFlock::prey_iterator Prey = GFLOCKNC.prey_begin();
+			CFlock::pred_iterator Pred = GFLOCKNC.predator_begin();
+			Param::Experiment experiment;
+			experiment.pred = Pred->GetPredParams();
+			experiment.prey = Prey->GetPreyParams();
+			experiment.predBird = Pred->GetBirdParams();
+			experiment.preyBird = Prey->GetBirdParams();
+			experiment.param = Sim.Params();
+
+
+			if (is_regular_file(itr->status())) std::cout << " [" << file_size(itr->path()) << ']';
+			std::string hoi = p;
+			hoi.append((itr->path().filename()).string());
+			std::ifstream infile(hoi);
+			
+			std::getline(infile, hoi); hoi.erase(0, 1);
+			experiment.param.evolution.fileName = "LOAD";
+			experiment.param.evolution.fileName.append((itr->path().filename()).string());
+			experiment.param.evolution.title = (itr->path().filename()).string();
+			std::getline(infile, hoi);
+			std::getline(infile, hoi);
+			//std::getline(infile, hoi);
+			std::string convert;
+			float skip;
+			//for (int n = 0; n < 20; n++)
+			//{
+			//	infile >> convert;
+			//	std::cout << "\n"<< convert;
+				
+			//}
+
+			infile >> convert;
+			convert.erase(0, 1);
+			experiment.predBird.wingAspectRatio = std::stof(convert);
+			if (hoi.find("predBodyDrag") != std::string::npos) infile >> experiment.predBird.bodyDrag;
+			if (hoi.find("predControlCL") != std::string::npos)infile >> experiment.predBird.controlCL;
+			if (hoi.find("predCDCL") != std::string::npos)infile >> experiment.predBird.CDCL;
+			if (hoi.find("predMinSpeed") != std::string::npos)infile >> experiment.predBird.minSpeed;
+			if (hoi.find("predCruiseSpeed") != std::string::npos)infile >> experiment.predBird.cruiseSpeed;
+			if (hoi.find("predMaxSpeed") != std::string::npos)infile >> experiment.predBird.maxSpeed;
+			if (hoi.find("predRollRate") != std::string::npos)infile >> experiment.predBird.rollRate;
+			if (hoi.find("predMaxLift") != std::string::npos)infile >> experiment.predBird.maxLift;
+			if (hoi.find("predCL") != std::string::npos)infile >> experiment.predBird.CL;
+			if (hoi.find("predWingSpan") != std::string::npos)infile >> experiment.predBird.wingSpan;
+			if (hoi.find("predMass") != std::string::npos)infile >> experiment.predBird.bodyMass;
+			if (hoi.find("predMaxForce") != std::string::npos)infile >> experiment.predBird.maxForce;
+			if (hoi.find("predRTStochastic") != std::string::npos)infile >> experiment.predBird.reactionTime;
+			if (hoi.find("predBlindAngle") != std::string::npos)infile >> experiment.predBird.reactionStochastic;
+			if (hoi.find("predBlindAngle") != std::string::npos)infile >> experiment.predBird.blindAngle;
+			if (hoi.find("predNoiseWeight") != std::string::npos)infile >> experiment.predBird.randomWeight;
+			if (hoi.find("predLockDistance") != std::string::npos)infile >> experiment.pred.LockDistance;
+			if (hoi.find("predBlindAngleLock") != std::string::npos)infile >> experiment.pred.LockBlindAngle;
+			if (hoi.find("predskipRightHemisphere") != std::string::npos)infile >> experiment.predBird.skipLeftHemisphere;
+			if (hoi.find("predrho")!= std::string::npos) infile >> experiment.predBird.rho;
+			if (hoi.find("predspeedControl") != std::string::npos)infile >> experiment.predBird.speedControl;
+			if (hoi.find("predmaxRadius") != std::string::npos)infile >> experiment.predBird.maxRadius;
+			if (hoi.find("predneighborLerp") != std::string::npos)infile >> experiment.predBird.neighborLerp;
+			if (hoi.find("predtopologicalRange") != std::string::npos)infile >> experiment.predBird.topologicalRange;
+			if (hoi.find("predcircularityInc") != std::string::npos)infile >> experiment.predBird.circularityInc;
+			if (hoi.find("predbinocularOverlap") != std::string::npos)infile >> experiment.predBird.binocularOverlap;
+			if (hoi.find("predseparationStepx") != std::string::npos)infile >> experiment.predBird.separationStep.x;
+			if (hoi.find("predseparationStepy") != std::string::npos)infile >> experiment.predBird.separationStep.y;
+			if (hoi.find("predseparationWeightx") != std::string::npos)infile >> experiment.predBird.separationWeight.x;
+			if (hoi.find("predseparationWeighty") != std::string::npos)infile >> experiment.predBird.separationWeight.y;
+			if (hoi.find("predseparationWeightz") != std::string::npos)infile >> experiment.predBird.separationWeight.z;
+			if (hoi.find("predalignmentWeightx") != std::string::npos)infile >> experiment.predBird.alignmentWeight.x;
+			if (hoi.find("predalignmentWeighty") != std::string::npos)infile >> experiment.predBird.alignmentWeight.y;
+			if (hoi.find("predcohesionWeightx") != std::string::npos)infile >> experiment.predBird.cohesionWeight.x;
+			if (hoi.find("predcohesionWeighty") != std::string::npos)infile >> experiment.predBird.cohesionWeight.y;
+			if (hoi.find("predcohesionWeightz") != std::string::npos)infile >> experiment.predBird.cohesionWeight.z;
+			if (hoi.find("predAltitude") != std::string::npos)infile >> experiment.predBird.altitude;
+			if (hoi.find("predrandomWeight") != std::string::npos)infile >> experiment.predBird.randomWeight;
+
+
+			if (hoi.find("numPrey") != std::string::npos)infile >> skip;
+			if (hoi.find("dt") != std::string::npos)infile >> skip;
+			if (hoi.find("EvolDuration") != std::string::npos)infile >> experiment.param.evolution.durationGeneration;
+			if (hoi.find("load") != std::string::npos)
+			{
+				infile >> experiment.param.evolution.load;
+				std::cout << "\nhoort er niet in!";
+			}
+			if (hoi.find("startGen") != std::string::npos)infile >> experiment.param.evolution.startGen;
+			
+
+			
+
+			if (hoi.find("evolX") != std::string::npos)infile >> experiment.param.evolution.evolveX;
+			if (hoi.find("evolY") != std::string::npos) infile >> experiment.param.evolution.evolveAlt;
+			if (hoi.find("evolZ") != std::string::npos)infile >> experiment.param.evolution.evolveZ;
+			if (hoi.find("evolveCL") != std::string::npos) infile >> experiment.param.evolution.evolveCL;
+			if (hoi.find("evolvewingAspectRatio") != std::string::npos)infile >> experiment.param.evolution.evolvewingAspectRatio;
+			if (hoi.find("evolvemaxForce") != std::string::npos)infile >> experiment.param.evolution.evolvemaxForce;
+			if (hoi.find("evolvewingSpan") != std::string::npos) infile >> experiment.param.evolution.evolvewingSpan;
+			if (hoi.find("evolvebodyMass") != std::string::npos) infile >> experiment.param.evolution.evolvebodyMass;
+			if (hoi.find("evolvecontrolCL") != std::string::npos)infile >> experiment.param.evolution.evolvecontrolCL;
+			if (hoi.find("evolvecruiseSpeed") != std::string::npos)infile >> experiment.param.evolution.evolvecruiseSpeed;
+			if (hoi.find("evolvemaxLift") != std::string::npos)infile >> experiment.param.evolution.evolvemaxLift;
+			if (hoi.find("evolvemaxSpeed") != std::string::npos)infile >> experiment.param.evolution.evolvemaxSpeed;
+			if (hoi.find("evolverollRate") != std::string::npos)infile >> experiment.param.evolution.evolverollRate;
+			if (hoi.find("evolveminSpeed") != std::string::npos)infile >> experiment.param.evolution.evolveminSpeed;
+			if (hoi.find("evolvereactionTime") != std::string::npos)infile >> experiment.param.evolution.evolvereactionTime;
+			if (hoi.find("evolvealignmentWeight") != std::string::npos)infile >> experiment.param.evolution.evolvealignmentWeight;
+			if (hoi.find("evolvecohesionWeight") != std::string::npos)infile >> experiment.param.evolution.evolvecohesionWeight;
+			if (hoi.find("evolveHandleTime") != std::string::npos)infile >> experiment.param.evolution.evolveHandleTime;
+			if (hoi.find("evolveLockDistance") != std::string::npos)infile >> experiment.param.evolution.evolveLockDistance;
+			if (hoi.find("evolPN") != std::string::npos)infile >> experiment.param.evolution.evolvePN;
+
+			
+
+			if (hoi.find("evolveDPAdjParam") != std::string::npos) infile >> experiment.param.evolution.evolveDPAdjParam;
+			if (hoi.find("minRadius") != std::string::npos)infile >> experiment.param.roost.minRadius;
+			
+			std::cout << "\n minRadius: " << experiment.param.roost.minRadius;
+			
+			if (hoi.find("maxRadius") != std::string::npos)infile >> experiment.param.roost.maxRadius;
+			if (hoi.find("Radius") != std::string::npos)infile >> experiment.param.roost.Radius;
+
+			
+
+			if (hoi.find("externalPrey") != std::string::npos)infile >> experiment.param.evolution.externalPrey;
+
+
+			
+
+			if (hoi.find("preyMaxForce") != std::string::npos)infile >> experiment.preyBird.maxForce;
+			if (hoi.find("preyAR") != std::string::npos)infile >> experiment.preyBird.wingAspectRatio;
+			if (hoi.find("preyCL") != std::string::npos)infile >> experiment.preyBird.CL;
+			if (hoi.find("preyWingSpan") != std::string::npos)infile >> experiment.preyBird.wingSpan;
+			if (hoi.find("preyCruiseSpeed") != std::string::npos)infile >> experiment.preyBird.cruiseSpeed;
+			if (hoi.find("preyMaxLift") != std::string::npos)infile >> experiment.preyBird.maxLift;
+			if (hoi.find("preyMaxSpeed") != std::string::npos)infile >> experiment.preyBird.maxSpeed;
+			if (hoi.find("preyRollRate") != std::string::npos)infile >> experiment.preyBird.rollRate;
+			if (hoi.find("preyMinSpeed") != std::string::npos)infile >> experiment.preyBird.minSpeed;
+			if (hoi.find("preyWBetaInRoll") != std::string::npos)infile >> experiment.preyBird.wBetaIn.x;
+			if (hoi.find("preyWBetaInPitch") != std::string::npos)infile >> experiment.preyBird.wBetaIn.y;
+			if (hoi.find("preyMaxRadius") != std::string::npos)infile >> experiment.preyBird.maxRadius;
+			if (hoi.find("preyMaxSeparationTopo") != std::string::npos)infile >> experiment.preyBird.maxSeparationTopo;
+			if (hoi.find("preyseparationWeightx") != std::string::npos)infile >> experiment.preyBird.separationWeight.x;
+			if (hoi.find("preyseparationWeighty") != std::string::npos)infile >> experiment.preyBird.separationWeight.y;
+			if (hoi.find("preyseparationWeightz") != std::string::npos)infile >> experiment.preyBird.separationWeight.z;
+			if (hoi.find("preyalignmentWeightx") != std::string::npos)infile >> experiment.preyBird.alignmentWeight.x;
+			if (hoi.find("preyalignmentWeighty") != std::string::npos)infile >> experiment.preyBird.alignmentWeight.y;
+			if (hoi.find("preycohesionWeightx") != std::string::npos)infile >> experiment.preyBird.cohesionWeight.x;
+			if (hoi.find("preycohesionWeighty") != std::string::npos)infile >> experiment.preyBird.cohesionWeight.y;
+			if (hoi.find("preycohesionWeightz") != std::string::npos)infile >> experiment.preyBird.cohesionWeight.z;
+			if (hoi.find("preyrandomWeight") != std::string::npos)infile >> experiment.preyBird.randomWeight;
+			if (hoi.find("preyBoundaryWeightx") != std::string::npos)infile >> experiment.preyBird.boundaryWeight.x;
+			if (hoi.find("preyBoundaryWeighty") != std::string::npos)infile >> experiment.preyBird.boundaryWeight.y;
+			if (hoi.find("preyBoundaryWeightz") != std::string::npos)infile >> experiment.preyBird.boundaryWeight.z;
+			if (hoi.find("preyOuterBoundary") != std::string::npos)infile >> experiment.preyBird.outerBoundary;
+			if (hoi.find("preyInnerBoundary") != std::string::npos)infile >> experiment.preyBird.innerBoundary;
+			if (hoi.find("preyAltitude") != std::string::npos)infile >> experiment.preyBird.altitude;
+			if (hoi.find("preyDetectCruising") != std::string::npos)infile >> experiment.prey.DetectCruising;
+			if (hoi.find("preyDetectionDistance") != std::string::npos)infile >> experiment.prey.DetectionDistance;
+			if (hoi.find("preyDetectionSurfaceProb") != std::string::npos)infile >> experiment.prey.DetectionSurfaceProb;
+			if (hoi.find("preyDetectionHemisphereFOV") != std::string::npos)infile >> experiment.prey.DetectionHemisphereFOV;
+			if (hoi.find("preyIncurNeighborPanic") != std::string::npos)infile >> experiment.prey.IncurNeighborPanic;
+			if (hoi.find("preyIncurLatency") != std::string::npos)infile >> experiment.prey.IncurLatency;
+			if (hoi.find("preyAlertnessRelexationx") != std::string::npos)infile >> experiment.prey.AlertnessRelexation.x;
+			if (hoi.find("preyAlertnessRelexationy") != std::string::npos)infile >> experiment.prey.AlertnessRelexation.y;
+			if (hoi.find("preyAlertedReactionTimeFactor") != std::string::npos)infile >> experiment.prey.AlertedReactionTimeFactor;
+			if (hoi.find("preyReturnRelaxation") != std::string::npos)infile >> experiment.prey.ReturnRelaxation;
+			if (hoi.find("preyReturnWeightx") != std::string::npos)infile >> experiment.prey.ReturnWeight.x;
+			if (hoi.find("preyReturnWeighty") != std::string::npos)infile >> experiment.prey.ReturnWeight.y;
+			if (hoi.find("preyReturnWeightz") != std::string::npos)infile >> experiment.prey.ReturnWeight.z;
+			if (hoi.find("preyReturnThresholdx") != std::string::npos)infile >> experiment.prey.ReturnThreshold.x;
+			if (hoi.find("preyReturnThresholdy") != std::string::npos)infile >> experiment.prey.ReturnThreshold.y;
+			if (hoi.find("preyRT") != std::string::npos)infile >> experiment.preyBird.reactionTime;
+			if (hoi.find("preyreactionStochastic") != std::string::npos)infile >> experiment.preyBird.reactionStochastic;
+			if (hoi.find("preyBlindAngle") != std::string::npos)infile >> experiment.preyBird.blindAngle;
+			if (hoi.find("preyBodyDrag") != std::string::npos)infile >> experiment.preyBird.bodyDrag;
+			if (hoi.find("preyControlCL") != std::string::npos)infile >> experiment.preyBird.controlCL;
+			if (hoi.find("preyCDCL") != std::string::npos)infile >> experiment.preyBird.CDCL;
+			if (hoi.find("preyMass") != std::string::npos)infile >> experiment.preyBird.bodyMass;
+			if (hoi.find("preyEvMaximizeDist") != std::string::npos)infile >> experiment.prey.EvasionStrategy[0].weight;
+			if (hoi.find("preyEvTurnInward") != std::string::npos)infile >> experiment.prey.EvasionStrategy[1].weight;
+			if (hoi.find("preyEvTurnAway") != std::string::npos)infile >> experiment.prey.EvasionStrategy[2].weight;
+			if (hoi.find("preyEvDrop") != std::string::npos)infile >> experiment.prey.EvasionStrategy[3].weight;
+			if (hoi.find("preyEvMoveCentered") != std::string::npos)infile >> experiment.prey.EvasionStrategy[4].weight;
+			if (hoi.find("preyEvZig") != std::string::npos)infile >> experiment.prey.EvasionStrategy[5].weight;
+
+			if (hoi.find("predGuidance") != std::string::npos)
+			{
+				infile >> convert;
+				if (convert == "Custom") experiment.pred.pursuit.type == 0;
+				if (convert == "ProportionalNavigation") experiment.pred.pursuit.type == 1;
+				if (convert == "DirectPursuit") experiment.pred.pursuit.type == 2;
+				if (convert == "DirectPursuit2") experiment.pred.pursuit.type == 3;
+				if (convert == "PNDP") experiment.pred.pursuit.type == 4;
+			}
+
+			Sim.experiments.push_back(experiment);
+			
 		}
 	}
 	else std::cout << (boost::filesystem::exists(p)? "Found: " : "Not found: ") << p << '\n';
-
-
 
 }
 
@@ -371,6 +625,7 @@ void EvolvePN::PrepareSave()
 		namesParameters_.push_back("dt"); ValuesParameters_.push_back(Sim.Params().IntegrationTimeStep);
 		namesParameters_.push_back("EvolDuration"); ValuesParameters_.push_back(Sim.Params().evolution.durationGeneration);
 		namesParameters_.push_back("load"); ValuesParameters_.push_back(Sim.Params().evolution.load);
+		
 		namesParameters_.push_back("startGen"); ValuesParameters_.push_back(Sim.Params().evolution.startGen);
 		namesParameters_.push_back("evolX"); ValuesParameters_.push_back(Sim.Params().evolution.evolveX);
 		namesParameters_.push_back("evolY"); ValuesParameters_.push_back(Sim.Params().evolution.evolveAlt);
@@ -477,7 +732,6 @@ void EvolvePN::PrepareSave()
 		};
 
 		namesParameters_.push_back("predGuidance"); StringParameters_.push_back(GuidanceNames[first->GetPredParams().pursuit.type]);
-
 		
 
 	}
@@ -525,7 +779,7 @@ void EvolvePN::Shuffle()
 
 		for (int ii = 0; ii < allele[i].size(); ii++)
 		{
-			allele[i][ii] += (1.0f / Generation_) * rnd(rnd_eng()) * 5 + 1.0f * rnd(rnd_eng());
+			allele[i][ii] += (1.0f / Generation_) * rnd(rnd_eng()) * 5 + rnd(rnd_eng()) *allele[i][ii]/10.0f;
 		}
 	}
 	CFlock::pred_iterator first(GFLOCKNC.predator_begin());
@@ -569,10 +823,10 @@ void EvolvePN::Shuffle()
 
 	first = GFLOCKNC.predator_end() - n;
 	//set the the last n to the average of the top 1%, This is possibly wrong, you want the sorted vector to be adapted
-	for (; first != last; ++first)
-	{
-		SetGetAlleles(top1, first, 2);
-	}
+	//for (; first != last; ++first)
+	//{
+	//	SetGetAlleles(top1, first, 2);
+	//}
 	const float R = PROOST.Radius;
 
 	first = GFLOCKNC.predator_begin();
@@ -612,7 +866,7 @@ void EvolvePN::Shuffle()
 		{
 			first->position_.y = first->getStartAltitude();
 			first->position_.x = first->getStartXDist();
-
+			first->position_.z = 0.0f;
 		}
 		if (!Sim.Params().evolution.evolveAlt && Sim.Params().evolution.evolveX)
 		{
@@ -625,6 +879,9 @@ void EvolvePN::Shuffle()
 		}
 		first->B_[0] = glmutils::vec3_in_sphere(rnd_eng());
 		first->B_[0] /= glm::length(first->B_[0]);
+
+		first->B_[0] = glm::normalize(-first->position_);
+
 		first->velocity_ = 20.0f * first->B_[0];
 
 
@@ -633,7 +890,7 @@ void EvolvePN::Shuffle()
 		first->setTrail(true);
 		first->BeginHunt(); 
 		//std::cout << "\npred num " << first->id();
-		std::cout << "\nN :  " << first->get_N() << " startAltitude :  " << first->getStartAltitude() << " startXDist :  " << first->getStartXDist() << " maxForce :  " << first->GetBirdParams().maxForce << " DPadjParam :  " << first->getDPAdjParam() << " Generation: " << first->getGeneration();
+		//std::cout << "\nN :  " << first->get_N() << " startAltitude :  " << first->getStartAltitude() << " startXDist :  " << first->getStartXDist() << " maxForce :  " << first->GetBirdParams().maxForce << " DPadjParam :  " << first->getDPAdjParam() << " Generation: " << first->getGeneration();
 		//std::cout << "\n" << rnd(rnd_eng());
 
 		meanN += first->get_N() * 1 / N;

@@ -30,6 +30,7 @@ local Default = {
 		durationGeneration = 25.0,   -- length in seconds in which one duration hunts
 		startGen = 0,				-- When no randomization at start is desired, set it to >0 (such as when loading an old one)
 		load = false,
+		loadFolder = "",
 		evolvePN = true,
 		evolveDPAdjParam = false,
 		evolveAlt = true,

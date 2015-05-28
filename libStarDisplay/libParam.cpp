@@ -255,6 +255,7 @@ namespace libParam
 	cobj.evolution.durationGeneration = object_cast<float  >(luaobj["evolution"]["durationGeneration"]);
 	cobj.evolution.startGen = object_cast<int >(luaobj["evolution"]["startGen"]);
 	cobj.evolution.load = object_cast<bool>(luaobj["evolution"]["load"]);
+	cobj.evolution.loadFolder = object_cast<std::string>(luaobj["evolution"]["loadFolder"]);
 	cobj.evolution.evolveAlt = object_cast<bool  >(luaobj["evolution"]["evolveAlt"]);
 	cobj.evolution.type = object_cast<std::string  >(luaobj["evolution"]["type"]);
 	cobj.evolution.fileName = object_cast<std::string  >(luaobj["evolution"]["fileName"]);
