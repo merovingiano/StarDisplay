@@ -85,7 +85,7 @@ function Birds.Starling (p)
   bird.CDCL= CDCL2(bird)
   bird.controlCL = false
   bird.bodyDrag = 0
-
+  bird.wingRetractionSpeed = 100
   bird.maxForce = 2  -- max steering force [N] 
   bird.maxLift = 3      -- [N]
   bird.cruiseSpeed = CruiseSpeed(bird)      -- [m/s]
@@ -181,9 +181,9 @@ function Birds.Falcon (p)
   bird.CDCL= CDCL(bird)
   bird.controlCL = false
   bird.bodyDrag = 0.017
-  
+  bird.wingRetractionSpeed = 59
   bird.maxLift = 40           -- [N}
-
+  
   bird.cruiseSpeed = 20          -- CruiseSpeed(bird)    -- [m/s]
   --bird.speedControl = 1 / 1000   -- one over tau 
   bird.minSpeed = 5

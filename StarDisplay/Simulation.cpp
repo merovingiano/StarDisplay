@@ -337,6 +337,7 @@ void Simulation::copyBirdParam(luabind::object& obj, Param::Bird& bird)
 		if (strKey3 == "altitude") bird.altitude = luabind::object_cast<float>(obj["altitude"]);
 		//if (strKey3 == "gpws") bird.gpws = luabind::object_cast<float>(obj["gpws"]);
 		if (strKey3 == "bodyDrag") bird.bodyDrag = luabind::object_cast<float>(obj["bodyDrag"]);
+		if (strKey3 == "wingRetractionSpeed") bird.bodyDrag = luabind::object_cast<float>(obj["wingRetractionSpeed"]);
 		if (strKey3 == "controlCL") bird.controlCL = luabind::object_cast<bool>(obj["controlCL"]);
 		if (strKey3 == "CDCL") bird.CDCL = luabind::object_cast<float>(obj["CDCL"]);
 
