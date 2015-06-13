@@ -162,6 +162,12 @@ void Simulation::GetExperimentSettings(const luabind::object& obj)
 							if (strKey4 == "evolveZ") experiment.param.evolution.evolveZ = luabind::object_cast<bool>(evolution["evolveZ"]);
 							if (strKey4 == "evolveCL") experiment.param.evolution.evolveCL = luabind::object_cast<bool>(evolution["evolveCL"]);
 							if (strKey4 == "evolvewingAspectRatio") experiment.param.evolution.evolvewingAspectRatio = luabind::object_cast<bool>(evolution["evolvewingAspectRatio"]);
+							if (strKey4 == "evolvewingBeatFreq") experiment.param.evolution.evolvewingBeatFreq = luabind::object_cast<bool>(evolution["evolvewingBeatFreq"]);
+							if (strKey4 == "evolvetheta") experiment.param.evolution.evolvetheta = luabind::object_cast<bool>(evolution["evolvetheta"]);
+							if (strKey4 == "evolvewingLength") experiment.param.evolution.evolvewingLength = luabind::object_cast<bool>(evolution["evolvewingLength"]);
+							if (strKey4 == "evolvebodyArea") experiment.param.evolution.evolvebodyArea = luabind::object_cast<bool>(evolution["evolvebodyArea"]);
+							if (strKey4 == "evolvecBody") experiment.param.evolution.evolvecBody = luabind::object_cast<bool>(evolution["evolvecBody"]);
+							if (strKey4 == "evolvecFriction") experiment.param.evolution.evolvecFriction = luabind::object_cast<bool>(evolution["evolvecFriction"]);
 							if (strKey4 == "evolvemaxForce") experiment.param.evolution.evolvemaxForce = luabind::object_cast<bool>(evolution["evolvemaxForce"]);
 							if (strKey4 == "evolvewingSpan") experiment.param.evolution.evolvewingSpan = luabind::object_cast<bool>(evolution["evolvewingSpan"]);
 							if (strKey4 == "evolvebodyMass") experiment.param.evolution.evolvebodyMass = luabind::object_cast<bool>(evolution["evolvebodyMass"]);
@@ -307,6 +313,12 @@ void Simulation::copyBirdParam(luabind::object& obj, Param::Bird& bird)
 		if (strKey3 == "bodyWeight") bird.bodyWeight = luabind::object_cast<float>(obj["bodyWeight"]);
 		if (strKey3 == "wingSpan") bird.wingSpan = luabind::object_cast<float>(obj["wingSpan"]);
 		if (strKey3 == "wingAspectRatio") bird.wingAspectRatio = luabind::object_cast<float>(obj["wingAspectRatio"]);
+		if (strKey3 == "wingBeatFreq") bird.wingBeatFreq = luabind::object_cast<float>(obj["wingBeatFreq"]);
+		if (strKey3 == "theta") bird.theta = luabind::object_cast<float>(obj["theta"]);
+		if (strKey3 == "wingLength") bird.wingLength = luabind::object_cast<float>(obj["wingLength"]);
+		if (strKey3 == "bodyArea") bird.bodyArea = luabind::object_cast<float>(obj["bodyArea"]);
+		if (strKey3 == "cBody") bird.cBody = luabind::object_cast<float>(obj["cBody"]);
+		if (strKey3 == "cFriction") bird.cFriction = luabind::object_cast<float>(obj["cFriction"]);
 		if (strKey3 == "wingArea") bird.wingArea = luabind::object_cast<float>(obj["wingArea"]);
 		if (strKey3 == "CL") bird.CL = luabind::object_cast<float>(obj["CL"]);
 		if (strKey3 == "maxForce") bird.maxForce = luabind::object_cast<float>(obj["maxForce"]);

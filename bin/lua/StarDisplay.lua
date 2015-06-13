@@ -20,7 +20,7 @@ Simulation.DebugLogOnce = true
 Simulation.DebugLogStackLevel = 0
 
 
-Simulation.IntegrationTimeStep = 0.0001  -- [s]
+Simulation.IntegrationTimeStep = 0.001  -- [s]
 Simulation.slowMotion = 10              -- slowdown factor
 Simulation.pausedSleep = 0              -- sleep time if paused [microseconds]
 Simulation.realTime = true

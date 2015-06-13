@@ -33,6 +33,12 @@ namespace Param {
 	  bool evolveZ;
 	  bool evolveCL;
 	  bool evolvewingAspectRatio;
+	  bool evolvewingBeatFreq;
+	  bool evolvetheta;
+	  bool evolvewingLength;
+	  bool evolvebodyArea;
+	  bool evolvecBody;
+	  bool evolvecFriction;
 	  bool evolvemaxForce;
 	  bool evolvewingSpan;
 	  bool evolvebodyMass;
@@ -208,6 +214,12 @@ namespace Param {
     float wingSpan;
     float wingAspectRatio;
     float wingArea;
+	float wingBeatFreq;
+	float theta;
+	float wingLength;
+	float bodyArea;
+	float cBody;
+	float cFriction;
     float CL;
     float maxForce;
     float maxLift;

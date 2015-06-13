@@ -80,6 +80,12 @@ function Birds.Starling (p)
   bird.bodyMass = 0.08        -- [kg]
   bird.wingSpan = 0.4         -- [m]
   bird.wingAspectRatio = 8.333
+  bird.wingBeatFreq = 0
+  bird.theta = 0
+  bird.wingLength = 0
+  bird.bodyArea = 0
+  bird.cBody = 0
+  bird.cFriction = 0
   bird.wingArea = bird.wingSpan * (bird.wingSpan / bird.wingAspectRatio)   -- [m^2]
   bird.CL = CL(bird,1)
   bird.CDCL= CDCL2(bird)
@@ -176,6 +182,12 @@ function Birds.Falcon (p)
   bird.bodyMass = 0.9         -- [kg]
   bird.wingSpan = 1.0         -- [m]
   bird.wingAspectRatio = 7.92
+  bird.wingBeatFreq = 5.1
+  bird.theta = 0.5*3.14
+  bird.wingLength = 0.285
+  bird.bodyArea = 0.0058
+  bird.cBody = 0.14
+  bird.cFriction = 0.014
   bird.wingArea = bird.wingSpan * (bird.wingSpan / bird.wingAspectRatio)   -- [m^2]
   bird.CL = CL(bird)
   bird.CDCL= CDCL(bird)

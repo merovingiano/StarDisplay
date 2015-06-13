@@ -354,31 +354,18 @@ void CPredator::Accelerate()
 
 void CPredator::flightDynamic()
 {
-  //! I'm leaving this in, although much more convoluted than necessary: it was used for thrust vectoring (may use it later to investigate differences with new approach)
-  glm::vec3 forceInBody = glm::vec3(glm::dot(B_[0], steering_), 0, 0);
-  const float f2 = glm::length(forceInBody);
-  if (f2 > pBird_.maxForce) {
-	  forceInBody /= f2;
-	  forceInBody *= pBird_.maxForce;
-  }
-
   const float pi = glm::pi<float>();
-  const float CL = pBird_.CL;
-  const float CDCL = 1.0f / ((pi * pBird_.wingAspectRatio) / CL);
-  float L = pBird_.bodyWeight * (speed_ * speed_) / (pBird_.cruiseSpeed * pBird_.cruiseSpeed);  // Lift
-  
+  const float dynamic = 0.5*pBird_.rho*speed_* speed_;
+  float area = pBird_.wingArea * (pBird_.wingLength * 2) / pBird_.wingSpan;
+  float CL = std::min(desiredLift_ / (dynamic*area),1.6f);
+  float T = -CL*CL * area * dynamic / (pi * pBird_.wingAspectRatio) + (1 - CL*CL / (1.6f*1.6f))*pi*pi*pi / 16 * pBird_.rho * pBird_.wingAspectRatio * area * (sin(0.5*pBird_.theta)*pBird_.wingBeatFreq)  * (sin(0.5*pBird_.theta)*pBird_.wingBeatFreq) * pBird_.wingLength *  pBird_.wingLength;
+  float L = CL *dynamic *area;
+  lift_ = L*B_[1];
+  liftMax_ = 1.6f *dynamic *area*B_[1];
 
+  float D = pBird_.cBody * dynamic *pBird_.bodyArea + pBird_.cFriction * dynamic * area;
 
-
-  glm::vec3 down = glm::vec3(0, 0, -pBird_.bodyWeight);
-  const float desiredLift = desiredLift_;
-
-  const float D = (CDCL + pBird_.bodyDrag / CL) * L;   // Drag
-  liftMax_ = B_[1] * L;
-  lift_ = B_[1] * std::min(L, desiredLift);
-  
-  //! Adding the x part of the force to the thrust
-  flightForce_ = lift_ + B_[0] * ( - D + forceInBody.x); // apply clamped lift, drag and default thrust. (removed CDCL * pBird_.bodyWeight)
+  flightForce_ = lift_ + B_[0] * (-D + T); 
   flightForce_.y -= pBird_.bodyWeight;        // apply gravity
 }
 

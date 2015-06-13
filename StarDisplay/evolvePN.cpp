@@ -55,6 +55,12 @@ void SetGetAlleles(one_allele& allele, CFlock::pred_iterator pred, int type)
 	if (type == 1) allele.push_back(pred->getStartZDist()); else if (Sim.Params().evolution.evolveZ) pred->setStartZDist(allele[index]); index++; 
 	if (type == 1) allele.push_back(pred->GetBirdParams().CL); else if (Sim.Params().evolution.evolveCL) bird.CL = allele[index]; index++; 
 	if (type == 1) allele.push_back(pred->GetBirdParams().wingAspectRatio); else if (Sim.Params().evolution.evolvewingAspectRatio) bird.wingAspectRatio = allele[index]; index++;
+	if (type == 1) allele.push_back(pred->GetBirdParams().wingBeatFreq); else if (Sim.Params().evolution.evolvewingBeatFreq) bird.wingBeatFreq = allele[index]; index++;
+	if (type == 1) allele.push_back(pred->GetBirdParams().theta); else if (Sim.Params().evolution.evolvetheta) bird.theta = allele[index]; index++;
+	if (type == 1) allele.push_back(pred->GetBirdParams().wingLength); else if (Sim.Params().evolution.evolvewingLength) bird.wingAspectRatio = allele[index]; index++;
+	if (type == 1) allele.push_back(pred->GetBirdParams().bodyArea); else if (Sim.Params().evolution.evolvebodyArea) bird.bodyArea = allele[index]; index++;
+	if (type == 1) allele.push_back(pred->GetBirdParams().cBody); else if (Sim.Params().evolution.evolvecBody) bird.cBody = allele[index]; index++;
+	if (type == 1) allele.push_back(pred->GetBirdParams().cFriction); else if (Sim.Params().evolution.evolvecFriction) bird.cFriction = allele[index]; index++;
 	if (type == 1) allele.push_back(pred->GetBirdParams().maxForce); else if (Sim.Params().evolution.evolvemaxForce) bird.maxForce = allele[index]; index++;
 	if (type == 1) allele.push_back(pred->GetBirdParams().wingSpan); else if (Sim.Params().evolution.evolvewingSpan) bird.wingSpan = allele[index]; index++; 
 	if (type == 1) allele.push_back(pred->GetBirdParams().bodyMass); else if (Sim.Params().evolution.evolvebodyMass) bird.bodyMass = allele[index]; index++; 
@@ -246,6 +252,12 @@ void EvolvePN::loadFiles()
 			infile >> convert;
 			convert.erase(0, 1);
 			experiment.predBird.wingAspectRatio = std::stof(convert);
+			if (hoi.find("predWingBeatFreq") != std::string::npos) infile >> experiment.predBird.wingBeatFreq;
+			if (hoi.find("predTheta") != std::string::npos) infile >> experiment.predBird.theta;
+			if (hoi.find("predWingLength") != std::string::npos) infile >> experiment.predBird.wingLength;
+			if (hoi.find("predBodyArea") != std::string::npos) infile >> experiment.predBird.bodyArea;
+			if (hoi.find("predCBody") != std::string::npos) infile >> experiment.predBird.cBody;
+			if (hoi.find("predCFriction") != std::string::npos) infile >> experiment.predBird.cFriction;
 			if (hoi.find("predBodyDrag") != std::string::npos) infile >> experiment.predBird.bodyDrag;
 			if (hoi.find("wingRetractionSpeed") != std::string::npos) infile >> experiment.predBird.wingRetractionSpeed;
 			if (hoi.find("predControlCL") != std::string::npos)infile >> experiment.predBird.controlCL;
@@ -305,6 +317,12 @@ void EvolvePN::loadFiles()
 			if (hoi.find("evolZ") != std::string::npos)infile >> experiment.param.evolution.evolveZ;
 			if (hoi.find("evolveCL") != std::string::npos) infile >> experiment.param.evolution.evolveCL;
 			if (hoi.find("evolvewingAspectRatio") != std::string::npos)infile >> experiment.param.evolution.evolvewingAspectRatio;
+			if (hoi.find("evolvewingBeatFreq") != std::string::npos)infile >> experiment.param.evolution.evolvewingBeatFreq;
+			if (hoi.find("evolvetheta") != std::string::npos)infile >> experiment.param.evolution.evolvetheta;
+			if (hoi.find("evolvewingLength") != std::string::npos)infile >> experiment.param.evolution.evolvewingLength;
+			if (hoi.find("evolvebodyArea") != std::string::npos)infile >> experiment.param.evolution.evolvebodyArea;
+			if (hoi.find("evolvecBody") != std::string::npos)infile >> experiment.param.evolution.evolvecBody;
+			if (hoi.find("evolvecFriction") != std::string::npos)infile >> experiment.param.evolution.evolvecFriction;
 			if (hoi.find("evolvemaxForce") != std::string::npos)infile >> experiment.param.evolution.evolvemaxForce;
 			if (hoi.find("evolvewingSpan") != std::string::npos) infile >> experiment.param.evolution.evolvewingSpan;
 			if (hoi.find("evolvebodyMass") != std::string::npos) infile >> experiment.param.evolution.evolvebodyMass;
@@ -584,6 +602,12 @@ void EvolvePN::PrepareSave()
 	if (namesParameters_.empty())
 	{
 		namesParameters_.push_back("predAR"); ValuesParameters_.push_back(first->GetBirdParams().wingAspectRatio);
+		namesParameters_.push_back("predwingBeatFreq"); ValuesParameters_.push_back(first->GetBirdParams().wingBeatFreq);
+		namesParameters_.push_back("predtheta"); ValuesParameters_.push_back(first->GetBirdParams().theta);
+		namesParameters_.push_back("predwingLength"); ValuesParameters_.push_back(first->GetBirdParams().wingLength);
+		namesParameters_.push_back("predbodyArea"); ValuesParameters_.push_back(first->GetBirdParams().bodyArea);
+		namesParameters_.push_back("predcBody"); ValuesParameters_.push_back(first->GetBirdParams().cBody);
+		namesParameters_.push_back("cFriction"); ValuesParameters_.push_back(first->GetBirdParams().cFriction);
 		namesParameters_.push_back("predBodyDrag");  ValuesParameters_.push_back(first->GetBirdParams().bodyDrag);
 		namesParameters_.push_back("wingRetractionSpeed");  ValuesParameters_.push_back(first->GetBirdParams().wingRetractionSpeed);
 		namesParameters_.push_back("predControlCL");  ValuesParameters_.push_back(first->GetBirdParams().controlCL);
@@ -635,6 +659,12 @@ void EvolvePN::PrepareSave()
 		namesParameters_.push_back("evolZ"); ValuesParameters_.push_back(Sim.Params().evolution.evolveZ);
 		namesParameters_.push_back("evolveCL"); ValuesParameters_.push_back(int(Sim.Params().evolution.evolveCL));
 		namesParameters_.push_back("evolvewingAspectRatio"); ValuesParameters_.push_back(Sim.Params().evolution.evolvewingAspectRatio);
+		namesParameters_.push_back("evolvewingBeatFreq"); ValuesParameters_.push_back(Sim.Params().evolution.evolvewingBeatFreq);
+		namesParameters_.push_back("evolvetheta"); ValuesParameters_.push_back(Sim.Params().evolution.evolvetheta);
+		namesParameters_.push_back("evolvewingLength"); ValuesParameters_.push_back(Sim.Params().evolution.evolvewingLength);
+		namesParameters_.push_back("evolvebodyArea"); ValuesParameters_.push_back(Sim.Params().evolution.evolvebodyArea);
+		namesParameters_.push_back("evolvecBody"); ValuesParameters_.push_back(Sim.Params().evolution.evolvecBody);
+		namesParameters_.push_back("evolvecFriction"); ValuesParameters_.push_back(Sim.Params().evolution.evolvecFriction);
 		namesParameters_.push_back("evolvemaxForce"); ValuesParameters_.push_back(Sim.Params().evolution.evolvemaxForce);
 
 		namesParameters_.push_back("evolvewingSpan"); ValuesParameters_.push_back(Sim.Params().evolution.evolvewingSpan);

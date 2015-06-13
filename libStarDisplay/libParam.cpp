@@ -265,6 +265,12 @@ namespace libParam
 	cobj.evolution.evolveZ = object_cast<bool  >(luaobj["evolution"]["evolveZ"]);
 	cobj.evolution.evolveCL = object_cast<bool  >(luaobj["evolution"]["evolveCL"]);
 	cobj.evolution.evolvewingAspectRatio = object_cast<bool  >(luaobj["evolution"]["evolvewingAspectRatio"]);
+	cobj.evolution.evolvewingBeatFreq = object_cast<bool  >(luaobj["evolution"]["evolvewingBeatFreq"]);
+	cobj.evolution.evolvetheta = object_cast<bool  >(luaobj["evolution"]["evolvetheta"]);
+	cobj.evolution.evolvewingLength = object_cast<bool  >(luaobj["evolution"]["evolvewingLength"]);
+	cobj.evolution.evolvebodyArea = object_cast<bool  >(luaobj["evolution"]["evolvebodyArea"]);
+	cobj.evolution.evolvecBody = object_cast<bool  >(luaobj["evolution"]["evolvecBody"]);
+	cobj.evolution.evolvecFriction = object_cast<bool  >(luaobj["evolution"]["evolvecFriction"]);
 	cobj.evolution.evolvewingSpan = object_cast<bool  >(luaobj["evolution"]["evolvewingSpan"]);
 	cobj.evolution.evolvemaxForce = object_cast<bool  >(luaobj["evolution"]["evolvemaxForce"]);
 	cobj.evolution.evolvebodyMass = object_cast<bool  >(luaobj["evolution"]["evolvebodyMass"]);
@@ -513,7 +519,13 @@ void luaopen_libParam(lua_State* L)
       .def_readonly("bodyWeight", &Bird::bodyWeight)
       .def_readwrite("wingSpan", &Bird::wingSpan)
       .def_readwrite("wingAspectRatio", &Bird::wingAspectRatio)
-	  .def_readwrite("bodyDrag", &Bird::bodyDrag)
+	  .def_readwrite("wingBeatFreq", &Bird::wingBeatFreq)
+	  .def_readwrite("theta", &Bird::theta)
+	  .def_readwrite("wingLength", &Bird::wingLength)
+	  .def_readwrite("bodyArea", &Bird::bodyArea)
+	  .def_readwrite("cBody", &Bird::cBody)
+	  .def_readwrite("cBody", &Bird::cBody)
+	  .def_readwrite("cFriction", &Bird::cFriction)
 	  .def_readwrite("wingRetractionSpeed", &Bird::wingRetractionSpeed)
 	  .def_readwrite("controlCL", &Bird::controlCL)
 	  .def_readwrite("CDCL", &Bird::CDCL)
