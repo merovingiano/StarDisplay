@@ -268,6 +268,8 @@ void CPredator::update(float dt, const CFlock&)
 		if (GetAsyncKeyState(VK_NUMPAD5)) steering_ += 3.0f*B_[0];
 		if (GetAsyncKeyState(VK_NUMPAD0)) steering_ += 10.0f*B_[0];
 
+		if (GetAsyncKeyState(VK_F7)) position_.y = 600.0f;
+		if (GetAsyncKeyState(VK_NUMPAD5)) N_ = 5.0f;
 
 	}
 	//! saving the position of some predator in a genetic algorithm (will be more general code when I come back)
@@ -361,11 +363,20 @@ void CPredator::flightDynamic()
   float T = -CL*CL * area * dynamic / (pi * pBird_.wingAspectRatio) + (1 - CL*CL / (1.6f*1.6f))*pi*pi*pi / 16 * pBird_.rho * pBird_.wingAspectRatio * area * (sin(0.5*pBird_.theta)*pBird_.wingBeatFreq)  * (sin(0.5*pBird_.theta)*pBird_.wingBeatFreq) * pBird_.wingLength *  pBird_.wingLength;
   float L = CL *dynamic *area;
   lift_ = L*B_[1];
-  liftMax_ = 1.6f *dynamic *area*B_[1];
-
+  liftMax_ = 1.6f *dynamic *area*B_[1]; 
   float D = pBird_.cBody * dynamic *pBird_.bodyArea + pBird_.cFriction * dynamic * area;
 
-  flightForce_ = lift_ + B_[0] * (-D + T); 
+  float bmax = pBird_.wingSpan;
+  float bmin = pBird_.wingSpan - 2 * pBird_.wingLength;
+  float b = pow((bmax - bmin) * 4.0f * desiredLift_ / (3.0f * pBird_.cFriction*area*(pBird_.rho*speed_*speed_)*(pBird_.rho*speed_*speed_)), 1.0f / 3.0f);
+  b =  std::min(std::max(b,bmin),bmax);
+  float CL2 = std::min(1.6f, desiredLift_ / (dynamic * area* (b - bmin) / (bmax - bmin)));
+  b = std::min(desiredLift_ / (dynamic * area* CL2 / (bmax - bmin)) + bmin, bmax);
+  float areaNew = area * (b - bmin) / (bmax - bmin);
+  float AR2 = b*b / areaNew;
+  float D2 = pBird_.cBody * dynamic *pBird_.bodyArea + pBird_.cFriction * dynamic * areaNew + CL2*CL2 * areaNew*dynamic / (pi * AR2);
+  float forwardAccel = std::max(-D + T, -D2);
+  flightForce_ = lift_ + B_[0] * (forwardAccel);
   flightForce_.y -= pBird_.bodyWeight;        // apply gravity
 }
 
@@ -638,6 +649,7 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 	avx::vec3 up = B_[1];
 	avx::vec3 side = B_[2];
 	avx::vec3 steering = steering_;
+
 	glm::vec3 steering2 = steering_;
 	steering2.y += pBird_.bodyWeight;
 	avx::vec3 gyro = gyro_.x * forward + gyro_.y * side + gyro_.z * up;

@@ -128,6 +128,7 @@ function Birds.Starling (p)
     
   bird.boundaryWeight = glm.vec3(0.01, 0.5 , 0.01)  -- horizontal-x, vertical-y (indiv.), horizontal-z
   bird.boundaryReflectAngle = 180                           -- [deg]
+   bird.rollrate=5
   bird.innerBoundary = 0   -- inner radius = (1 - innerBoundary) * Roost.Radius
   bird.altitude = 120         -- preferred altitude [m]  @Rolf only used at initialisation
   --bird.GPWS = { type = gpws.Custom, threshold = 0, hook = Rolf.HelloWorld(bird.altitude) }
@@ -179,8 +180,8 @@ function Birds.Falcon (p)
   bird.skipRightHemisphere = 0      -- spacial hemisphere (not brain hemisphere)
 
   bird.rho = rho
-  bird.bodyMass = 0.9         -- [kg]
-  bird.wingSpan = 1.0         -- [m]
+  bird.bodyMass = 0.55         -- [kg]
+  bird.wingSpan = 0.873         -- [m]
   bird.wingAspectRatio = 7.92
   bird.wingBeatFreq = 5.1
   bird.theta = 0.5*3.14
@@ -200,7 +201,7 @@ function Birds.Falcon (p)
   --bird.speedControl = 1 / 1000   -- one over tau 
   bird.minSpeed = 5
   bird.maxSpeed = 40
-  bird.rollrate=10
+  bird.rollRate=10
   bird.maxForce = maxForce(bird)          -- max steering force [N]
 
 
