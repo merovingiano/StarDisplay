@@ -375,6 +375,7 @@ void CPredator::flightDynamic()
   float areaNew = area * (b - bmin) / (bmax - bmin);
   float AR2 = b*b / areaNew;
   float D2 = pBird_.cBody * dynamic *pBird_.bodyArea + pBird_.cFriction * dynamic * areaNew + CL2*CL2 * areaNew*dynamic / (pi * AR2);
+  if ((-D + T) > -D2) glide_ = false; else glide_ = true;
   float forwardAccel = std::max(-D + T, -D2);
   flightForce_ = lift_ + B_[0] * (forwardAccel);
   flightForce_.y -= pBird_.bodyWeight;        // apply gravity
@@ -706,7 +707,7 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 	glm::vec3 Ll = glm::vec3(0, glm::dot(lift_, B_[1]), glm::dot(lift_, B_[2]));
 	//! determine the size of the turn towards desired angle
 	float turn = asin(glm::cross(Ll, Fl).x / (glm::length(Ll) * glm::length(Fl)));
-	float rollrate = pBird_.rollRate;
+	float rollrate = pBird_.rollRate * speed_*speed_ / (400*8);
 	//! Clamp anglular velocity 
 	float beta = std::max(std::min((turn), rollrate * dt), -rollrate * dt);
 
@@ -738,7 +739,8 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 
 	//! Doing the beat cycle for graphics
 	//beat cycle
-	beatCycle_ += dt*(8 + 3 * glm::length(force_));
+	beatCycle_ += dt*(pBird_.wingBeatFreq * 2*3.14);
+	if (glide_) beatCycle_ = 4.14;
 	if (Sim.SimulationTime() < 0.1) beatCycle_ += rand_;
 }
 
