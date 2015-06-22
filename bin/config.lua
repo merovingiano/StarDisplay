@@ -14,7 +14,7 @@ dofile(Simulation.WorkingPath .. "experiments.lua")
 
 -- Insert custom statistic
 
-doExperiments = 0
+doExperiments = 1
 -- Overwrite default initial parameter if required
 gParam.Roost = {
   numPrey = 1,
@@ -26,10 +26,10 @@ gParam.Roost = {
 gParam.evolution.type = "PN"
 gParam.evolution.fileName = "PNmutation.txt"
 --gParam.evolution.type = "noEvol"
-gParam.evolution.TrajectoryBestPredator = true
+gParam.evolution.TrajectoryBestPredator = false
 gParam.evolution.title = "PN new mutation test" 
-gParam.evolution.durationGeneration = 10
-gParam.evolution.load = true
+gParam.evolution.durationGeneration = 1
+gParam.evolution.load = false
 gParam.evolution.loadFolder = "D:/ownCloud/2013-2014/phd hunting/dataStarDisplay/continue folder/"
 gParam.evolution.description = "I've added a new extra mutation, allowing it to vary more. I want to see the long term effects of this. "
 

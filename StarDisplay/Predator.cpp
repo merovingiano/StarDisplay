@@ -241,18 +241,18 @@ void CPredator::update(float dt, const CFlock&)
       steerToFlock();
       if (interaction_neighbors_ == 0) 
       {
-        handleBoundary(pBird_.altitude, position_.y); 
+        //handleBoundary(pBird_.altitude, position_.y); 
       }
     }
     else 
     {
-      wBetaIn_ = pBird_.wBetaIn;
-      wBetaOut_ = pBird_.wBetaOut;
-      handleBoundary(pBird_.altitude, position_.y); 
+      //wBetaIn_ = pBird_.wBetaIn;
+      //wBetaOut_ = pBird_.wBetaOut;
+      //handleBoundary(pBird_.altitude, position_.y); 
     }
-    handleGPWS();
-    steering_ += boundary_;
-    steering_ += speedControl() * B_[0];
+    //handleGPWS();
+    //steering_ += boundary_;
+    //steering_ += speedControl() * B_[0];
 	//! Controlling the bird. 
 	if ((GCAMERA.GetFocalBird())->id() == id_)
 	{
@@ -268,7 +268,16 @@ void CPredator::update(float dt, const CFlock&)
 		if (GetAsyncKeyState(VK_NUMPAD5)) steering_ += 3.0f*B_[0];
 		if (GetAsyncKeyState(VK_NUMPAD0)) steering_ += 10.0f*B_[0];
 
-		if (GetAsyncKeyState(VK_F7)) position_.y = 600.0f;
+		if (GetAsyncKeyState(VK_F7))
+		{
+			position_.y = 1200.0f;
+			position_.x = 1.0f;
+			position_.z = 1.0f;
+			B_[0] = glm::normalize(-position_);
+
+			velocity_ = 80.0f *B_[0];
+			N_ = 2.0f;
+		}
 		if (GetAsyncKeyState(VK_NUMPAD5)) N_ = 5.0f;
 
 	}
@@ -356,6 +365,7 @@ void CPredator::Accelerate()
 
 void CPredator::flightDynamic()
 {
+	
   const float pi = glm::pi<float>();
   const float dynamic = 0.5*pBird_.rho*speed_* speed_;
   float area = pBird_.wingArea * (pBird_.wingLength * 2) / pBird_.wingSpan;
@@ -378,7 +388,7 @@ void CPredator::flightDynamic()
   if ((-D + T) > -D2) glide_ = false; else glide_ = true;
   float forwardAccel = std::max(-D + T, -D2);
   flightForce_ = lift_ + B_[0] * (forwardAccel);
-  flightForce_.y -= pBird_.bodyWeight;        // apply gravity
+  flightForce_.y -= pBird_.bodyMass * 9.81;        // apply gravity
 }
 
 
@@ -652,7 +662,7 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 	avx::vec3 steering = steering_;
 
 	glm::vec3 steering2 = steering_;
-	steering2.y += pBird_.bodyWeight;
+	steering2.y += pBird_.bodyMass * 9.81;
 	avx::vec3 gyro = gyro_.x * forward + gyro_.y * side + gyro_.z * up;
 	//steering += gyro;
 
@@ -678,7 +688,7 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 		if (glm::dot(Fl2, Fl2) > 500000000)
 		{
 			
-			glm::vec3 weight = glm::vec3(0, pBird_.bodyWeight, 0);
+			glm::vec3 weight = glm::vec3(0, pBird_.bodyMass * 9.81, 0);
 			weight = glm::vec3(0, glm::dot(weight, B_[1]), glm::dot(weight, B_[2]));
 
 			glm::vec3 combined = weight + Fl2;
@@ -707,7 +717,7 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 	glm::vec3 Ll = glm::vec3(0, glm::dot(lift_, B_[1]), glm::dot(lift_, B_[2]));
 	//! determine the size of the turn towards desired angle
 	float turn = asin(glm::cross(Ll, Fl).x / (glm::length(Ll) * glm::length(Fl)));
-	float rollrate = pBird_.rollRate * speed_*speed_ / (400*8);
+	float rollrate = pBird_.rollRate * speed_*speed_ / (8000);
 	//! Clamp anglular velocity 
 	float beta = std::max(std::min((turn), rollrate * dt), -rollrate * dt);
 

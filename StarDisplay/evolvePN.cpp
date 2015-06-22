@@ -78,7 +78,7 @@ void SetGetAlleles(one_allele& allele, CFlock::pred_iterator pred, int type)
 	if (type == 1) allele.push_back(pred->GetBirdParams().cohesionWeight.z); else if (Sim.Params().evolution.evolvecohesionWeight) bird.cohesionWeight.z = allele[index]; index++; 
 	if (type == 1) allele.push_back(pred->GetPredParams().HandleTime); else if (Sim.Params().evolution.evolveHandleTime) predParam.HandleTime = allele[index]; index++; 
 	if (type == 1) allele.push_back(pred->GetPredParams().LockDistance); else if (Sim.Params().evolution.evolveLockDistance) predParam.LockDistance = allele[index]; index++; 
-	if (type == 1) allele.push_back(std::max(pred->hunts().minDist,0.1f)); else
+	if (type == 1) allele.push_back(std::max(pred->hunts().minDist,0.2f)); else
 	{
 		pred->SetPredParams(predParam);
 		pred->SetBirdParams(bird);
@@ -123,7 +123,7 @@ void EvolvePN::Reset()
 		std::cout << "\n Starting Simulation " << Sim.expNumb;
 		if (Sim.expNumb > Sim.experiments.size()) AppWindow.PostMessage(WM_CLOSE); 
 		Param::Params p = Sim.experiments[Sim.expNumb-1].param;
-		p.evolution.terminationGeneration = 500;
+		if (Sim.Params().evolution.load) p.evolution.terminationGeneration = 500;
 		Sim.SetParams(p);
 		for (; firstPred != lastPred; ++firstPred)
 		{
@@ -135,11 +135,18 @@ void EvolvePN::Reset()
 			firstPrey->SetPreyParams(Sim.experiments[Sim.expNumb - 1].prey);
 			firstPrey->SetBirdParams(Sim.experiments[Sim.expNumb - 1].preyBird);
 		}
-		std::string tmp = Sim.Params().evolution.loadFolder;
-		tmp.append(Sim.experiments[Sim.expNumb - 1].param.evolution.title);
-		
-		loadOldData(tmp);
+		if (Sim.Params().evolution.load)
+		{
+			std::string tmp = Sim.Params().evolution.loadFolder;
+			tmp.append(Sim.experiments[Sim.expNumb - 1].param.evolution.title);
+
+			loadOldData(tmp);
+		}
 		std::cout << "\n Generation: " << Generation_;
+		std::cout << "\n expnum: " << Sim.expNumb;
+		std::cout << "\n rollrate: " << Sim.experiments[Sim.expNumb - 1].predBird.rollRate;
+		std::cout << "\n rollrate: " << Sim.experiments[Sim.expNumb +5].predBird.rollRate;
+		std::cout << "\n rollrate: " << Sim.experiments[Sim.expNumb +16].predBird.rollRate;
 
 		CFlock::prey_iterator testfirstPrey(GFLOCKNC.prey_begin());
 		std::cout << "\n testing alterness relaxation: " << testfirstPrey->GetPreyParams().AlertnessRelexation.x << " " << testfirstPrey->GetPreyParams().AlertnessRelexation.y;
@@ -813,7 +820,7 @@ void EvolvePN::Shuffle()
 
 		for (int ii = 0; ii < allele[i].size(); ii++)
 		{
-			allele[i][ii] += (1.0f / Generation_) * rnd(rnd_eng()) * 5 + rnd(rnd_eng()) *allele[i][ii]/100.0f;
+			allele[i][ii] += (1.0f / Generation_) * rnd(rnd_eng()) * 5 + rnd(rnd_eng()) *allele[i][ii]/10.0f;
 		}
 	}
 	CFlock::pred_iterator first(GFLOCKNC.predator_begin());
