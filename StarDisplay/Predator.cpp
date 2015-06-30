@@ -389,6 +389,7 @@ void CPredator::flightDynamic()
   float forwardAccel = std::max(-D + T, -D2);
   flightForce_ = lift_ + B_[0] * (forwardAccel);
   flightForce_.y -= pBird_.bodyMass * 9.81;        // apply gravity
+  if (glide_ == true) span_ = 1.0f - (b - bmin) / (bmax - bmin); else span_ = 0.0f;
 }
 
 
@@ -612,12 +613,15 @@ void CPredator::PNDP(const glm::vec3& targetHeading, const glm::vec3& targetVelo
 //! Prop Nav function
 void CPredator::proportionalNavigation(const glm::vec3& targetHeading, const glm::vec3& targetVelocity)
 {
-	
+	//Hack
+	//N_ = 2.2f;
+
 	glm::vec3 r = targetPoint_ - position_;
 	glm::vec3 v = velocity_ - targetVelocity;
 	glm::vec3 wLOS = glm::cross(v, r) / glm::dot(r, r);
 	steering_ += N_ * glm::cross(wLOS, velocity_)*pBird_.bodyMass;
 	//!stopping attack when in blind angle and close to prey
+	//if (glm::length(steering_) > 50) std::cout << "\n r " << glm::length(r) << "  v: " << glm::length(v) << "  wLOS " << glm::length(wLOS) << " mass " << pBird_.bodyMass << " N " << N_ << " steering " << glm::length(steering_);
 }
 
 void CPredator::predatorIntegration(float dt)
@@ -675,60 +679,22 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 	// if so, then decrease lift untill it is equal in length as fSteer
 	// if not, then cut off the part of Fsteer that is not gravity, so it remains the desired angle of turn, but slower
 	float liftLsq = glm::dot(liftMax_, liftMax_);
-	desiredLift_ = 500.0f;
-	if (liftLsq > glm::dot(steering2, steering2))
-	{
-			desiredLift_ = glm::length(Fl);
-	}
-	else
-	{
-		desiredLift_ = glm::length(Fl);
-		glm::vec3 Fl2 = glm::vec3(0, glm::dot(steering_, B_[1]), glm::dot(steering_, B_[2]));
-		//! What I am trying here(rescale the prop nav portion of the vector does not seem to increase performace, therefore it is not used for now
-		if (glm::dot(Fl2, Fl2) > 500000000)
-		{
-			
-			glm::vec3 weight = glm::vec3(0, pBird_.bodyMass * 9.81, 0);
-			weight = glm::vec3(0, glm::dot(weight, B_[1]), glm::dot(weight, B_[2]));
+	desiredLift_ = glm::length(Fl);
 
-			glm::vec3 combined = weight + Fl2;
-			//std::cout << "\n combined: " << combined.x << "  " << combined.y << "  " << combined.z;
-			//std::cout << "\n Fl: " << Fl.x << "  " << Fl.y << "  " << Fl.z;
-			//std::cout << "\nlength old steering: " << glm::length(Fl) << "  length of lift: " << glm::length(liftMax_);
-			if (glm::dot(weight, weight) < liftLsq)
-			{
-				float a = glm::dot(Fl2, Fl2);
-				float b = 2 * glm::dot(Fl2, weight);
-				float c = glm::dot(weight, weight) - liftLsq;
-
-				float ans1 = (-b + sqrt(b *b - 4 * a*c)) / (2 * a);
-				float ans2 = (-b - sqrt(b *b - 4 * a*c)) / (2 * a);
-				Fl = Fl2 * std::max(ans1, ans2);
-				Fl += weight;
-				desiredLift_ = glm::length(Fl);
-				//std::cout << "\nlength new steering: " << glm::length(Fl) << "  length of lift: " << glm::length(liftMax_);
-				//std::cout << "\n ans1: " << ans1 << "  ans2: " << ans2;
-			}
-		}
-	}
 
 
 	
 	glm::vec3 Ll = glm::vec3(0, glm::dot(lift_, B_[1]), glm::dot(lift_, B_[2]));
 	//! determine the size of the turn towards desired angle
 	float turn = asin(glm::cross(Ll, Fl).x / (glm::length(Ll) * glm::length(Fl)));
-	float rollrate = pBird_.rollRate * speed_*speed_ / (8000);
+	float rollrate = pBird_.rollRate * speed_*speed_ / (8000.0f);
 	//! Clamp anglular velocity 
 	float beta = std::max(std::min((turn), rollrate * dt), -rollrate * dt);
 
 	avx::vec3 bank = beta * side;
 
-	//! remove pitching (comment out)
-	//float phi = std::max(std::min((wBetaIn_.y * avx::dot(steering, up)), 0.0005f / dt), -0.0005f / dt);
-	//std::cout << "\nphi: " << phi;
-	//avx::vec3 pitch = (phi * dt) * up;
 
-	//forward = avx::save_normalize(forward + pitch, forward);
+	forward = avx::normalize(forward);
 	up += bank;
 	side = avx::normalize(avx::cross(forward, up));
 	up = avx::cross(side, forward);
@@ -750,7 +716,7 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 	//! Doing the beat cycle for graphics
 	//beat cycle
 	beatCycle_ += dt*(pBird_.wingBeatFreq * 2*3.14);
-	if (glide_) beatCycle_ = 4.14;
+	if (glide_) beatCycle_ = 0.0f;
 	if (Sim.SimulationTime() < 0.1) beatCycle_ += rand_;
 }
 

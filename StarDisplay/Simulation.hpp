@@ -9,6 +9,7 @@
 #include "Params.hpp"
 #include "evolvePN.hpp"
 #include <vector>
+#include <iostream>
 
 class Simulation
 {
@@ -36,6 +37,8 @@ public:
   void SelectStatistic(int selectedId);
   void ResetCurrentStatistic();
   void PauseCurrentStatistic();
+  void PrintVector(glm::vec3 input, std::string text);
+  void PrintFloat(float input, std::string text);
   void ResumeCurrentStatistic();
   void SaveCurrentStatistic(const char* fname, bool append);
   void SetFocalBird(const class CBird* bird, bool showTrail);

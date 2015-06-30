@@ -17,6 +17,7 @@
 #include "Globals.hpp"
 #include <iostream>
 
+
 using namespace Param;
 namespace avx = glmutils::avx;
 
@@ -241,10 +242,11 @@ void CPrey::update(float dt, const CFlock& flock)
     if (f2 > pBird_.maxForce * pBird_.maxForce) {
       force /= avx::fast_sqrt(f2);
       force *= pBird_.maxForce;
-      force.store(steering_);
+      //force.store(steering_);
     }
     force.store(force_);
-
+	steering_ = glm::normalize(steering_) * speed_ * speed_ *  0.01f;
+	//Sim.PrintVector(steering_, "steering");
     // calculate time of next reaction
     nextReactionTime();
   }
@@ -286,21 +288,50 @@ void CPrey::update(float dt, const CFlock& flock)
 //! 
 void CPrey::flightDynamic()
 {
-  const float pi = glm::pi<float>();
-  const float CL = pBird_.CL;
-  const float CDCL = 1.0f / ((pi * pBird_.wingAspectRatio) / CL);
-  const float L = pBird_.bodyWeight * (speed_ * speed_) / (pBird_.cruiseSpeed * pBird_.cruiseSpeed);  // Lift
-  const float D = CDCL * L;                                           // Drag
-  lift_ = B_[1] * std::min(L, pBird_.maxLift);
-  flightForce_ = B_[1] * lift_ + B_[0] * (CDCL * pBird_.bodyWeight - D);  // apply lift, drag and default thrust
-  flightForce_.y -= pBird_.bodyWeight;                                // apply gravity
+	const float pi = glm::pi<float>();
+	const float dynamic = 0.5*pBird_.rho*speed_* speed_;
+	float area = pBird_.wingArea * (pBird_.wingLength * 2) / pBird_.wingSpan;
+	float CL = std::min(desiredLift_ / (dynamic*area), 1.6f);
+	//Sim.PrintFloat(CL, "cl");
+	float T = -CL*CL * area * dynamic / (pi * pBird_.wingAspectRatio) + (1 - CL*CL / (1.6f*1.6f))*pi*pi*pi / 16 * pBird_.rho * pBird_.wingAspectRatio * area * (sin(0.5*pBird_.theta)*pBird_.wingBeatFreq)  * (sin(0.5*pBird_.theta)*pBird_.wingBeatFreq) * pBird_.wingLength *  pBird_.wingLength;
+	float L = CL *dynamic *area;
+	lift_ = L*B_[1];
+	liftMax_ = 1.6f *dynamic *area*B_[1];
+	float D = pBird_.cBody * dynamic *pBird_.bodyArea + pBird_.cFriction * dynamic * area;
+
+	float bmax = pBird_.wingSpan;
+	float bmin = pBird_.wingSpan - 2 * pBird_.wingLength;
+	float b = pow((bmax - bmin) * 4.0f * desiredLift_ / (3.0f * pBird_.cFriction*area*(pBird_.rho*speed_*speed_)*(pBird_.rho*speed_*speed_)), 1.0f / 3.0f);
+	b = std::min(std::max(b, bmin), bmax);
+	float CL2 = std::min(1.6f, desiredLift_ / (dynamic * area* (b - bmin) / (bmax - bmin)));
+	b = std::min(desiredLift_ / (dynamic * area* CL2 / (bmax - bmin)) + bmin, bmax);
+	float areaNew = area * (b - bmin) / (bmax - bmin);
+	float AR2 = b*b / areaNew;
+	float D2 = pBird_.cBody * dynamic *pBird_.bodyArea + pBird_.cFriction * dynamic * areaNew + CL2*CL2 * areaNew*dynamic / (pi * AR2);
+	if ((-D + T) > -D2) glide_ = false; else glide_ = true;
+	float forwardAccel = std::max(-D + T, -D2);
+
+	//Hack: cruise control
+	float desiredForward = glm::dot(steering_, B_[1]);
+	//if (desiredForward < glm::length(forwardAccel))
+	//{
+	//	forwardAccel = forwardAccel / glm::length(forwardAccel) * desiredForward;
+	//}
+
+	flightForce_ = lift_ + B_[0] * (forwardAccel);
+	flightForce_.y -= pBird_.bodyMass * 9.81;        // apply gravity          
+
+	if (glide_ == true) span_ = 1.0f - (b - bmin) / (bmax - bmin); else span_ = 0.0f;
 }
 
 
 void CPrey::maneuver()
 {
-	if (fmod(Sim.SimulationTime(), 2) < 1) steering_ += H_[2] * 5.0f; else steering_ += H_[2] * -5.0f;
-	if (fmod(Sim.SimulationTime(), 4) < 2) steering_ += H_[1] * 5.0f; else steering_ += H_[1] * -5.0f;
+	float reversed = 1;
+	if (fmod(Sim.SimulationTime(), 0.05) < 0.025) reversed *=-1;
+	steering_ += H_[2] * float(sin(Sim.SimulationTime() * 2.0f*reversed));
+	steering_ += H_[1] * float(sin(Sim.SimulationTime()*1.4f * param 2.0f*reversed));
+	
 }
 
 void CPrey::flightExternal()

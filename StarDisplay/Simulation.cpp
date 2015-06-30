@@ -527,6 +527,20 @@ void Simulation::PauseCurrentStatistic()
 }
 
 
+void Simulation::PrintVector(glm::vec3 input, std::string text)
+{
+
+	std::cout << "\n" << text << " " << input.x << " " << input.y << " " << input.z;
+}
+
+
+void Simulation::PrintFloat(float input, std::string text)
+{
+
+	std::cout << "\n" << text << " " << input;
+}
+
+
 void Simulation::SaveCurrentStatistic(const char* fname, bool append)
 {
   statistic_->save(fname, append);

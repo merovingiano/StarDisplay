@@ -78,14 +78,14 @@ function Birds.Starling (p)
 
   bird.rho = rho
   bird.bodyMass = 0.08        -- [kg]
-  bird.wingSpan = 0.4         -- [m]
+  bird.wingSpan = 0.38         -- [m]
   bird.wingAspectRatio = 8.333
-  bird.wingBeatFreq = 0
-  bird.theta = 0
-  bird.wingLength = 0
-  bird.bodyArea = 0
-  bird.cBody = 0
-  bird.cFriction = 0
+  bird.wingBeatFreq = 9.5
+  bird.theta = 0.5*3.14
+  bird.wingLength = 0.15
+  bird.bodyArea = 0.001246019
+  bird.cBody = 0.41
+  bird.cFriction = 0.014
   bird.wingArea = bird.wingSpan * (bird.wingSpan / bird.wingAspectRatio)   -- [m^2]
   bird.CL = CL(bird,1)
   bird.CDCL= CDCL2(bird)
@@ -96,18 +96,18 @@ function Birds.Starling (p)
   bird.maxLift = 3      -- [N]
   bird.cruiseSpeed = CruiseSpeed(bird)      -- [m/s]
   -- for experiment
-  bird.cruiseSpeed = 12
-  bird.speedControl = 1		-- one over tau 
+  bird.cruiseSpeed = 20
+  bird.speedControl = 2		-- one over tau 
   bird.minSpeed = bird.cruiseSpeed -5
   bird.maxSpeed = bird.cruiseSpeed + 5
   bird.houjebek = 5
-  bird.rollRate= 10
+  bird.rollRate= 600
   
   -----------------------------------------------------------------------------
   -- Steering
   -----------------------------------------------------------------------------
 
-  bird.wBetaIn = glm.vec3( 4, 0.1, 0 )    -- roll, pitch, yaw
+  bird.wBetaIn = glm.vec3( 4, 100, 0 )    -- roll, pitch, yaw
   bird.wBetaOut = glm.vec3( 0, 0, 0 )     -- roll, pitch, yaw 
 
   bird.maxRadius = 200.0     -- [m] 
@@ -124,11 +124,10 @@ function Birds.Starling (p)
   bird.separationWeight = 1 * glm.vec3(1, 1, 1)   -- forward, up, side
   bird.alignmentWeight = 1 * glm.vec2( 1, 1 )     -- usual, banking
   bird.cohesionWeight = 1 * glm.vec3( 1, 1, 1 )   -- forward, up, side
-  bird.randomWeight = 20                        
+  bird.randomWeight = 0                 
     
-  bird.boundaryWeight = glm.vec3(0.01, 0.5 , 0.01)  -- horizontal-x, vertical-y (indiv.), horizontal-z
+  bird.boundaryWeight = glm.vec3(0.01, 0.05 , 0.01)  -- horizontal-x, vertical-y (indiv.), horizontal-z
   bird.boundaryReflectAngle = 180                           -- [deg]
-   bird.rollrate=5
   bird.innerBoundary = 0   -- inner radius = (1 - innerBoundary) * Roost.Radius
   bird.altitude = 120         -- preferred altitude [m]  @Rolf only used at initialisation
   --bird.GPWS = { type = gpws.Custom, threshold = 0, hook = Rolf.HelloWorld(bird.altitude) }
@@ -143,7 +142,7 @@ function Birds.Starling (p)
   prey.DetectionHemisphereFOV = 270        -- [deg]
 
   --prey.EvasionStrategy = { type = EvasionStrategies.Custom, hook = Wave(DropEx(5,10)) }
-  prey.EvasionStrategy = { type = EvasionStrategies.MaximizeDist, weight = 5.0, edges = glm.vec4(0, 2, 2, 2) }
+ -- prey.EvasionStrategy = { type = EvasionStrategies.MaximizeDist, weight = 5.0, edges = glm.vec4(0, 2, 2, 2) }
 
 
   prey.IncurNeighborPanic = 2        -- absorb panic reaction from nth nearest neighbor

@@ -121,6 +121,7 @@ public:
   glm::vec3 predatorForce_;
   const     CPredator* detectedPredator_;
   float     predatorDist_;
+ 
   glm::vec2 alertnessRelaxation_;
   glm::vec3 returnForce_;
   float     returnRelaxation_;

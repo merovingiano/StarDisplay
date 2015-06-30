@@ -48,6 +48,7 @@ public:
   float speed() const { return speed_; }                              //!< speed
   float beatCycle() const { return beatCycle_; }       
   float getRand() const { return rand_; }
+  float getSpam() const { return span_; }
   void SetSpeed(float x);                                             //!< write speed
   void SetVelocity(glm::vec3 const& x);                               //!< write velocity
 
@@ -133,6 +134,8 @@ protected:
   float   rand_;
   float   desiredLift_;
   float   speed_;
+  bool			   glide_;
+  float		span_;
   float   reactionTime_;
   float   reactionInterval_;
   float   searchRadius_;

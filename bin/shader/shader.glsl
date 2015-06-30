@@ -273,19 +273,36 @@ shader[vertex] Instancing
     // Vertex in local space
     vec4 position = Vertex;
     position.xyz *= modelScale;
-	float pronationDist; float outerDist; float randomLoc; float realPronationDist; float rotationDist; 
+	float pronationDist; float outerDist; float randomLoc; float realPronationDist; float rotationDist; float retractionDist; float retractionDist2;
 	float headDist;
 	
-	 if (int(part) == 1) pronationDist = 2*exp(-pow(length(vec3(0.1,0.15,-1.3) - Vertex.xyz),2)*2); 
-	 if (int(part) == 2) pronationDist = 2*exp(-pow(length(vec3(0.1,0.15,1.3) - Vertex.xyz),2)*2);
-	 if (int(part) == 1) realPronationDist = 1-exp(-pow(length(vec3(0.1,0.04,-0.1) - position.xyz),2)*2); 
-	 if (int(part) == 2) realPronationDist = 1-exp(-pow(length(vec3(0.1,0.04,0.1) - position.xyz),2)*2); 
-	 if (int(part) == 1) rotationDist = 1-exp(-pow(length(vec3(0.1,0.04,-0.1) - position.xyz),2)*30); 
-	 if (int(part) == 2) rotationDist = 1-exp(-pow(length(vec3(0.1,0.04,0.1) - position.xyz),2)*30); 
+	float prey = 1;
+	float prey_outer = 1;
+	if (modelScale == 1.6) prey = 6;
+	if (modelScale == 1.6) prey_outer = 2;
+	 if (int(part) == 1) pronationDist = 2*exp(-pow(length(vec3(0.1,0.15,-1.3) - Vertex.xyz),2)*2*prey); 
+	 if (int(part) == 2) pronationDist = 2*exp(-pow(length(vec3(0.1,0.15,1.3) - Vertex.xyz),2)*2*prey);
+	 if (int(part) == 1) realPronationDist = 1-exp(-pow(length(vec3(0.1,0.04,-0.1) - position.xyz) ,2)*2*prey); 
+	 if (int(part) == 2) realPronationDist = 1-exp(-pow(length(vec3(0.1,0.04,0.1) - position.xyz),2)*2*prey); 
+	 if (int(part) == 1) rotationDist = 1-exp(-pow(length(vec3(0.1,0.04,-0.1) - position.xyz),2)*20*prey); 
+	 if (int(part) == 2) rotationDist = 1-exp(-pow(length(vec3(0.1,0.04,0.1) - position.xyz),2)*20*prey); 
+	 if (int(part) == 1) retractionDist = 1-exp(-pow(length(vec2(-0.15,-0.1) - position.xz),2)*5*prey); 
+	 if (int(part) == 2) retractionDist = 1-exp(-pow(length(vec2(-0.15,0.1) - position.xz),2)*5*prey); 
+	 if (int(part) == 1) 
+	 {
+						retractionDist2 = 1-exp(-pow(-0.2 - position.z,2)*20*prey); 
+						if (-0.2-position.z < 0) retractionDist2 = 0;
+	 }
+	 if (int(part) == 2) 
+	 {
+						retractionDist2 = 1-exp(-pow((0.2 - position.z),2)*20*prey); 
+						if (0.2-position.z > 0) retractionDist2 = 0;
+	}
+
 	 if (int(part) > 0) randomLoc = 2*exp(-pow(length(-1 - position.x),2)*2); 
 	 if (int(part) == 0) randomLoc = 2*exp(-pow(length(-1.2 - position.x),2)*2); 
-	 if (int(part) == 1) outerDist = (1-exp(-pow(-0.2 - position[2],2)*5)); 
-	 if (int(part) == 2) outerDist = (1-exp(-pow(0.2 - position[2],2)*5));
+	 if (int(part) == 1) outerDist = (1-exp(-pow(-0.2 - position[2],2)*5 / prey)); 
+	 if (int(part) == 2) outerDist = (1-exp(-pow(0.2 - position[2],2)*5 /  prey));
 
 	 headDist = 1-exp(-pow(length(0.3 - position.x),2)*5); 
 
@@ -293,6 +310,15 @@ shader[vertex] Instancing
 	  0, rotationDist*cos(rot) + (1-rotationDist)*1, -rotationDist*sin(rot), 0,
 	  0, rotationDist*sin(rot), rotationDist*cos(rot) + (1-rotationDist)*1, 0,
 						   0, 0, 0, 1 );
+
+	  mat4 wingRetract = mat4(  retractionDist*cos(force[1]*1.5) + (1-retractionDist)*1, 0, retractionDist*sin(force[1]*1.5), 0,
+	  0,1,0 , 0,
+	   -retractionDist*sin(force[1]*1.5),0, retractionDist*cos(force[1]*1.5) + (1-retractionDist)*1, 0,
+						   0, 0, 0, 1 );
+
+
+
+	
 
 	 mat4 outerMat = mat4( 1, 0, 0, 0,
 	  0,  outerDist*cos(outer) + (1-outerDist)*1, -sin(outer)*outerDist, 0,
@@ -322,33 +348,92 @@ shader[vertex] Instancing
 	  sin(outer+0.3)*pronationDist, 0, pronationDist*cos(outer+0.3) + (1-pronationDist)*1, 0,
 	  0, 0, 0, 1 );
 	if (int(part) == 1) { 
+	     
          position = backwardMat * (position-vec4(0.1,0.2,0,0)) + vec4(0.1,0.2,0,0);
 		//position = pronationMat * (position-vec4(0.1,0.2,0,0)) + vec4(0.1,0.2,0,0);
 		if (up==1 && position.z < -0.2){
-			position = outerMat * (position-vec4(0,0.2,-0.2,0)) + vec4(0,0.2,-0.2,0);
+			position = outerMat * (position-vec4(0,0.2,-0.2 / prey_outer ,0)) + vec4(0,0.2,-0.2 / prey_outer,0);
 		}
+		vec4 turnPoint = loc[int(part)] + vec4(0,0.02,-0.1,0);
+		vec4 turnPoint2 = loc[int(part)] + vec4(0.05,0.02,-0.3 / modelScale,0);
+		position = wingRotate * (position-turnPoint*modelScale) + turnPoint*modelScale;
 		
-		position = wingRotate * (position-loc[int(part)]*modelScale) + loc[int(part)]*modelScale;
+		position = wingRetract * (position-turnPoint*modelScale) + turnPoint*modelScale;
+
+		vec3 relpos = normalize(vec3(position.x - turnPoint2.x,0,position.z - turnPoint2.z));
+		vec3 arrow = normalize(vec3(-1,0,0.75));
+		float dot = relpos.x*arrow.x;
+		float cross = relpos.z *arrow.x;
+		float angle = 0;
+	    angle = asin(cross);
+		//retractionDist2 = 1;
+		if (dot < 0 ) angle = 3.14159 - abs(angle); 
+		if (cross < 0 ) angle = 2*3.14159 - angle;
+		angle = angle *3.0f/5.0f * force[1];
+	   float angle2 = 0.4*3.14  * force[1];
+
+						    mat4 wingRetract3 = mat4(  retractionDist2*cos(angle) + (1-retractionDist2)*1, 0, -retractionDist2*sin(angle), 0,
+	  0,1,0 , 0,
+	   retractionDist2*sin(angle),0, retractionDist2*cos(angle) + (1-retractionDist2)*1, 0,
+						   0, 0, 0, 1 );
+						    mat4 wingRetract4 = mat4(  retractionDist2*cos(angle2) + (1-retractionDist2)*1, 0, -retractionDist2*sin(angle2), 0,
+	  0,1,0 , 0,
+	   retractionDist2*sin(angle2),0, retractionDist2*cos(angle2) + (1-retractionDist2)*1, 0,
+						   0, 0, 0, 1 );
+
+		position = wingRetract3 * (position - turnPoint2) + turnPoint2;
+		position = wingRetract4 * (position - turnPoint2) + turnPoint2;
 		position = realPronationMat * (position-vec4(0.1,0.04,0,0)) + vec4(0.1,0.04,0,0);
 		
 	}
 	if (int(part) == 2) {
 	    backwardMat[0][2] *= -1;
 		backwardMat[2][0] *= -1;
+	    wingRetract[0][2] *= -1;
+		wingRetract[2][0] *= -1;
+		//wingRetract2[0][2] *= -1;
+		//wingRetract2[2][0] *= -1;
 		//pronationMat[1][2] *= -1;
 		//pronationMat[2][1] *= -1;
 	    mat4x4 outerMatrix = outerMat;
 	    outerMatrix[1][2] *= -1;
 		outerMatrix[2][1] *= -1;
-		vec4 second = vec4(loc[1][0],loc[1][1],-loc[1][2],loc[1][3]);
+		vec4 turnPoint =  vec4(loc[1][0],loc[1][1],-loc[1][2],loc[1][3]) + vec4(0,0.02,0,0);
+		vec4 turnPoint2 =  vec4(loc[1][0],loc[1][1],-loc[1][2],loc[1][3]) + vec4(0,0.02,0.2 / modelScale,0);
+		vec4 second = vec4(loc[1][0],loc[1][1],-loc[1][2],loc[1][3]) + vec4(0,0.02,0,0);
 		position = backwardMat * (position-vec4(0.1,0.2,0,0)) + vec4(0.1,0.2,0,0);
 		//position = pronationMat * (position-vec4(0.1,0.2,0,0)) + vec4(0.1,0.2,0,0);
 
 	    if (up==1 && position.z > 0.2){
-			position = outerMatrix * (position-vec4(0,0.2,0.2,0)) + vec4(0,0.2,0.2,0);
+			position = outerMatrix * (position-vec4(0,0.2,0.2 / prey_outer ,0)) + vec4(0,0.2,0.2 / prey_outer ,0);
 		}
 		
 		mat4x4 Matrix = wingRotate;  
+		
+		position = wingRetract * (position-turnPoint*modelScale) + turnPoint*modelScale;
+		vec3 relpos = normalize(vec3(position.x - turnPoint2.x,0,position.z - turnPoint2.z));
+		vec3 arrow = vec3(-1,0,0);
+		float dot = relpos.x*arrow.x;
+		float cross = -relpos.z *arrow.x;
+		float angle = 0;
+	    angle = asin(cross);
+		//retractionDist2 = 1;
+		if (dot < 0 ) angle = 3.14159 - abs(angle); 
+		if (cross < 0 ) angle = 2*3.14159 - angle;
+		angle = angle *3.0f/5.0f * force[1];
+	    float angle2 = 0.4*3.14  * force[1];
+
+						    mat4 wingRetract3 = mat4(  retractionDist2*cos(angle) + (1-retractionDist2)*1, 0, retractionDist2*sin(angle), 0,
+	  0,1,0 , 0,
+	   -retractionDist2*sin(angle),0, retractionDist2*cos(angle) + (1-retractionDist2)*1, 0,
+						   0, 0, 0, 1 );
+						    mat4 wingRetract4 = mat4(  retractionDist2*cos(angle2) + (1-retractionDist2)*1, 0, retractionDist2*sin(angle2), 0,
+	  0,1,0 , 0,
+	   -retractionDist2*sin(angle2),0, retractionDist2*cos(angle2) + (1-retractionDist2)*1, 0,
+						   0, 0, 0, 1 );
+
+		position = wingRetract3 * (position - turnPoint2) + turnPoint2;
+		position = wingRetract4 * (position - turnPoint2) + turnPoint2;
 	    Matrix[1][2] *= -1;
 		Matrix[2][1] *= -1;
 		position = Matrix * (position-second*modelScale)+second*modelScale;
@@ -359,7 +444,7 @@ shader[vertex] Instancing
 	//position = randomMat * position;
     position = M * position;
     position = ModelViewProjection * position;
-	position += vec4(0,sin(rot)*headDist*0.1,0,0);
+	position += vec4(0,sin(rot)*headDist*0.05,0,0);
 	gl_Position = position;
   }
 };
@@ -497,14 +582,14 @@ shader[vertex] InstancingSloppyPeregrine
 	  sin(outer+0.3)*pronationDist, 0, pronationDist*cos(outer+0.3) + (1-pronationDist)*1, 0,
 	  0, 0, 0, 1 );
 	if (int(part) == 2) { 
-         position = backwardMat * (position-vec4(0.1,0.2,0,0)) + vec4(0.1,0.2,0,0);
+         //position = backwardMat * (position-vec4(0.1,0.2,0,0)) + vec4(0.1,0.2,0,0);
 		//position = pronationMat * (position-vec4(0.1,0.2,0,0)) + vec4(0.1,0.2,0,0);
 		if (up==1 && position.z < -0.2){
-			position = outerMat * (position-vec4(0,0.2,-0.2,0)) + vec4(0,0.2,-0.2,0);
+			//position = outerMat * (position-vec4(0,0.2,-0.2,0)) + vec4(0,0.2,-0.2,0);
 		}
 		
-		position = wingRotate * (position-(vec4(0,0.05,-0.1,0))) + vec4(0,0.05,-0.1,0);
-		position = realPronationMat * (position-vec4(0.1,0.04,0,0)) + vec4(0.1,0.04,0,0);
+		position = wingRotate * (position-(vec4(0,0.05,-0.5,0))) + vec4(0,0.05,-0.5,0);
+		//position = realPronationMat * (position-vec4(0.1,0.04,0,0)) + vec4(0.1,0.04,0,0);
 		
 	}
 	if (int(part) == 1) {
@@ -595,7 +680,7 @@ shader[fragment] Instancing
   void main( void )
   {
     if (vDiscard == 1.0) discard;
-    FragColor = (1 + 0.0001*vShade) * mix( texture( Texture, vTexCoord ), vColor, texMix )*(0.1 + abs(fnormal.z)) + vec4(0.8, 0.9, 0.7, 1.0) * pow(abs(fnormal.z), 40.0);
+    FragColor = (1 + 0.0001*vShade) * mix( texture( Texture, vTexCoord ), vColor, texMix )*(0.1 + abs(fnormal.z));// + vec4(0.8, 0.9, 0.7, 1.0) * pow(abs(fnormal.z), 40.0);
   }
 
 };

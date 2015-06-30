@@ -124,7 +124,6 @@ private:
   float            handleTime_;
   float            dogFight_;
   const CPrey*     lockedOn_;
-  bool			   glide_;
   const CPrey*     closestPrey_;
   const CPrey*     targetPrey_;
   glm::vec3        targetPoint_;

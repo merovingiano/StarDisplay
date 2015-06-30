@@ -124,6 +124,7 @@ void CBird::noise()
 {
   if (pBird_.randomWeight > 0.0f) {
     steering_ += pBird_.randomWeight * reactionTime_ * glmutils::unit_vec3(rnd_eng());
+	  //std::cout << "\n noise " << pBird_.randomWeight * reactionTime_;
   }
 }
 
@@ -208,25 +209,29 @@ void CBird::handleCustomGPWS()
 // Velocity Verlet integration
 void CBird::integration(float dt)
 {
+
   const float hdt = 0.5f * dt;
   const float rBM = 1.0f / pBird_.bodyMass;
   avx::vec3 accel(accel_);
   avx::vec3 velocity(velocity_);
-  avx::vec3 force(force_);
+
+
+  //std::cout << "\n yforce: " << force.get_y();
   avx::vec3 position(position_);
   avx::vec3 flightForce(flightForce_);
   avx::vec3 forward(B_[0]);
 
   velocity += accel * hdt;                 // v(t + dt/2) = v(t) + a(t) dt/2
   position += velocity * dt;               // r(t + dt) = r(t) + v(t + dt/2)
-  accel = (force + flightForce) * rBM;     // a(t + dt) = F(t + dt)/m
+  accel = (flightForce)* rBM;     // a(t + dt) = F(t + dt)/m
   position.store(position_);
   velocity += accel * hdt;                 // v(t) = v(t + dt/2) + a(t + dt) dt/2
   accel.store(accel_);
 
-   // clip speed
+  // clip speed
   speed_ = avx::length(velocity);
-  speed_ = avx::clamp(speed_, pBird_.minSpeed, pBird_.maxSpeed);
+  //! don't clamp speed: no stoop possible otherwise
+  //speed_ = avx::clamp(speed_, pBird_.minSpeed, pBird_.maxSpeed);
   forward = velocity / speed_;
 
   // interesting: This keeps it always aligned with the forward velocity. This has great impact on the turning behavior.
@@ -240,18 +245,41 @@ void CBird::regenerateLocalSpace(float dt)
 	avx::vec3 up = B_[1];
 	avx::vec3 side = B_[2];
 	avx::vec3 steering = steering_;
-	avx::vec3 gyro = gyro_.x * forward + gyro_.y * side + gyro_.z * up;
-	steering += gyro;
 
-	float Fl = glm::dot(steering_, H_[2]);
-	float Ll = glm::dot(lift_, H_[2]);
-	float beta = wBetaIn_.x * (Fl - Ll) * dt;
+	glm::vec3 steering2 = steering_;
+	steering2.y += pBird_.bodyMass * 9.81;
+	avx::vec3 gyro = gyro_.x * forward + gyro_.y * side + gyro_.z * up;
+	//steering += gyro;
+
+
+	//!New steering method as discussed
+	glm::vec3 Fl = glm::vec3(0, glm::dot(steering2, B_[1]), glm::dot(steering2, B_[2]));
+
+
+	//calculate whether there is enough lift for turning towards steering
+	// if so, then decrease lift untill it is equal in length as fSteer
+	// if not, then cut off the part of Fsteer that is not gravity, so it remains the desired angle of turn, but slower
+	float liftLsq = glm::dot(liftMax_, liftMax_);
+	desiredLift_ = glm::length(Fl);
+
+
+
+
+	glm::vec3 Ll = glm::vec3(0, glm::dot(lift_, B_[1]), glm::dot(lift_, B_[2]));
+	//! determine the size of the turn towards desired angle
+	float turn = asin(glm::cross(Ll, Fl).x / (glm::length(Ll) * glm::length(Fl)));
+	float rollrate = pBird_.rollRate * speed_*speed_ / (8000);
+	//! Clamp anglular velocity 
+	float beta = std::max(std::min((turn), rollrate * dt), -rollrate * dt);
+
 	avx::vec3 bank = beta * side;
 
-	float phi = (wBetaIn_.y * avx::dot(steering, up));
-	avx::vec3 pitch = (phi * dt) * up;
+	//! remove pitching (comment out)
+	//float phi = std::max(std::min((wBetaIn_.y * avx::dot(steering, up)), 0.0005f / dt), -0.0005f / dt);
+	//std::cout << "\nphi: " << phi;
+	//avx::vec3 pitch = (phi * dt) * up;
 
-	forward = avx::save_normalize(forward + pitch, forward);
+	forward = avx::normalize(forward);
 	up += bank;
 	side = avx::normalize(avx::cross(forward, up));
 	up = avx::cross(side, forward);
@@ -270,9 +298,13 @@ void CBird::regenerateLocalSpace(float dt)
 	up.store(H_[1]);
 	side.store(H_[2]);
 
-
+	//std::cout << "\n body " << B_[0][0] << " " << B_[0][1] << " " << B_[0][2];
+	//std::cout << "\n body " << B_[1][0] << " " << B_[1][1] << " " << B_[1][2];
+	//std::cout << "\n body " << B_[2][0] << " " << B_[2][1] << " " << B_[2][2];
 	//beat cycle
-	beatCycle_ += dt*(8 + 3 * glm::length(force_));
+	beatCycle_ += dt*(pBird_.wingBeatFreq * 2 * 3.14);
+	if (glide_) beatCycle_ = 0.0f;
+	if (Sim.SimulationTime() < 0.1) beatCycle_ += rand_;
 }
 
 void CBird::nextReactionTime()
