@@ -614,7 +614,7 @@ void CPredator::PNDP(const glm::vec3& targetHeading, const glm::vec3& targetVelo
 void CPredator::proportionalNavigation(const glm::vec3& targetHeading, const glm::vec3& targetVelocity)
 {
 	//Hack
-	//N_ = 2.2f;
+	N_ = 3.0f;
 
 	glm::vec3 r = targetPoint_ - position_;
 	glm::vec3 v = velocity_ - targetVelocity;

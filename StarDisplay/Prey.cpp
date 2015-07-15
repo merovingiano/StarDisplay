@@ -245,7 +245,7 @@ void CPrey::update(float dt, const CFlock& flock)
       //force.store(steering_);
     }
     force.store(force_);
-	steering_ = glm::normalize(steering_) * speed_ * speed_ *  0.01f;
+	steering_ = glm::normalize(steering_) * speed_ * speed_ *  pBird_.randomWeight;
 	//Sim.PrintVector(steering_, "steering");
     // calculate time of next reaction
     nextReactionTime();
@@ -329,8 +329,8 @@ void CPrey::maneuver()
 {
 	float reversed = 1;
 	if (fmod(Sim.SimulationTime(), 0.05) < 0.025) reversed *=-1;
-	steering_ += H_[2] * float(sin(Sim.SimulationTime() * 2.0f*reversed));
-	steering_ += H_[1] * float(sin(Sim.SimulationTime()*1.4f * param 2.0f*reversed));
+	steering_ += H_[2] * float(sin(Sim.SimulationTime() * 2.0f*reversed*pBird_.randomWeight));
+	steering_ += H_[1] * float(sin(Sim.SimulationTime()*1.4f * 2.0f*reversed*pBird_.randomWeight));
 	
 }
 
