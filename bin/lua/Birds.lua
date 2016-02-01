@@ -253,6 +253,8 @@ function Birds.Falcon (p)
   predator.ExposureThreshold = glm.vec2(0.35, 0.20) -- (lock on, lose lock)
   predator.AttractMix = 0.1                   -- mix between distance (1) and exposure - factor (0)
   predator.HandleTime = 100
+  predator.VisualError = 0                 -- random error in degrees of retina
+  predator.VisualBias = glm.vec2(0)        -- degrees along x (horizontal) and y (vertical) of retina
 
   if p ~= nil then
     p.BirdParams = bird

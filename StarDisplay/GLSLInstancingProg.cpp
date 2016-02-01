@@ -103,7 +103,7 @@ void GLSLInstancingProg<LOD>::do_instance(const CBird& bird, size_t ofs, int lod
     avx::vec4 c0(bird.forward(), scale);
     avx::vec4 c1(bird.up(), 0);
     avx::vec4 c2(bird.position(), bird.getCurrentColorTex());
-	avx::vec4 c3(bird.getRand(), bird.getSpam(), (bird.force())[1], bird.beatCycle());
+	avx::vec4 c3(bird.getRand(), 0.0f, (bird.force())[1], bird.beatCycle());
 	//c3.x = bird.rand();
     dst->c[0] = c0; 
     dst->c[1] = c1;

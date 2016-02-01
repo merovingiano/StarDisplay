@@ -33,7 +33,7 @@
 namespace {
 
   const char header_fmt[] =
-    "\\smallface{}\n[F1] Help\n[F2] Birds: %d + %d\n[F3] Boundary radius: %d\n[F4] HRTree level: %d\n\nh.hildenbrandt@rug.nl\n";
+    "\\smallface{}\n[F1] Help\n[F2] Birds: %d + %d\n[F3] Boundary radius: %d\n[F4] HRTree level: %d\n\nh.hildenbrandt@rug.nl\nr.mills@rug.nl\n";
 
   const char details_predator[] =
 	  "\\smallface{}\nVelocity: %.1f \nAltitude: %.1f \nSteering Force magnitude: %.1f \nAcceleration: %.1f \nPrey Caught: %d \nminDist: %2f \nLocks: %d \nHunting: %d \nLast MinDist: %2f \nN: %2f \nMean N of Flock: %2f \nMean StartAltitude of Flock: %2f \nMean StartXDist of Flock: %2f ";

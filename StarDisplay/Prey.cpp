@@ -312,7 +312,7 @@ void CPrey::flightDynamic()
 	float forwardAccel = std::max(-D + T, -D2);
 
 	//Hack: cruise control
-	float desiredForward = glm::dot(steering_, B_[1]);
+	//float desiredForward = glm::dot(steering_, B_[1]);
 	//if (desiredForward < glm::length(forwardAccel))
 	//{
 	//	forwardAccel = forwardAccel / glm::length(forwardAccel) * desiredForward;

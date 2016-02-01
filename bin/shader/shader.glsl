@@ -393,8 +393,8 @@ shader[vertex] Instancing
 		wingRetract[2][0] *= -1;
 		//wingRetract2[0][2] *= -1;
 		//wingRetract2[2][0] *= -1;
-		pronationMat[1][2] *= -1;
-		pronationMat[2][1] *= -1;
+		//pronationMat[1][2] *= -1;
+		//pronationMat[2][1] *= -1;
 	    mat4x4 outerMatrix = outerMat;
 	    outerMatrix[1][2] *= -1;
 		outerMatrix[2][1] *= -1;
@@ -402,7 +402,7 @@ shader[vertex] Instancing
 		vec4 turnPoint2 =  vec4(loc[1][0],loc[1][1],-loc[1][2],loc[1][3]) + vec4(0,0.02,0.2 / modelScale,0);
 		vec4 second = vec4(loc[1][0],loc[1][1],-loc[1][2],loc[1][3]) + vec4(0,0.02,0,0);
 		position = backwardMat * (position-vec4(0.1,0.2,0,0)) + vec4(0.1,0.2,0,0);
-		position = pronationMat * (position-vec4(0.1,0.2,0,0)) + vec4(0.1,0.2,0,0);
+		//position = pronationMat * (position-vec4(0.1,0.2,0,0)) + vec4(0.1,0.2,0,0);
 
 	    if (up==1 && position.z > 0.2){
 			position = outerMatrix * (position-vec4(0,0.2,0.2 / prey_outer ,0)) + vec4(0,0.2,0.2 / prey_outer ,0);
