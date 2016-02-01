@@ -534,6 +534,11 @@ void Simulation::PrintVector(glm::vec3 input, std::string text)
 	std::cout << "\n" << text << " " << input.x << " " << input.y << " " << input.z;
 }
 
+void Simulation::PrintVec2(glm::vec2 input, std::string text)
+{
+
+	std::cout << "\n" << text << " " << input.x << " " << input.y << " ";
+}
 
 void Simulation::PrintFloat(float input, std::string text)
 {

@@ -256,8 +256,8 @@ void CPredator::update(float dt, const CFlock&)
 	//! Controlling the bird. 
 	if ((GCAMERA.GetFocalBird())->id() == id_)
 	{
-		std::cout << pPred_.VisualError << "\n";
-		std::cout << pPred_.VisualBias.x << "  " << pPred_.VisualBias.y << "\n";
+		//std::cout << pPred_.VisualError << "\n";
+		//std::cout << pPred_.VisualBias.x << "  " << pPred_.VisualBias.y << "\n";
 		if (GetAsyncKeyState(VK_DOWN)) steering_ +=  B_[1];
 		if (GetAsyncKeyState(VK_NUMPAD2)) steering_ += 5.0f*B_[1];
 		if (GetAsyncKeyState(VK_UP)) steering_ -= B_[1];
@@ -618,6 +618,19 @@ void CPredator::proportionalNavigation(const glm::vec3& targetHeading, const glm
 	//N_ = 3.0f;
 
 	glm::vec3 r = targetPoint_ - position_;
+
+	//add visual error!! translate angular velocity to position. This is hacky: actually computations should be done on FOV pred (cant do bias like this)
+	if ((GCAMERA.GetFocalBird())->id() == id_) Sim.PrintVector(r, "before");
+
+	float LOS = avx::fast_sqrt(glm::dot(r, r));
+	if ((GCAMERA.GetFocalBird())->id() == id_) Sim.PrintFloat(LOS, "LOS");
+	r.x += (pPred_.VisualError * (float(rand()) / (float(RAND_MAX))) ) * LOS;
+	r.y += (pPred_.VisualError * (float(rand()) / (float(RAND_MAX))) ) * LOS;
+	r.z += (pPred_.VisualError * (float(rand()) / (float(RAND_MAX)))) * LOS;
+
+	if ((GCAMERA.GetFocalBird())->id() == id_) Sim.PrintFloat((float(rand()) / (float(RAND_MAX))), "random");
+	if ((GCAMERA.GetFocalBird())->id() == id_) Sim.PrintVector(r, "after");
+
 	glm::vec3 v = velocity_ - targetVelocity;
 	glm::vec3 wLOS = glm::cross(v, r) / glm::dot(r, r);
 	steering_ += N_ * glm::cross(wLOS, velocity_)*pBird_.bodyMass;

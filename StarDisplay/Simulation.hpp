@@ -38,6 +38,7 @@ public:
   void ResetCurrentStatistic();
   void PauseCurrentStatistic();
   void PrintVector(glm::vec3 input, std::string text);
+  void PrintVec2(glm::vec2 input, std::string text);
   void PrintFloat(float input, std::string text);
   void ResumeCurrentStatistic();
   void SaveCurrentStatistic(const char* fname, bool append);
