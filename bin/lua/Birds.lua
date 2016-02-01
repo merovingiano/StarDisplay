@@ -124,7 +124,7 @@ function Birds.Starling (p)
   bird.separationWeight = 1 * glm.vec3(1, 1, 1)   -- forward, up, side
   bird.alignmentWeight = 1 * glm.vec2( 1, 1 )     -- usual, banking
   bird.cohesionWeight = 1 * glm.vec3( 1, 1, 1 )   -- forward, up, side
-  bird.randomWeight = 0.001         
+  bird.randomWeight = 0.01         
     
   bird.boundaryWeight = glm.vec3(0.01, 0.5 , 0.01)  -- horizontal-x, vertical-y (indiv.), horizontal-z
   bird.boundaryReflectAngle = 180                           -- [deg]
@@ -254,7 +254,7 @@ function Birds.Falcon (p)
   predator.AttractMix = 0.1                   -- mix between distance (1) and exposure - factor (0)
   predator.HandleTime = 100
   predator.VisualError = 0                 -- random error in degrees of retina
-  predator.VisualBias = glm.vec2(0)        -- degrees along x (horizontal) and y (vertical) of retina
+  predator.VisualBias = glm.vec2(0,0)        -- degrees along x (horizontal) and y (vertical) of retina 
 
   if p ~= nil then
     p.BirdParams = bird

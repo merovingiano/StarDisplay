@@ -256,7 +256,8 @@ void CPredator::update(float dt, const CFlock&)
 	//! Controlling the bird. 
 	if ((GCAMERA.GetFocalBird())->id() == id_)
 	{
-
+		std::cout << pPred_.VisualError << "\n";
+		std::cout << pPred_.VisualBias.x << "  " << pPred_.VisualBias.y << "\n";
 		if (GetAsyncKeyState(VK_DOWN)) steering_ +=  B_[1];
 		if (GetAsyncKeyState(VK_NUMPAD2)) steering_ += 5.0f*B_[1];
 		if (GetAsyncKeyState(VK_UP)) steering_ -= B_[1];

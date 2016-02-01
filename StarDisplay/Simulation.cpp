@@ -288,7 +288,8 @@ void Simulation::GetExperimentSettings(const luabind::object& obj)
 					if (strKey3 == "maxLocks") experiment.pred.maxLocks = luabind::object_cast<int>(pred["maxLocks"]);
 					if (strKey3 == "ExposureThreshold") experiment.pred.ExposureThreshold = luabind::object_cast<glm::vec2>(pred["ExposureThreshold"]);
 					if (strKey3 == "AttractMix") experiment.pred.AttractMix = luabind::object_cast<float>(pred["AttractMix"]);
-					if (strKey3 == "HandleTime") experiment.pred.HandleTime = luabind::object_cast<float>(pred["HandleTime"]);
+					if (strKey3 == "VisualError") experiment.pred.VisualError = luabind::object_cast<float>(pred["VisualError"]);
+					if (strKey3 == "VisualBias") experiment.pred.VisualBias = luabind::object_cast<glm::vec2>(pred["VisualBias"]);
 
 
 				}

@@ -596,6 +596,8 @@ void luaopen_libParam(lua_State* L)
       .def_readwrite("ExposureThreshold", &Predator::ExposureThreshold)
       .def_readwrite("AttractMix", &Predator::AttractMix)
       .def_readwrite("HandleTime", &Predator::HandleTime)
+	  .def_readwrite("VisualError", &Predator::VisualError)
+	  .def_readwrite("VisualBias", &Predator::VisualBias)
   ];
 }
 

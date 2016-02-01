@@ -347,6 +347,8 @@ namespace Param {
     glm::vec2 ExposureThreshold;
     float AttractMix;
     float HandleTime;
+	float VisualError;
+	glm::vec2 VisualBias;
   };
 
 
