@@ -145,8 +145,7 @@ void EvolvePN::Reset()
 		std::cout << "\n Generation: " << Generation_;
 		std::cout << "\n expnum: " << Sim.expNumb;
 		std::cout << "\n rollrate: " << Sim.experiments[Sim.expNumb - 1].predBird.rollRate;
-		std::cout << "\n rollrate: " << Sim.experiments[Sim.expNumb +5].predBird.rollRate;
-		std::cout << "\n rollrate: " << Sim.experiments[Sim.expNumb +16].predBird.rollRate;
+		std::cout << "\n Visual Error: " << Sim.experiments[Sim.expNumb - 1].pred.VisualError;
 
 		CFlock::prey_iterator testfirstPrey(GFLOCKNC.prey_begin());
 		std::cout << "\n testing alterness relaxation: " << testfirstPrey->GetPreyParams().AlertnessRelexation.x << " " << testfirstPrey->GetPreyParams().AlertnessRelexation.y;
@@ -304,7 +303,7 @@ void EvolvePN::loadFiles()
 			if (hoi.find("predcohesionWeightz") != std::string::npos)infile >> experiment.predBird.cohesionWeight.z;
 			if (hoi.find("predAltitude") != std::string::npos)infile >> experiment.predBird.altitude;
 			if (hoi.find("predrandomWeight") != std::string::npos)infile >> experiment.predBird.randomWeight;
-
+			if (hoi.find("predVisualError") != std::string::npos)infile >> experiment.pred.VisualError;
 
 			if (hoi.find("numPrey") != std::string::npos)infile >> skip;
 			if (hoi.find("dt") != std::string::npos)infile >> skip;
@@ -654,6 +653,7 @@ void EvolvePN::PrepareSave()
 		namesParameters_.push_back("predcohesionWeightz"); ValuesParameters_.push_back(first->GetBirdParams().cohesionWeight.z);
 		namesParameters_.push_back("predAltitude"); ValuesParameters_.push_back(first->GetBirdParams().altitude);
 		namesParameters_.push_back("predrandomWeight"); ValuesParameters_.push_back(first->GetBirdParams().randomWeight);
+		namesParameters_.push_back("predVisualError"); ValuesParameters_.push_back(first->GetPredParams().VisualError);
 
 		namesParameters_.push_back("numPrey"); ValuesParameters_.push_back(GFLOCK.num_prey());
 		namesParameters_.push_back("dt"); ValuesParameters_.push_back(Sim.Params().IntegrationTimeStep);

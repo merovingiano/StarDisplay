@@ -173,7 +173,7 @@ end
 
 function Birds.Falcon (p)
   local bird = Params.Bird()
-  bird.reactionTime = 0.01          -- [s]
+  bird.reactionTime = 0.020          -- [s]
   bird.reactionStochastic = 0.000   -- reactionTime <- (1 + uniform(-reactionStochastic, + reactionStocastic)) * reactionTime
   bird.skipLeftHemisphere = 0       -- spacial hemisphere (not brain hemisphere)
   bird.skipRightHemisphere = 0      -- spacial hemisphere (not brain hemisphere)
@@ -200,7 +200,7 @@ function Birds.Falcon (p)
   --bird.speedControl = 1 / 1000   -- one over tau 
   bird.minSpeed = 5
   bird.maxSpeed = 40
-  bird.rollRate=10
+  bird.rollRate=5
   bird.maxForce = maxForce(bird)          -- max steering force [N]
 
 

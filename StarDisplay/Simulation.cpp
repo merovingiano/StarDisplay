@@ -296,6 +296,7 @@ void Simulation::GetExperimentSettings(const luabind::object& obj)
 			}
 		}
 		std::cout << "\n and it issss:::  " << experiment.param.evolution.fileName;
+		std::cout << "\n and visual error is:::  " << experiment.pred.VisualError;
 		Sim.experiments.push_back(experiment);
 	}
 }
@@ -842,7 +843,7 @@ void Simulation::UpdateSimulation(double sim_dt)
 		if (timeSinceEvolution > params_.evolution.durationGeneration)
 		{
 			evolution.apply();
-			evolution.save(params_.evolution.fileName.c_str(), 0);
+			evolution.save(params_.evolution.fileName.c_str(), 0); 
 			std::cout << "\n test";
 			timeSinceEvolution = 0.0f;
 		}

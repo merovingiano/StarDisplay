@@ -620,16 +620,16 @@ void CPredator::proportionalNavigation(const glm::vec3& targetHeading, const glm
 	glm::vec3 r = targetPoint_ - position_;
 
 	//add visual error!! translate angular velocity to position. This is hacky: actually computations should be done on FOV pred (cant do bias like this)
-	if ((GCAMERA.GetFocalBird())->id() == id_) Sim.PrintVector(r, "before");
+	//if ((GCAMERA.GetFocalBird())->id() == id_) Sim.PrintVector(r, "before");
 
 	float LOS = avx::fast_sqrt(glm::dot(r, r));
-	if ((GCAMERA.GetFocalBird())->id() == id_) Sim.PrintFloat(LOS, "LOS");
+	//if ((GCAMERA.GetFocalBird())->id() == id_) Sim.PrintFloat(LOS, "LOS");
 	r.x += (pPred_.VisualError * (float(rand()) / (float(RAND_MAX))) ) * LOS;
 	r.y += (pPred_.VisualError * (float(rand()) / (float(RAND_MAX))) ) * LOS;
 	r.z += (pPred_.VisualError * (float(rand()) / (float(RAND_MAX)))) * LOS;
 
-	if ((GCAMERA.GetFocalBird())->id() == id_) Sim.PrintFloat((float(rand()) / (float(RAND_MAX))), "random");
-	if ((GCAMERA.GetFocalBird())->id() == id_) Sim.PrintVector(r, "after");
+	//if ((GCAMERA.GetFocalBird())->id() == id_) Sim.PrintFloat((float(rand()) / (float(RAND_MAX))), "random");
+	//if ((GCAMERA.GetFocalBird())->id() == id_) Sim.PrintVector(r, "after");
 
 	glm::vec3 v = velocity_ - targetVelocity;
 	glm::vec3 wLOS = glm::cross(v, r) / glm::dot(r, r);
@@ -701,6 +701,7 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 	glm::vec3 Ll = glm::vec3(0, glm::dot(lift_, B_[1]), glm::dot(lift_, B_[2]));
 	//! determine the size of the turn towards desired angle
 	float turn = asin(glm::cross(Ll, Fl).x / (glm::length(Ll) * glm::length(Fl)));
+	//scaling!!!
 	float rollrate = pBird_.rollRate * speed_*speed_ / (8000.0f);
 	//! Clamp anglular velocity 
 	float beta = std::max(std::min((turn), rollrate * dt), -rollrate * dt);
