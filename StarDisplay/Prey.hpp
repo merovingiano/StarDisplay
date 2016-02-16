@@ -69,6 +69,17 @@ public:
   //! \return distance to nearest detected predator in range.
   float predatorDist() const { return predatorDist_; }
 
+  float get_average_lat_acceleration() const { return average_lat_acceleration_; }
+  float get_max_lat_acceleration() const { return max_lat_acceleration_; }
+  float get_average_for_acceleration() const { return average_for_acceleration_; }
+  float get_max_for_acceleration() const { return max_for_acceleration_; }
+  float get_average_roll_rate() const { return average_roll_rate_; }
+  float get_max_roll_rate() const { return max_roll_rate_; }
+  long get_counter_acc() const { return counter_acc_; }
+  void set_counter_acc(float counter) { counter_acc_ = counter; }
+
+
+
   //! \return predator reaction
   int predatorReaction() const { return predatorReaction_; }
 
@@ -99,7 +110,7 @@ private:
   void flightDynamic();
   void flightExternal();
   void maneuver();
-
+  void calculateAccelerations();
   //! Handles main social interaction rules
   void steerToFlock(struct fov_filter const& filter);
 
@@ -128,6 +139,8 @@ public:
   double    panicOnset_;
   int       panicCopy_;
   int       predatorReaction_;
+  
+
 
 private:
   int         skippedLeftHemisphere_;
@@ -136,6 +149,15 @@ private:
   glm::vec2   alignmentWeight_;
   int         flockId_;
   unsigned    flockSize_;
+  float     average_lat_acceleration_;
+  float     max_lat_acceleration_;
+  float     average_for_acceleration_;
+  float     max_for_acceleration_;
+  float     average_roll_rate_;
+  float     max_roll_rate_;
+  long      counter_acc_;
+  ;
+
 };
 
 

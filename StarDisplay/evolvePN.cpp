@@ -134,6 +134,8 @@ void EvolvePN::Reset()
 		{
 			firstPrey->SetPreyParams(Sim.experiments[Sim.expNumb - 1].prey);
 			firstPrey->SetBirdParams(Sim.experiments[Sim.expNumb - 1].preyBird);
+			// reset the couunter to compute the averages
+			firstPrey->set_counter_acc(0);
 		}
 		if (Sim.Params().evolution.load)
 		{

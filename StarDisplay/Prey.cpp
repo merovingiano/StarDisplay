@@ -16,7 +16,7 @@
 #include "Flock.hpp"
 #include "Globals.hpp"
 #include <iostream>
-
+#include <string>
 
 using namespace Param;
 namespace avx = glmutils::avx;
@@ -154,6 +154,9 @@ void CPrey::update(float dt, const CFlock& flock)
   //
   // Warning: this function is called from inside a parallel section!
   //
+
+	calculateAccelerations();
+
   if (reactionTime_ >= reactionInterval_)
   {
     bool alreadyAlerted = (0 != (predatorReaction_ & PredationReactions::Alerted));
@@ -332,6 +335,22 @@ void CPrey::maneuver()
 	steering_ += H_[2] * float(sin(Sim.SimulationTime() * 2.0f*reversed*pBird_.randomWeight));
 	steering_ += H_[1] * float(sin(Sim.SimulationTime()*1.4f * 2.0f*reversed*pBird_.randomWeight));
 	
+}
+
+void CPrey::calculateAccelerations()
+{
+	// counter is reset to 0 with each new experiment in EvolvePN
+	counter_acc_++;
+
+
+	average_for_acceleration_ = abs(glm::dot(B_[0], accel_)) / float(counter_acc_) + ((float(counter_acc_) - 1.0f) / float(counter_acc_)) * average_for_acceleration_;
+	max_for_acceleration_ = std::max(abs(glm::dot(B_[0], accel_)), max_for_acceleration_);
+	average_lat_acceleration_ = abs(glm::dot(B_[1], accel_)) / float(counter_acc_) + (float(counter_acc_) - 1.0f) / float(counter_acc_) * average_lat_acceleration_; 
+	max_lat_acceleration_ = std::max(abs(glm::dot(B_[1], accel_)), max_lat_acceleration_);
+	average_roll_rate_ = glm::dot(B_[0], accel_);
+	max_roll_rate_ = glm::dot(B_[0], accel_);
+	
+
 }
 
 void CPrey::flightExternal()

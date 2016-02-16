@@ -39,7 +39,7 @@ namespace {
 	  "\\smallface{}\nVelocity: %.1f \nAltitude: %.1f \nSteering Force magnitude: %.1f \nAcceleration: %.1f \nPrey Caught: %d \nminDist: %2f \nLocks: %d \nHunting: %d \nLast MinDist: %2f \nN: %2f \nMean N of Flock: %2f \nMean StartAltitude of Flock: %2f \nMean StartXDist of Flock: %2f ";
 
   const char details_prey[] =
-	  "\\smallface{}\nVelocity: %.1f \nAltitude: %.1f \nSteering Force magnitude: %.1f \nAcceleration: %.1f";
+	  "\\smallface{}\nVelocity: %.1f \nAltitude: %.1f \nSteering Force magnitude: %.1f \nAcceleration: %.1f \nAverage Lateral acceleration: %.1f \nMaximum Lateral acceleration: %.1f";
 
   const char footer_fmt[] =
     "\\smallface{}Sim. time: %02.0f:%02.0f:%02.0f\nupdate: %.1f ms\nfps: %d";
@@ -290,8 +290,9 @@ void GLSLState::PrintInfoText()
   }
   else
   {
+	  const CPrey* focalPrey = GCAMERA.GetFocalPrey();
 	  Fonts->set_color(glm::vec4(1, 1, 0, 1));
-	  _snprintf_s(buf, 255, details_prey, glm::length(focalBird->velocity()), (focalBird->position())[1], glm::length(focalBird->steering()), glm::length(focalBird->accel()));
+	  _snprintf_s(buf, 255, details_prey, glm::length(focalBird->velocity()), (focalBird->position())[1], glm::length(focalBird->steering()), glm::length(focalBird->accel()), focalPrey->get_average_lat_acceleration(), focalPrey->get_max_lat_acceleration(), focalPrey->get_average_for_acceleration(), focalPrey->get_max_for_acceleration());
 	  Fonts->print(buf);
 
   }
