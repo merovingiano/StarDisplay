@@ -272,6 +272,7 @@ void CBird::regenerateLocalSpace(float dt)
 	//! Clamp anglular velocity 
 	float beta = std::max(std::min((turn), rollrate * dt), -rollrate * dt);
 
+	roll_rate_ = beta;
 	avx::vec3 bank = beta * side;
 
 	//! remove pitching (comment out)

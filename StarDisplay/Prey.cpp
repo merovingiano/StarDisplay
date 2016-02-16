@@ -342,13 +342,19 @@ void CPrey::calculateAccelerations()
 	// counter is reset to 0 with each new experiment in EvolvePN
 	counter_acc_++;
 
+	if (counter_acc_ == 1)
+	{
+		max_for_acceleration_ = 0.0f;
+		max_lat_acceleration_ = 0.0f;
+		max_roll_rate_ = 0.0f;
+	}
 
 	average_for_acceleration_ = abs(glm::dot(B_[0], accel_)) / float(counter_acc_) + ((float(counter_acc_) - 1.0f) / float(counter_acc_)) * average_for_acceleration_;
 	max_for_acceleration_ = std::max(abs(glm::dot(B_[0], accel_)), max_for_acceleration_);
 	average_lat_acceleration_ = abs(glm::dot(B_[1], accel_)) / float(counter_acc_) + (float(counter_acc_) - 1.0f) / float(counter_acc_) * average_lat_acceleration_; 
 	max_lat_acceleration_ = std::max(abs(glm::dot(B_[1], accel_)), max_lat_acceleration_);
-	average_roll_rate_ = glm::dot(B_[0], accel_);
-	max_roll_rate_ = glm::dot(B_[0], accel_);
+	average_roll_rate_ = abs(roll_rate_) + ((float(counter_acc_) - 1.0f) / float(counter_acc_)) * average_roll_rate_;;
+	max_roll_rate_ = std::max(abs(roll_rate_), max_for_acceleration_);
 	
 
 }

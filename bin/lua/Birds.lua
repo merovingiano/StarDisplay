@@ -25,6 +25,46 @@ local CL = function (bird, alpha)
 end
 
 
+function ParseCSVLine (line,sep) 
+	local res = {}
+	local pos = 1
+	sep = sep or ','
+	while true do 
+		local c = string.sub(line,pos,pos)
+		if (c == "") then break end
+		if (c == '"') then
+			-- quoted value (ignore separator within)
+			local txt = ""
+			repeat
+				local startp,endp = string.find(line,'^%b""',pos)
+				txt = txt..string.sub(line,startp+1,endp-1)
+				pos = endp + 1
+				c = string.sub(line,pos,pos) 
+				if (c == '"') then txt = txt..'"' end 
+				-- check first char AFTER quoted string, if it is another
+				-- quoted string without separator, then append it
+				-- this is the way to "escape" the quote char in a quote. example:
+				--   value1,"blub""blip""boing",value3  will result in blub"blip"boing  for the middle
+			until (c ~= '"')
+			table.insert(res,txt)
+			assert(c == sep or c == "")
+			pos = pos + 1
+		else	
+			-- no quotes used, just look for the first separator
+			local startp,endp = string.find(line,sep,pos)
+			if (startp) then 
+				table.insert(res,string.sub(line,pos,startp-1))
+				pos = endp + 1
+			else
+				-- no separator found -> use rest of string and terminate
+				table.insert(res,string.sub(line,pos))
+				break
+			end 
+		end
+	end
+	return res
+end
+
 
 -- Allometric scaling with wing load
 -- Alerstam et al PLOS Biol 5, 2007
@@ -69,6 +109,16 @@ function Birds.Starling (p)
   local bird = Params.Bird()
 
   -- Pomeroy 1977 AnimBehav: 76.38 ms startle reaction time
+
+  local file = io.open("C:/Users/Robin/Desktop/Book2.csv", "r")
+  local line = ParseCSVLine(file:read(),",")
+  print(line[1])
+
+  local i = 1
+  while i==1 do
+
+   line = 0
+  end
 
   local rtm, rts = 76.38 / 1000, 0.01     -- mean & standard dev. of reaction time
   bird.reactionTime = random:normal_min_max(rtm, rts, math.max(0, rtm-4*rts), rtm+4*rts) -- [s]

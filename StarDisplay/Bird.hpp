@@ -134,6 +134,7 @@ protected:
   float   rand_;
   float   desiredLift_;
   float   speed_;
+  float   roll_rate_;
   bool			   glide_;
   float		span_;
   float   reactionTime_;

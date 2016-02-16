@@ -134,8 +134,6 @@ void EvolvePN::Reset()
 		{
 			firstPrey->SetPreyParams(Sim.experiments[Sim.expNumb - 1].prey);
 			firstPrey->SetBirdParams(Sim.experiments[Sim.expNumb - 1].preyBird);
-			// reset the couunter to compute the averages
-			firstPrey->set_counter_acc(0);
 		}
 		if (Sim.Params().evolution.load)
 		{
@@ -185,6 +183,10 @@ void EvolvePN::loadOldData(std::string filename)
 		data_all_pred data_all_pred;
 
 		float tempFloat;
+
+		//Warning: if I add more lines here, I cannot load old data correctly. Namely, it go to the next line, and things start to get messed up. To prevent this, I should count the number of lines first, and only do those
+		//Always append a new variable to store at the end! Perhaps 1. get the names of the columns first, and then have a similar system as in loadfiles()
+		//I added more variables to store, currently, old files are no longer loadable.
 		for (; first != last; ++first)
 		{
 			data_per_pred data;
@@ -585,6 +587,12 @@ void EvolvePN::PrepareSave()
 		data.push_back(first->GetBirdParams().reactionTime);
 		data.push_back(first->GetBirdParams().cruiseSpeed);
 		data.push_back(float(first->GetPredParams().pursuit.type));
+		data.push_back(float(firstPrey->get_average_for_acceleration()));
+		data.push_back(float(firstPrey->get_max_for_acceleration()));
+		data.push_back(float(firstPrey->get_average_lat_acceleration()));
+		data.push_back(float(firstPrey->get_max_lat_acceleration()));
+		data.push_back(float(firstPrey->get_average_roll_rate()));
+		data.push_back(float(firstPrey->get_max_roll_rate()));
 		data_all_pred.push_back(data);
 
 	}
@@ -605,6 +613,12 @@ void EvolvePN::PrepareSave()
 		names_.push_back("reactionTime");
 		names_.push_back("cruiseSpeed");
 		names_.push_back("PursuitType1pn2dp");
+		names_.push_back("average_for_acceleration");
+		names_.push_back("max_for_acceleration");
+		names_.push_back("average_lat_acceleration");
+		names_.push_back("max_lat_acceleration");
+		names_.push_back("average_roll_rate");
+		names_.push_back("max_roll_rate");
 	}
 	first = GFLOCKNC.predator_begin();
 	if (namesParameters_.empty())
@@ -953,6 +967,8 @@ void EvolvePN::Shuffle()
 	for (; firstPrey != lastPrey; ++firstPrey)
 	{
 		firstPrey->position_ = glm::vec3(0, 120, 0);
+		// reset the couunter to compute the averages
+		firstPrey->set_counter_acc(0);
 	};
 
 	GFLOCKNC.meanN = meanN;
