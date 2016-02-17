@@ -110,7 +110,7 @@ PredatorFactory = PredatorFactory or function ()
 	  forward = forward / glm.length(forward)
       predator = Simulation.NewPredator(id, position, forward)
     end
-    Birds.Falcon(predator)
+    Birds.newBird(predator, gParam.Birds.csv_file_species , gParam.Birds.csv_file_prey_predator_settings,"Peregrine falcon", 1)
     predator:SetTrail(true)
     predator:SetTargetPrey(Simulation.GetActiveCamera():GetFocalPrey())
     predator:StartAttack()

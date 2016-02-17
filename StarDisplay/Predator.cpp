@@ -299,13 +299,7 @@ void CPredator::update(float dt, const CFlock&)
     noise();    // add some noise
 	//! Clamped force no longer used. Just for graphics
     avx::vec3 force(steering_);
-    const float f2 = avx::length2(force);
-    if (f2 > pBird_.maxForce * pBird_.maxForce) {
-      force /= avx::fast_sqrt(f2);
-      force *= pBird_.maxForce;
-      //force.store(steering_);
-    }
-    force.store(force_);
+
 
     // calculate time of next reaction
     nextReactionTime();
@@ -359,8 +353,8 @@ void CPredator::update(float dt, const CFlock&)
 
 void CPredator::Accelerate()
 {
-	//! This will be clamped later. Idea: accelerate maximally unless PN dictates it should turn
-	steering_ += pBird_.maxForce*B_[0];
+	//! There is no acceleration or deceleration in the model currently; it always accelerates as much as possible
+	steering_ += 0.0f*B_[0];
 }
 
 

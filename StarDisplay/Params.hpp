@@ -249,7 +249,6 @@ namespace Param {
     float innerBoundary;
     float altitude;
     GPWS gpws;
-	float bodyDrag;
 	float wingRetractionSpeed;
 	bool controlCL;
 	float CDCL;

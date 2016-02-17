@@ -25,6 +25,43 @@ local CL = function (bird, alpha)
 end
 
 
+function process_CSV_cell(cell, type)
+   sep = ';'
+
+   if type == "list" then
+	   list = {}
+	   for word in string.gmatch(cell, '([^;]+)') do
+	      for k, v in string.gmatch(cell, "(%w+) = (%w+)") do
+		     list[k] = tonumber(v)
+		     print(k .. " = " .. v)
+			 print(v)
+	      end
+	   end
+      return list
+   end
+
+   if type == "boolean" then
+      local value = tonumber(cell)
+	   if value == 0 then return false else return true end
+   end
+
+   if type == "glm2" or  type == "glm3"  then
+      list = {}
+	  counter = 0
+      for word in string.gmatch(cell, '([^;]+)') do
+	     counter = counter + 1
+		 list[counter] = tonumber(word)
+	  end
+	  if counter == 2 then return glm.vec2(list[1],list[2]) end
+	  if counter == 3 then return glm.vec3(list[1],list[2], list[3]) end
+   end
+
+   return tonumber(cell)
+
+end
+
+
+
 function ParseCSVLine (line,sep) 
 	local res = {}
 	local pos = 1
@@ -110,15 +147,7 @@ function Birds.Starling (p)
 
   -- Pomeroy 1977 AnimBehav: 76.38 ms startle reaction time
 
-  local file = io.open("C:/Users/Robin/Desktop/Book2.csv", "r")
-  local line = ParseCSVLine(file:read(),",")
-  print(line[1])
 
-  local i = 1
-  while i==1 do
-
-   line = 0
-  end
 
   local rtm, rts = 76.38 / 1000, 0.01     -- mean & standard dev. of reaction time
   bird.reactionTime = random:normal_min_max(rtm, rts, math.max(0, rtm-4*rts), rtm+4*rts) -- [s]
@@ -140,7 +169,6 @@ function Birds.Starling (p)
   bird.CL = CL(bird,1)
   bird.CDCL= CDCL2(bird)
   bird.controlCL = false
-  bird.bodyDrag = 0
   bird.wingRetractionSpeed = 100
   bird.maxForce = 2  -- max steering force [N] 
   bird.maxLift = 3      -- [N]
@@ -242,7 +270,6 @@ function Birds.Falcon (p)
   bird.CL = CL(bird)
   bird.CDCL= CDCL(bird)
   bird.controlCL = false
-  bird.bodyDrag = 0.017
   bird.wingRetractionSpeed = 59
   bird.maxLift = 40           -- [N}
   
@@ -313,7 +340,113 @@ function Birds.Falcon (p)
   return bird, predator
 end
 
+function Birds.newBird (p, file,settingsFile, name, isPredator)
+  local bird = Params.Bird()
+  local file = io.open(file, "r")
+  local names = ParseCSVLine(file:read(),",")
+  local bird_info = {}
+  local tmp = {}
+  local prey_pred = 0
+  local bird_spec = 0
+  local line = ParseCSVLine(file:read(),",")
+  local predator = Params.Predator()
 
+  while line[2] ~= "" do  
+	if(line[2] == name) then
+		tmp = line
+		for k,v in pairs(tmp) do		  
+		  bird_info[names[k]] = tmp[k]
+		end
+	end
+	line = ParseCSVLine(file:read(),",")
+  end
+
+  io.close(file)
+
+  local keyset={}
+  local n=0
+
+  local settings = io.open(settingsFile, "r")
+
+  line = ParseCSVLine(settings:read(),",")
+  while line[1] ~= "end" do  
+    if line[1] == "Prey" then prey_pred = 1 end
+    if line[1] == "Predator" then prey_pred = 2 end
+	if line[1] == "Bird Properties" then bird_spec = 1 end
+	if line[1] == "Prey Properties" then bird_spec = 2 end
+	if line[1] == "Predator Properties" then bird_spec = 3 end
+	if isPredator == 1 and prey_pred == 2  and bird_spec == 1 and line[1] ~= "Predator Properties" then
+	  bird[line[1]] = process_CSV_cell(line[2], line[3])
+	end
+    if isPredator == 1 and prey_pred == 2  and bird_spec == 3 and line[1] ~= "Predator Properties" then
+	  predator[line[1]] = process_CSV_cell(line[2], line[3])
+	end
+	if isPredator == 0 and prey_pred == 1  and bird_spec == 1 and line[1] ~= "Predator Properties" then
+	  bird[line[1]] = process_CSV_cell(line[2], line[3])
+	end
+	if isPredator == 0 and prey_pred == 1  and bird_spec == 2 and line[1] ~= "Predator Properties" then
+	  prey[line[1]] = process_CSV_cell(line[2], line[3])
+	end
+	line = ParseCSVLine(settings:read(),",")
+  end
+  io.close(settings)
+
+
+  --used: physical
+  bird.rho = rho
+  bird.bodyMass = tonumber(bird_info["Mass male"] / 1000)       -- [kg]
+  bird.wingSpan = tonumber(bird_info["Wingspan male"] / 100  )      -- [m]
+  print(bird_info["Aspect ratio male"])
+  bird.wingAspectRatio = tonumber(bird_info["Aspect ratio male"])
+  bird.wingBeatFreq = tonumber(bird_info["Wingbeat frequency"])
+  bird.theta =  tonumber(bird_info["Span Angle Down to Upstroke"])
+  bird.wingLength = tonumber(bird_info["Wing length male"]) / 100
+  bird.bodyArea = tonumber(bird_info["Body area"] )
+  bird.cBody =  tonumber(bird_info["Body drag coefficient"] )
+  bird.cFriction = tonumber(bird_info["Wing length male"])
+  bird.wingArea = bird.wingSpan * (bird.wingSpan / bird.wingAspectRatio)   -- [m^2] 
+  bird.rollRate= tonumber(bird_info["Roll rate"])   -- Important: needs physical theory!
+
+  -- currently unused, to be deleted or may we useful later
+  bird.CL = CL(bird)
+  bird.CDCL= CDCL(bird)
+  bird.controlCL = false
+  bird.wingRetractionSpeed = 59
+  bird.maxLift = 0   
+  bird.cruiseSpeed = 20
+  bird.minSpeed = 5
+  bird.maxSpeed = 40
+  bird.maxForce = 0       -- max steering force [N]
+
+
+
+  -- currently unused, to be deleted or may we useful later
+  bird.wBetaIn = glm.vec3( 1, 1, 0 )    -- roll, pitch, yaw  
+  bird.wBetaOut = glm.vec3( 0, 0, 0 )   -- roll, pitch, yaw
+
+
+  while 1==1 do
+
+  end
+
+  if isPredator == 0 then
+     if p ~= nil then
+       p.BirdParams = bird
+       p.PreyParams = prey
+
+     end
+	   return bird, prey
+  else
+   if p ~= nil then
+       p.BirdParams = bird
+       p.PredParams = predator
+
+     end
+	   return bird, predator
+
+  end
+
+end
 
 
 return Birds

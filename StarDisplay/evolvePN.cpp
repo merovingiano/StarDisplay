@@ -268,7 +268,6 @@ void EvolvePN::loadFiles()
 			if (hoi.find("predBodyArea") != std::string::npos) infile >> experiment.predBird.bodyArea;
 			if (hoi.find("predCBody") != std::string::npos) infile >> experiment.predBird.cBody;
 			if (hoi.find("predCFriction") != std::string::npos) infile >> experiment.predBird.cFriction;
-			if (hoi.find("predBodyDrag") != std::string::npos) infile >> experiment.predBird.bodyDrag;
 			if (hoi.find("predWingRetractionSpeed") != std::string::npos) infile >> experiment.predBird.wingRetractionSpeed;
 			if (hoi.find("predControlCL") != std::string::npos)infile >> experiment.predBird.controlCL;
 			if (hoi.find("predCDCL") != std::string::npos)infile >> experiment.predBird.CDCL;
@@ -412,7 +411,6 @@ void EvolvePN::loadFiles()
 			if (hoi.find("preyRT") != std::string::npos)infile >> experiment.preyBird.reactionTime;
 			if (hoi.find("preyreactionStochastic") != std::string::npos)infile >> experiment.preyBird.reactionStochastic;
 			if (hoi.find("preyBlindAngle") != std::string::npos)infile >> experiment.preyBird.blindAngle;
-			if (hoi.find("preyBodyDrag") != std::string::npos)infile >> experiment.preyBird.bodyDrag;
 			if (hoi.find("preyWingRetractionSpeed") != std::string::npos)infile >> experiment.preyBird.wingRetractionSpeed;
 			if (hoi.find("preyControlCL") != std::string::npos)infile >> experiment.preyBird.controlCL;
 			if (hoi.find("preyCDCL") != std::string::npos)infile >> experiment.preyBird.CDCL;
@@ -630,7 +628,6 @@ void EvolvePN::PrepareSave()
 		namesParameters_.push_back("predBodyArea"); ValuesParameters_.push_back(first->GetBirdParams().bodyArea);
 		namesParameters_.push_back("predCBody"); ValuesParameters_.push_back(first->GetBirdParams().cBody);
 		namesParameters_.push_back("predCFriction"); ValuesParameters_.push_back(first->GetBirdParams().cFriction);
-		namesParameters_.push_back("predBodyDrag");  ValuesParameters_.push_back(first->GetBirdParams().bodyDrag);
 		namesParameters_.push_back("predWingRetractionSpeed");  ValuesParameters_.push_back(first->GetBirdParams().wingRetractionSpeed);
 		namesParameters_.push_back("predControlCL");  ValuesParameters_.push_back(first->GetBirdParams().controlCL);
 		namesParameters_.push_back("predCDCL");  ValuesParameters_.push_back(first->GetBirdParams().CDCL);
@@ -757,7 +754,6 @@ void EvolvePN::PrepareSave()
 		namesParameters_.push_back("preyRT"); ValuesParameters_.push_back(firstPrey->GetBirdParams().reactionTime);
 		namesParameters_.push_back("preyreactionStochastic"); ValuesParameters_.push_back(firstPrey->GetBirdParams().reactionStochastic);
 		namesParameters_.push_back("preyBlindAngle"); ValuesParameters_.push_back(firstPrey->GetBirdParams().blindAngle);
-		namesParameters_.push_back("preyBodyDrag"); ValuesParameters_.push_back(firstPrey->GetBirdParams().bodyDrag);
 		namesParameters_.push_back("preyWingRetractionSpeed"); ValuesParameters_.push_back(firstPrey->GetBirdParams().wingRetractionSpeed);
 		namesParameters_.push_back("preyControlCL"); ValuesParameters_.push_back(firstPrey->GetBirdParams().controlCL);
 		namesParameters_.push_back("preyCDCL"); ValuesParameters_.push_back(firstPrey->GetBirdParams().CDCL);

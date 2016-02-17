@@ -67,6 +67,11 @@ local Default = {
 		terminationGeneration = 100000000,
   },
 
+  Birds = {
+     csv_file_species = "../../lua/bird_properties.csv",
+	 csv_file_prey_predator_settings = "../../lua/prey_predator_settings.csv",
+  },
+
   Trail = {
     Length = 5,           -- length in seconds (read-once)
     Width = 0.25,          -- [m]
