@@ -492,7 +492,16 @@ void EvolvePN::save(const char* fname, bool append) const
 	std::string bufS("D:/ownCloud/2013-2014/phd\ hunting/dataStarDisplay/");
 	bufS.append(buf);
 	bufS.append("/");
+	std::string luaName("experiment.lua");
+	std::string fnameTrunc(std::string(fname).substr(0, std::string(fname).find(".txt")));
+
+
 	CreateDirectory(bufS.c_str(), NULL);
+	CopyFile("../../experiments.lua", (bufS + fnameTrunc + luaName).c_str(), TRUE);
+	CopyFile((Sim.experiments[Sim.expNumb - 1].param.birds.csv_file_prey_predator_settings).c_str(), (bufS + fnameTrunc + "pred_prey.csv").c_str(), TRUE);
+	CopyFile((Sim.experiments[Sim.expNumb - 1].param.birds.csv_file_species).c_str(), (bufS + fnameTrunc + "species.csv").c_str(), TRUE);
+
+
 	bufS.append(fname);
 	
 	std::ofstream os(bufS.c_str(), std::ios_base::out | (append ? std::ios_base::app : std::ios_base::trunc));

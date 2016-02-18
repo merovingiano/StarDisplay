@@ -197,6 +197,19 @@ void Simulation::GetExperimentSettings(const luabind::object& obj)
 
 					}
 
+					if (strKey3 == "Birds")
+
+					{
+						luabind::object Birds = obj[intKey][strKey2][strKey3];
+						for (luabind::iterator iiii(Birds), end; iiii != end; ++iiii)
+						{
+							std::string strKey4 = luabind::object_cast<std::string>(iiii.key());
+							if (strKey4 == "csv_file_species") experiment.param.birds.csv_file_species = luabind::object_cast<std::string>(Birds["csv_file_species"]);
+							if (strKey4 == "csv_file_prey_predator_settings") experiment.param.birds.csv_file_prey_predator_settings = luabind::object_cast<std::string>(Birds["csv_file_prey_predator_settings"]);
+						}
+
+					}
+
 					if (strKey3 == "roost")
 
 					{

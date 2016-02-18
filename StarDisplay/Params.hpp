@@ -18,6 +18,13 @@ namespace Param {
     float maxRadius;
   };
 
+  struct Birds
+  {
+	  std::string csv_file_species;
+	  std::string csv_file_prey_predator_settings;
+  };
+
+
   struct Evolution
   {
 	  std::string type;
@@ -410,6 +417,7 @@ namespace Param {
     FeatureMap featureMap;
     RenderFlags renderFlags;
 	Evolution evolution;
+	Birds     birds;
   };
 
 

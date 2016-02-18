@@ -293,7 +293,8 @@ namespace libParam
 	cobj.evolution.title = object_cast<std::string>(luaobj["evolution"]["title"]);
 	cobj.evolution.description = object_cast<std::string >(luaobj["evolution"]["description"]);
 
-	
+	cobj.birds.csv_file_species = object_cast<std::string  >(luaobj["Birds"]["csv_file_species"]);
+	cobj.birds.csv_file_prey_predator_settings = object_cast<std::string  >(luaobj["Birds"]["csv_file_prey_predator_settings"]);
 
 
 	return cobj;
