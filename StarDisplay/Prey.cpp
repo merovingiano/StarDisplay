@@ -277,7 +277,7 @@ void CPrey::update(float dt, const CFlock& flock)
 
   //std::cout << "\n x: " << B_[0].x << " y: " << B_[0].y << " z: " << B_[0].z;
 
-  testSettings();
+  //testSettings();
 }
 
 

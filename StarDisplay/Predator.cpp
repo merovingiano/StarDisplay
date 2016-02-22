@@ -369,10 +369,17 @@ void CPredator::flightDynamic()
   // Now, first calculate the maximum lift, given torque constraints, the wing span is:
   float bmax = pBird_.wingSpan;
   float bmin = pBird_.wingSpan - 2 * pBird_.wingLength;
-
   float L0 = 1.7f*pBird_.bodyMass*9.81f;
   float b_maxlift = (bmax - bmin) * avx::fast_sqrt(L0 / (1.6f*dynamic*area)) + bmin;
   float liftMax = 1.6f *dynamic*area* (b_maxlift - bmin) / (bmax - bmin);
+
+  // calculate angular acceleration due to lift
+  float angular_acc = (1.6f *dynamic*area *bmax / 8) / pBird_.InertiaWing; 
+  //hack: how long it takes to roll 30 degrees
+  float time = avx::fast_sqrt(0.53f / angular_acc);
+  // distance, given this time, for a second
+  roll_rate_ = 1 / time * 0.53f + pi * pBird_.wingBeatFreq;
+
   // How big should the cl be?
   float r_desired_lift = std::min(desiredLift_, liftMax);
   float CL = std::min(r_desired_lift / (dynamic*area), 1.6f);
@@ -719,7 +726,8 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 	//! determine the size of the turn towards desired angle
 	float turn = asin(glm::cross(Ll, Fl).x / (glm::length(Ll) * glm::length(Fl)));
 	//scaling!!!
-	float rollrate = pBird_.rollRate * speed_*speed_ / (8000.0f);
+	float rollrate = roll_rate_;
+	Sim.PrintFloat(rollrate, "rollrate");
 	//! Clamp anglular velocity 
 	float beta = std::max(std::min((turn), rollrate * dt), -rollrate * dt);
 
