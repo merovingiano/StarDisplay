@@ -47,6 +47,7 @@ local Default = {
 		evolvemaxForce= false,
 		evolvewingSpan= false,
 		evolvebodyMass= false,
+		evolveInertiaWing= false,
 		evolvecontrolCL= false,
 		evolvecruiseSpeed= false,
 		evolvemaxLift= false,

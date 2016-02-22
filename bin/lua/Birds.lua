@@ -202,6 +202,7 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
   --used: physical
   bird.rho = rho
   bird.bodyMass = tonumber(bird_info["Mass male"] / 1000)       -- [kg]
+  bird.InertiaWing = tonumber(bird_info["moment of inertia male"])
   bird.wingSpan = tonumber(bird_info["Wingspan male"] / 100  )      -- [m]
   bird.wingAspectRatio = tonumber(bird_info["Aspect ratio male"])
   bird.wingBeatFreq = tonumber(bird_info["Wingbeat frequency"])

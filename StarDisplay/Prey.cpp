@@ -277,7 +277,7 @@ void CPrey::update(float dt, const CFlock& flock)
 
   //std::cout << "\n x: " << B_[0].x << " y: " << B_[0].y << " z: " << B_[0].z;
 
-  //testSettings();
+  testSettings();
 }
 
 
@@ -307,8 +307,8 @@ void CPrey::flightDynamic()
 	float b_maxlift = (bmax - bmin) * avx::fast_sqrt(L0 / (1.6f*dynamic*area)) + bmin;
 	float liftMax = 1.6f *dynamic*area* (b_maxlift - bmin) / (bmax - bmin);
 
-	Sim.PrintFloat(liftMax / pBird_.bodyMass, "max acceleration");
-	Sim.PrintFloat(speed_, "speed_");
+	//Sim.PrintFloat(liftMax / pBird_.bodyMass, "max acceleration");
+	//Sim.PrintFloat(speed_, "speed_");
 	// How big should the cl be?
 	float r_desired_lift = std::min(desiredLift_, liftMax);
 	float CL = std::min(r_desired_lift / (dynamic*area), 1.6f);
@@ -526,6 +526,7 @@ void CPrey::testSettings()
 		Sim.PrintFloat(pBird_.rollRate, "rollRate");
 		Sim.PrintFloat(pBird_.bodyWeight, "bodyWeight");
 		Sim.PrintFloat(pBird_.rho, "rho");
+		Sim.PrintFloat(pBird_.InertiaWing, "Inertia");
 		Sim.PrintFloat(pBird_.maxForce, "maxForce");
 		Sim.PrintFloat(pBird_.minSpeed, "minSpeed");
 		Sim.PrintFloat(pBird_.maxSpeed, "maxSpeed");

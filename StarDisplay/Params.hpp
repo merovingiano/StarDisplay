@@ -49,6 +49,7 @@ namespace Param {
 	  bool evolvemaxForce;
 	  bool evolvewingSpan;
 	  bool evolvebodyMass;
+	  bool evolveInertiaWing;
 	  bool evolvecontrolCL;
 	  bool evolvecruiseSpeed;
 	  bool evolvemaxLift;
@@ -217,6 +218,7 @@ namespace Param {
     int skipRightHemisphere;
     float rho;
     float bodyMass;
+	float InertiaWing;
     float bodyWeight;
     float wingSpan;
     float wingAspectRatio;
