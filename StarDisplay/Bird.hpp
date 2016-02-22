@@ -111,6 +111,7 @@ public:
   float                      wingSpan_;
   HRTREE_ALIGN(16) glm::mat3 B_;          
   HRTREE_ALIGN(16) glm::mat3 H_; 
+  HRTREE_ALIGN(16) glm::vec3 liftMax_;
   HRTREE_ALIGN(16) glm::vec3 velocity_;
   HRTREE_ALIGN(16) glm::vec3 accel_;
   HRTREE_ALIGN(16) glm::vec3 force_;
@@ -123,7 +124,7 @@ public:
 
 protected:
   HRTREE_ALIGN(16) glm::vec3 lift_;
-  HRTREE_ALIGN(16) glm::vec3 liftMax_;
+  
   HRTREE_ALIGN(16) glm::vec3 flightForce_;
   HRTREE_ALIGN(16) glm::vec3 bank_;
 
