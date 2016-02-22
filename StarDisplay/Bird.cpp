@@ -221,13 +221,18 @@ void CBird::integration(float dt)
   avx::vec3 flightForce(flightForce_);
   avx::vec3 forward(B_[0]);
 
+  //Sim.PrintVector(accel_, "acceleration");
+ // Sim.PrintVector(flightForce_, "flightForce_");
+  //Sim.PrintFloat(rBM, "rBM");
+  //
   velocity += accel * hdt;                 // v(t + dt/2) = v(t) + a(t) dt/2
   position += velocity * dt;               // r(t + dt) = r(t) + v(t + dt/2)
   accel = (flightForce)* rBM;     // a(t + dt) = F(t + dt)/m
+
   position.store(position_);
   velocity += accel * hdt;                 // v(t) = v(t + dt/2) + a(t + dt) dt/2
   accel.store(accel_);
-
+  //Sim.PrintVector(accel_, "acceleration after integration");
   // clip speed
   speed_ = avx::length(velocity);
   //! don't clamp speed: no stoop possible otherwise

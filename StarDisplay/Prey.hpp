@@ -120,6 +120,7 @@ private:
   void predatorPanicMaximizeDist();				//! Try to increase expected closest approach.
   void predatorPanicTurnInward();					//! Turn along circularity vector.
   void predatorPanicTurnAway();						//! Turn in opposite direction to predator.
+  void testSettings();
 	void predatorPanicDrop();						//! Drop out of sky.
   void predatorPanicMoveCentered();		//! Move towards center.
   void predatorPanicZig();		  //! Left-right evasion.

@@ -456,7 +456,7 @@ namespace libParam
   void SetEvasionStrategy(Prey* prey, const object& luaobj)
   {
     Panic p = FromLua<Panic>(luaobj);
-    prey->EvasionStrategy[p.type] = p;
+    prey->EvasionStrategy[int(p.type)] = p;
   }
 
   object GetEvasionStrategy(Prey* prey, const object& type)

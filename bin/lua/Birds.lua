@@ -54,6 +54,8 @@ function process_CSV_cell(cell, type)
 	  if counter == 3 then return glm.vec3(list[1],list[2], list[3]) end
    end
 
+   --print(cell)
+   --print(tonumber(cell))
    return tonumber(cell)
 
 end
@@ -177,36 +179,37 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
 	if line[1] == "Bird Properties" then bird_spec = 1 end
 	if line[1] == "Prey Properties" then bird_spec = 2 end
 	if line[1] == "Predator Properties" then bird_spec = 3 end
-	if isPredator == 1 and prey_pred == 2  and bird_spec == 1 and line[1] ~= "Predator Properties" then
+	if isPredator == 1 and prey_pred == 2  and bird_spec == 1 and line[1] ~= "Predator Properties" and line[1] ~= "" then
 	  bird[line[1]] = process_CSV_cell(line[2], line[3])
 	end
-    if isPredator == 1 and prey_pred == 2  and bird_spec == 3 and line[1] ~= "Predator Properties" then
+    if isPredator == 1 and prey_pred == 2  and bird_spec == 3 and line[1] ~= "Bird Properties" and line[1] ~= "" then
 	  predator[line[1]] = process_CSV_cell(line[2], line[3])
 	end
-	if isPredator == 0 and prey_pred == 1  and bird_spec == 1 and line[1] ~= "Predator Properties" then
+	if isPredator == 0 and prey_pred == 1  and bird_spec == 1 and line[1] ~= "Bird Properties" and line[1] ~= "" then
 	  bird[line[1]] = process_CSV_cell(line[2], line[3])
 	end
-	if isPredator == 0 and prey_pred == 1  and bird_spec == 2 and line[1] ~= "Predator Properties" then
-	  print(line[1])
-	  prey[line[1]] = process_CSV_cell(line[2], line[3])
+	if isPredator == 0 and prey_pred == 1  and bird_spec == 2 and line[1] ~= "Prey Properties" and line[1] ~= "" then
+	  if  line[1] ~= "EvasionStrategy" then 
+		prey[line[1]] = process_CSV_cell(line[2], line[3]) 
+	  end
 	end
 	line = ParseCSVLine(settings:read(),",")
   end
   io.close(settings)
 
+  --prey.EvasionStrategy = { type = EvasionStrategies.None, weight = 1.0, edges = glm.vec4(0, 2, 2, 2) }
 
   --used: physical
   bird.rho = rho
   bird.bodyMass = tonumber(bird_info["Mass male"] / 1000)       -- [kg]
   bird.wingSpan = tonumber(bird_info["Wingspan male"] / 100  )      -- [m]
-  print(bird_info["Aspect ratio male"])
   bird.wingAspectRatio = tonumber(bird_info["Aspect ratio male"])
   bird.wingBeatFreq = tonumber(bird_info["Wingbeat frequency"])
   bird.theta =  tonumber(bird_info["Span Angle Down to Upstroke"])
   bird.wingLength = tonumber(bird_info["Wing length male"]) / 100
   bird.bodyArea = tonumber(bird_info["Body area"] )
   bird.cBody =  tonumber(bird_info["Body drag coefficient"] )
-  bird.cFriction = tonumber(bird_info["Wing length male"])
+  bird.cFriction = tonumber(bird_info["Friction drag wing"])
   bird.wingArea = bird.wingSpan * (bird.wingSpan / bird.wingAspectRatio)   -- [m^2] 
   bird.rollRate= tonumber(bird_info["Roll rate"])   -- Important: needs physical theory!
 
@@ -215,18 +218,32 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
   bird.CDCL= CDCL(bird)
   bird.controlCL = false
   bird.wingRetractionSpeed = 59
-  bird.maxLift = 0   
+  bird.maxLift = 5   
   bird.cruiseSpeed = 20
-  bird.minSpeed = 5
+  bird.minSpeed = 1
   bird.maxSpeed = 40
-  bird.maxForce = 0       -- max steering force [N]
+  bird.maxForce = 3       -- max steering force [N]
 
 
 
   -- currently unused, to be deleted or may we useful later
-  bird.wBetaIn = glm.vec3( 1, 1, 0 )    -- roll, pitch, yaw  
-  bird.wBetaOut = glm.vec3( 0, 0, 0 )   -- roll, pitch, yaw
+  bird.wBetaIn = glm.vec3( 4, 1, 0 )    -- roll, pitch, yaw
+  bird.wBetaOut = glm.vec3( 0, 0, 0 )     -- roll, pitch, yaw 
+  prey.AlertedWBetaIn = bird.wBetaIn
+  prey.AlertedWBetaOut = bird.wBetaOut
 
+  print(bird.bodyArea)
+  print(bird.maxSpeed)
+  print(bird.wingSpan)
+  print(prey.IncurLatency)
+ print(prey.DetectCruising)
+  print(prey.AlertedAlignmentWeight)
+  print(bird.bodyMass)
+  print(bird.theta)
+  print(bird.speedControl)
+  --while 1 == 1 do
+
+ --end
 
   if isPredator == 0 then
      if p ~= nil then
@@ -245,6 +262,7 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
 
   end
 
+ 
 end
 
 

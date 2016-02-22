@@ -276,6 +276,8 @@ void CPrey::update(float dt, const CFlock& flock)
   appendTrail(trail_, position_, B_[2], color_tex_, dt);
 
   //std::cout << "\n x: " << B_[0].x << " y: " << B_[0].y << " z: " << B_[0].z;
+
+  //testSettings();
 }
 
 
@@ -322,8 +324,12 @@ void CPrey::flightDynamic()
 	//}
 
 	flightForce_ = lift_ + B_[0] * (forwardAccel);
+	//Sim.PrintVector(flightForce_, "flight force before adding gravity");
+	//Sim.PrintFloat(T, "Thrust");
 	flightForce_.y -= pBird_.bodyMass * 9.81;        // apply gravity          
 
+	//Sim.PrintVector(flightForce_, "flight force after adding gravity");
+	//Sim.PrintFloat(pBird_.bodyMass, "body mass ");
 	if (glide_ == true) span_ = 1.0f - (b - bmin) / (bmax - bmin); else span_ = 0.0f;
 }
 
@@ -487,6 +493,35 @@ void CPrey::handleEvasion()
   }
   predatorPanicCustom();
 }
+
+
+void CPrey::testSettings()
+{
+
+		Sim.PrintFloat(pPrey_.AlertedTopo,"alertedTopo") ;
+		Sim.PrintFloat(pPrey_.ReturnRelaxation, "ReturnRelaxation");
+		Sim.PrintFloat(pPrey_.IncurLatency, "IncurLatency");
+		Sim.PrintFloat(pBird_.bodyMass, "bodymass");
+		Sim.PrintFloat(pBird_.bodyArea, "bodyArea");
+		Sim.PrintFloat(pBird_.cBody, "cBody");
+		Sim.PrintFloat(pBird_.cruiseSpeed, "cruiseSpeed");
+		Sim.PrintFloat(pBird_.wingSpan, "wingSpan");
+		Sim.PrintFloat(pBird_.rollRate, "rollRate");
+		Sim.PrintFloat(pBird_.bodyWeight, "bodyWeight");
+		Sim.PrintFloat(pBird_.rho, "rho");
+		Sim.PrintFloat(pBird_.maxForce, "maxForce");
+		Sim.PrintFloat(pBird_.minSpeed, "minSpeed");
+		Sim.PrintFloat(pBird_.maxSpeed, "maxSpeed");
+		Sim.PrintFloat(pBird_.speedControl, "speedControl");
+		Sim.PrintFloat(pBird_.innerBoundary, "innerBoundary");
+		Sim.PrintFloat(pBird_.outerBoundary, "outerBoundary");
+		Sim.PrintVector(pBird_.boundaryWeight, "boundaryWeight");
+		Sim.PrintVector(B_[0], "body x");
+		Sim.PrintVector(B_[1], "body y");
+		Sim.PrintVector(B_[2], "body z");
+		//while (1 == 1){}
+}
+
 
 
 void CPrey::predatorPanicMaximizeDist()

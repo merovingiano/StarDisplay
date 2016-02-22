@@ -18,7 +18,7 @@ doExperiments = 1
 -- Overwrite default initial parameter if required
 gParam.Roost = {
   numPrey = 1,
-  numPredators = 1000,
+  numPredators = 2,
   Radius = 500.0,
   minRadius = 150.0,
   maxRadius = 10000.0,
@@ -92,7 +92,9 @@ PreyFactory = PreyFactory or function ()
       position.y = 120
       prey = Simulation.NewPrey(id, position, Init_flockForward)
     end
-    Birds.newBird(prey, gParam.Birds.csv_file_species , gParam.Birds.csv_file_prey_predator_settings,"Common starling ", 0)
+    Birds.newBird(prey, gParam.Birds.csv_file_species , gParam.Birds.csv_file_prey_predator_settings,"Common starling", 0)
+
+	
     return prey
   end
 end

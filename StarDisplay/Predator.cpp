@@ -362,24 +362,47 @@ void CPredator::flightDynamic()
 {
 	
   const float pi = glm::pi<float>();
+  // often used combination of variables:
   const float dynamic = 0.5*pBird_.rho*speed_* speed_;
+  // subtract the part of the body of total wing area
   float area = pBird_.wingArea * (pBird_.wingLength * 2) / pBird_.wingSpan;
-  float CL = std::min(desiredLift_ / (dynamic*area),1.6f);
-  float T = -CL*CL * area * dynamic / (pi * pBird_.wingAspectRatio) + (1 - CL*CL / (1.6f*1.6f))*pi*pi*pi / 16 * pBird_.rho * pBird_.wingAspectRatio * area * (sin(0.5*pBird_.theta)*pBird_.wingBeatFreq)  * (sin(0.5*pBird_.theta)*pBird_.wingBeatFreq) * pBird_.wingLength *  pBird_.wingLength;
-  float L = CL *dynamic *area;
-  lift_ = L*B_[1];
-  liftMax_ = 1.6f *dynamic *area*B_[1]; 
-  float D = pBird_.cBody * dynamic *pBird_.bodyArea + pBird_.cFriction * dynamic * area;
-
+  // Now, first calculate the maximum lift, given torque constraints, the wing span is:
   float bmax = pBird_.wingSpan;
   float bmin = pBird_.wingSpan - 2 * pBird_.wingLength;
-  float b = pow((bmax - bmin) * 4.0f * desiredLift_ / (3.0f * pBird_.cFriction*area*(pBird_.rho*speed_*speed_)*(pBird_.rho*speed_*speed_)), 1.0f / 3.0f);
+
+  float L0 = 1.7f*pBird_.bodyMass*9.81f;
+  float b_maxlift = (bmax - bmin) * avx::fast_sqrt(L0 / (1.6f*dynamic*area)) + bmin;
+  float liftMax = 1.6f *dynamic*area* (b_maxlift - bmin) / (bmax - bmin);
+  // How big should the cl be?
+  float r_desired_lift = std::min(desiredLift_, liftMax);
+  float CL = std::min(r_desired_lift / (dynamic*area), 1.6f);
+  // calculate Thrust for flapping
+  float T = -CL*CL * area * dynamic / (pi * pBird_.wingAspectRatio) + (1 - CL*CL / (1.6f*1.6f))*pi*pi*pi / 16 * pBird_.rho * pBird_.wingAspectRatio * area * (sin(0.5*pBird_.theta)*pBird_.wingBeatFreq)  * (sin(0.5*pBird_.theta)*pBird_.wingBeatFreq) * pBird_.wingLength *  pBird_.wingLength;
+  // and lift
+  float L = CL *dynamic *area;
+  lift_ = L*B_[1];
+  // what would the maximum lift have been? (for later)
+  liftMax_ = liftMax*B_[1];
+  // calculate the body drag and friction drag
+  float D = pBird_.cBody * dynamic *pBird_.bodyArea + pBird_.cFriction * dynamic * area;
+  
+  // Now we calculate thrust lift and drag for gliding and wing retraction
+
+  // calculate the optimal wingspan, to decrease drag, given certain lift
+  float b = pow((bmax - bmin) * 4.0f * r_desired_lift / (3.0f * pBird_.cFriction*area*(pBird_.rho*speed_*speed_)*(pBird_.rho*speed_*speed_)), 1.0f / 3.0f);
+  // bound the wingspan to min and max
   b =  std::min(std::max(b,bmin),bmax);
-  float CL2 = std::min(1.6f, desiredLift_ / (dynamic * area* (b - bmin) / (bmax - bmin)));
-  b = std::min(desiredLift_ / (dynamic * area* CL2 / (bmax - bmin)) + bmin, bmax);
+  // calculate CL given b
+  float CL2 = std::min(1.6f, r_desired_lift / (dynamic * area* (b - bmin) / (bmax - bmin)));
+  // make sure with the new CL, the new b is also still smaller than maximum wing span
+  b = std::min(r_desired_lift / (dynamic * area* CL2 / (bmax - bmin)) + bmin, bmax);
+  // calculate new area
   float areaNew = area * (b - bmin) / (bmax - bmin);
+  // calculate new aspect ratio
   float AR2 = b*b / areaNew;
+  // calculate new drag 
   float D2 = pBird_.cBody * dynamic *pBird_.bodyArea + pBird_.cFriction * dynamic * areaNew + CL2*CL2 * areaNew*dynamic / (pi * AR2);
+  // flap or glide?
   if ((-D + T) > -D2) glide_ = false; else glide_ = true;
   float forwardAccel = std::max(-D + T, -D2);
   flightForce_ = lift_ + B_[0] * (forwardAccel);
