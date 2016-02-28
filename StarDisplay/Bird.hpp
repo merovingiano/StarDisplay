@@ -115,6 +115,7 @@ public:
   HRTREE_ALIGN(16) glm::vec3 liftMax_;
   HRTREE_ALIGN(16) glm::vec3 velocity_;
   HRTREE_ALIGN(16) glm::vec3 accel_;
+  float angular_acc_;
   HRTREE_ALIGN(16) glm::vec3 force_;
   HRTREE_ALIGN(16) glm::vec3 gyro_;
   HRTREE_ALIGN(16) glm::vec3 boundary_;

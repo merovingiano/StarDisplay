@@ -406,19 +406,10 @@ void CPredator::flightDynamic()
   float areaNew = area * (b - bmin) / (bmax - bmin);
 
   // calculate angular acceleration due to lift
-  float angular_acc = (1.6f *dynamic*area *bmax / 8) / pBird_.InertiaWing;
+  angular_acc_ = (1.6f *dynamic*area *bmax / 8) / pBird_.InertiaWing;
   //alternative: (still super high...)
-  angular_acc = liftMax * (bmax / 8) / (pBird_.InertiaWing * 30);
-  //hack: how long it takes to roll 30 degrees
-  float time = avx::fast_sqrt(2*0.53f / angular_acc);
-
-  // calculate adaptation roll here. If the bird is able to have a roll rate of 0 at the desired bank angle, given maximal acceleration, then accelerate maximally. If this is not possible, decelerate maximally (bang-bang control)
-  // calculate timepoints at desired bank angle
-
-
-  // distance, given this time, for a second
-  roll_rate_ = 1 / time * 0.53f; // +pi * pBird_.wingBeatFreq;
-  //roll_rate_ = angular_acc;
+  angular_acc_ = liftMax * (bmax / 8) / (pBird_.InertiaWing * 30);
+  
   // calculate new aspect ratio
   float AR2 = b*b / areaNew;
   // calculate new drag 
@@ -735,16 +726,37 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 
 
 
-	
+	//Stuff to adapt here!! not finished
+	//also, make sure not to have a roll acceleration of too high near the desired bank angle, so that it won't oscillate due to finite model steps
 	glm::vec3 Ll = glm::vec3(0, glm::dot(lift_, B_[1]), glm::dot(lift_, B_[2]));
-	//! determine the size of the turn towards desired angle
+	//! determine the size of the turn towards desired angle (positive or negative)
 	float turn = asin(glm::cross(Ll, Fl).x / (glm::length(Ll) * glm::length(Fl)));
+
+	//hack: how long it takes to roll 30 degrees
+	float time = avx::fast_sqrt(2 * 0.53f / angular_acc_);
+
+	// calculate adaptation roll here. If the bird is able to have a roll rate of 0 at the desired bank angle, given maximal acceleration, then accelerate maximally. If this is not possible, decelerate maximally (bang-bang control)
+	// calculate timepoints at desired bank angle
+
+	float p = turn;
+	float a = angular_acc_;
+	float c = roll_rate_;
+	if (p < 0) a *= -1;
+	if (c*c > 2 * a*p & p*c > 0) a *= -1;
+
+	roll_rate_ = roll_rate_ + a*dt;
+
+	// distance, given this time, for a second
+	//roll_rate_ = 1 / time * 0.53f; // +pi * pBird_.wingBeatFreq;
+	//roll_rate_ = angular_acc;
 	//scaling!!!
 	float rollrate = roll_rate_;
+
+
 	//Sim.PrintFloat(rollrate, "rollrate");
 	//! Clamp anglular velocity 
 	float beta = std::max(std::min((turn), rollrate * dt), -rollrate * dt);
-
+	beta = rollrate* dt;
 	avx::vec3 bank = beta * side;
 
 
