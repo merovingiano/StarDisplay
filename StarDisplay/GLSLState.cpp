@@ -36,7 +36,7 @@ namespace {
     "\\smallface{}\n[F1] Help\n[F2] Birds: %d + %d\n[F3] Boundary radius: %d\n[F4] HRTree level: %d\n\nh.hildenbrandt@rug.nl\nr.mills@rug.nl\n";
 
   const char details_predator[] =
-	  "\\smallface{}\nVelocity: %.1f \nAltitude: %.1f \nSteering Force magnitude: %.1f \nAcceleration: %.1f \nPrey Caught: %d \nminDist: %2f \nLocks: %d \nHunting: %d \nLast MinDist: %2f \nN: %2f \nMean N of Flock: %2f \nMean StartAltitude of Flock: %2f \nMean StartXDist of Flock: %2f \nmax lateral acceleration: %2f ";
+	  "\\smallface{}\nVelocity: %.1f \nAltitude: %.1f \nSteering Force magnitude: %.1f \nAcceleration: %.1f \nPrey Caught: %d \nminDist: %2f \nLocks: %d \nHunting: %d \nLast MinDist: %2f \nN: %2f \nMean N of Flock: %2f \nMean StartAltitude of Flock: %2f \nMean StartXDist of Flock: %2f \nmax lateral acceleration: %2f  \nRoll rate: %2f ";
 
   const char details_prey[] =
 	  "\\smallface{}\nVelocity: %.1f \nAltitude: %.1f \nSteering Force magnitude: %.1f \nAcceleration: %.1f \nAverage Lateral acceleration: %.1f \n Maximum Lateral acceleration: %.1f";
@@ -285,7 +285,7 @@ void GLSLState::PrintInfoText()
   {
 	  Fonts->set_color(glm::vec4(1, 1, 0, 1));
 	  const CPredator* focalPred = GCAMERA.GetFocalPredator();
-	  _snprintf_s(buf, 399, details_predator, glm::length(focalBird->velocity()), (focalBird->position())[1], glm::length(focalBird->steering()), glm::length(focalBird->accel()), (focalPred->hunts()).success, (focalPred->hunts()).minDist, (focalPred->hunts()).locks, focalPred->is_attacking(), (focalPred->hunts()).lastMinDist, focalPred->get_N(), GFLOCKNC.meanN, GFLOCKNC.meanStartAltitude, GFLOCKNC.meanXDist, sqrt( glm::dot(focalPred->liftMax_, focalPred->liftMax_)) / focalBird->GetBirdParams().bodyMass);
+	  _snprintf_s(buf, 399, details_predator, glm::length(focalBird->velocity()), (focalBird->position())[1], glm::length(focalBird->steering()), glm::length(focalBird->accel()), (focalPred->hunts()).success, (focalPred->hunts()).minDist, (focalPred->hunts()).locks, focalPred->is_attacking(), (focalPred->hunts()).lastMinDist, focalPred->get_N(), GFLOCKNC.meanN, GFLOCKNC.meanStartAltitude, GFLOCKNC.meanXDist, sqrt( glm::dot(focalPred->liftMax_, focalPred->liftMax_)) / focalBird->GetBirdParams().bodyMass, focalBird->roll_rate_);
 	  Fonts->print(buf);
   }
   else

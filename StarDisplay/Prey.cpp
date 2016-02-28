@@ -309,6 +309,17 @@ void CPrey::flightDynamic()
 
 	//Sim.PrintFloat(liftMax / pBird_.bodyMass, "max acceleration");
 	//Sim.PrintFloat(speed_, "speed_");
+
+	// calculate angular acceleration due to lift
+	float angular_acc = (1.6f *dynamic*area *bmax / 8) / pBird_.InertiaWing;
+	//alternative: (still super high...)
+	angular_acc = (liftMax *bmax / 8) / pBird_.InertiaWing;
+
+	//hack: how long it takes to roll 30 degrees
+	float time = avx::fast_sqrt(0.53f / angular_acc);
+	// distance, given this time, for a second
+	roll_rate_ = 1 / time * 0.53f + pi * pBird_.wingBeatFreq;
+
 	// How big should the cl be?
 	float r_desired_lift = std::min(desiredLift_, liftMax);
 	float CL = std::min(r_desired_lift / (dynamic*area), 1.6f);

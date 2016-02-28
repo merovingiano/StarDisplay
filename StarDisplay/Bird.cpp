@@ -273,11 +273,11 @@ void CBird::regenerateLocalSpace(float dt)
 	glm::vec3 Ll = glm::vec3(0, glm::dot(lift_, B_[1]), glm::dot(lift_, B_[2]));
 	//! determine the size of the turn towards desired angle
 	float turn = asin(glm::cross(Ll, Fl).x / (glm::length(Ll) * glm::length(Fl)));
-	float rollrate = pBird_.rollRate * speed_*speed_ / (8000);
+	float rollrate = roll_rate_;
 	//! Clamp anglular velocity 
 	float beta = std::max(std::min((turn), rollrate * dt), -rollrate * dt);
 
-	roll_rate_ = beta;
+	//roll_rate_ = beta;
 	avx::vec3 bank = beta * side;
 
 	//! remove pitching (comment out)

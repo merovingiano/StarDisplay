@@ -109,6 +109,7 @@ protected:
 public:
   HRTREE_ALIGN(16) glm::vec3 position_;
   float                      wingSpan_;
+  float   roll_rate_;
   HRTREE_ALIGN(16) glm::mat3 B_;          
   HRTREE_ALIGN(16) glm::mat3 H_; 
   HRTREE_ALIGN(16) glm::vec3 liftMax_;
@@ -135,7 +136,7 @@ protected:
   float   rand_;
   float   desiredLift_;
   float   speed_;
-  float   roll_rate_;
+  
   bool			   glide_;
   float		span_;
   float   reactionTime_;

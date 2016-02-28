@@ -370,15 +370,12 @@ void CPredator::flightDynamic()
   float bmax = pBird_.wingSpan;
   float bmin = pBird_.wingSpan - 2 * pBird_.wingLength;
   float L0 = 1.7f*pBird_.bodyMass*9.81f;
-  float b_maxlift = (bmax - bmin) * avx::fast_sqrt(L0 / (1.6f*dynamic*area)) + bmin;
+  float b_maxlift = std::min(bmax, (bmax - bmin) * avx::fast_sqrt(L0 / (1.6f*dynamic*area)) + bmin);
+  //Sim.PrintFloat(b_maxlift, "b max lift");
   float liftMax = 1.6f *dynamic*area* (b_maxlift - bmin) / (bmax - bmin);
 
-  // calculate angular acceleration due to lift
-  float angular_acc = (1.6f *dynamic*area *bmax / 8) / pBird_.InertiaWing; 
-  //hack: how long it takes to roll 30 degrees
-  float time = avx::fast_sqrt(0.53f / angular_acc);
-  // distance, given this time, for a second
-  roll_rate_ = 1 / time * 0.53f + pi * pBird_.wingBeatFreq;
+
+
 
   // How big should the cl be?
   float r_desired_lift = std::min(desiredLift_, liftMax);
@@ -387,6 +384,8 @@ void CPredator::flightDynamic()
   float T = -CL*CL * area * dynamic / (pi * pBird_.wingAspectRatio) + (1 - CL*CL / (1.6f*1.6f))*pi*pi*pi / 16 * pBird_.rho * pBird_.wingAspectRatio * area * (sin(0.5*pBird_.theta)*pBird_.wingBeatFreq)  * (sin(0.5*pBird_.theta)*pBird_.wingBeatFreq) * pBird_.wingLength *  pBird_.wingLength;
   // and lift
   float L = CL *dynamic *area;
+  //Sim.PrintFloat(L, "actual lift");
+  //Sim.PrintFloat(liftMax, "maximum lift");
   lift_ = L*B_[1];
   // what would the maximum lift have been? (for later)
   liftMax_ = liftMax*B_[1];
@@ -405,6 +404,21 @@ void CPredator::flightDynamic()
   b = std::min(r_desired_lift / (dynamic * area* CL2 / (bmax - bmin)) + bmin, bmax);
   // calculate new area
   float areaNew = area * (b - bmin) / (bmax - bmin);
+
+  // calculate angular acceleration due to lift
+  float angular_acc = (1.6f *dynamic*area *bmax / 8) / pBird_.InertiaWing;
+  //alternative: (still super high...)
+  angular_acc = liftMax * (bmax / 8) / (pBird_.InertiaWing * 30);
+  //hack: how long it takes to roll 30 degrees
+  float time = avx::fast_sqrt(2*0.53f / angular_acc);
+
+  // calculate adaptation roll here. If the bird is able to have a roll rate of 0 at the desired bank angle, given maximal acceleration, then accelerate maximally. If this is not possible, decelerate maximally (bang-bang control)
+  // calculate timepoints at desired bank angle
+
+
+  // distance, given this time, for a second
+  roll_rate_ = 1 / time * 0.53f; // +pi * pBird_.wingBeatFreq;
+  //roll_rate_ = angular_acc;
   // calculate new aspect ratio
   float AR2 = b*b / areaNew;
   // calculate new drag 
@@ -639,7 +653,7 @@ void CPredator::PNDP(const glm::vec3& targetHeading, const glm::vec3& targetVelo
 void CPredator::proportionalNavigation(const glm::vec3& targetHeading, const glm::vec3& targetVelocity)
 {
 	//Hack
-	N_ = 3.0f;
+	//N_ = 3.0f;
 
 	glm::vec3 r = targetPoint_ - position_;
 
@@ -727,7 +741,7 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 	float turn = asin(glm::cross(Ll, Fl).x / (glm::length(Ll) * glm::length(Fl)));
 	//scaling!!!
 	float rollrate = roll_rate_;
-	Sim.PrintFloat(rollrate, "rollrate");
+	//Sim.PrintFloat(rollrate, "rollrate");
 	//! Clamp anglular velocity 
 	float beta = std::max(std::min((turn), rollrate * dt), -rollrate * dt);
 

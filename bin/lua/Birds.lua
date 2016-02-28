@@ -233,15 +233,15 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
   prey.AlertedWBetaIn = bird.wBetaIn
   prey.AlertedWBetaOut = bird.wBetaOut
 
-  print(bird.bodyArea)
-  print(bird.maxSpeed)
-  print(bird.wingSpan)
-  print(prey.IncurLatency)
- print(prey.DetectCruising)
-  print(prey.AlertedAlignmentWeight)
-  print(bird.bodyMass)
-  print(bird.theta)
-  print(bird.speedControl)
+--  print(bird.bodyArea)
+ -- print(bird.maxSpeed)
+ -- print(bird.wingSpan)
+ -- print(prey.IncurLatency)
+ --print(prey.DetectCruising)
+ -- print(prey.AlertedAlignmentWeight)
+ -- print(bird.bodyMass)
+ -- print(bird.theta)
+ -- print(bird.speedControl)
   --while 1 == 1 do
 
  --end
