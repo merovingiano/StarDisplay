@@ -360,66 +360,73 @@ void CPredator::Accelerate()
 
 void CPredator::flightDynamic()
 {
-	
-  const float pi = glm::pi<float>();
-  // often used combination of variables:
-  const float dynamic = 0.5*pBird_.rho*speed_* speed_;
-  // subtract the part of the body of total wing area
-  float area = pBird_.wingArea * (pBird_.wingLength * 2) / pBird_.wingSpan;
-  // Now, first calculate the maximum lift, given torque constraints, the wing span is:
-  float bmax = pBird_.wingSpan;
-  float bmin = pBird_.wingSpan - 2 * pBird_.wingLength;
-  float L0 = 1.7f*pBird_.bodyMass*9.81f;
-  float b_maxlift = std::min(bmax, (bmax - bmin) * avx::fast_sqrt(L0 / (1.6f*dynamic*area)) + bmin);
-  //Sim.PrintFloat(b_maxlift, "b max lift");
-  float liftMax = 1.6f *dynamic*area* (b_maxlift - bmin) / (bmax - bmin);
+
+	const float pi = glm::pi<float>();
+	// often used combination of variables:
+	const float dynamic = 0.5*pBird_.rho*speed_* speed_;
+	// subtract the part of the body of total wing area
+	float area = pBird_.wingArea * (pBird_.wingLength * 2) / pBird_.wingSpan;
+	// Now, first calculate the maximum lift, given torque constraints, the wing span is:
+	float bmax = pBird_.wingSpan;
+	float bmin = pBird_.wingSpan - 2 * pBird_.wingLength;
+	float L0 = 1.7f*pBird_.bodyMass*9.81f;
+	float b_maxlift = std::min(bmax, (bmax - bmin) * avx::fast_sqrt(L0 / (1.6f*dynamic*area)) + bmin);
+	//Sim.PrintFloat(b_maxlift, "b max lift");
+	float liftMax = 1.6f *dynamic*area* (b_maxlift - bmin) / (bmax - bmin);
+
+	// calculate the inertia, bases on b_maxlift
+	float phi = (b_maxlift - bmin) / (bmax - bmin);
+	//
+	float InertiaWingCenter = pBird_.InertiaWing * phi*phi + 1 / 4 * 0.098*0.098 * pow(pBird_.bodyMass, 0.70f) * pBird_.wingMass + 0.098 * pow(pBird_.bodyMass, 0.35f) * pBird_.J*phi;
+	float Inertia = 2 * InertiaWingCenter + pBird_.InertiaBody;
+
+	// How big should the cl be?
+	float r_desired_lift = std::min(desiredLift_, liftMax);
+	float CL = std::min(r_desired_lift / (dynamic*area), 1.6f);
+	// unconstrained Tmax
+	float Tmax = pi*pi*pi / 16 * pBird_.rho * pBird_.wingAspectRatio * area * (sin(0.5*pBird_.theta)*pBird_.wingBeatFreq)  * (sin(0.5*pBird_.theta)*pBird_.wingBeatFreq) * pBird_.wingLength *  pBird_.wingLength;
+	// constrained Tmax
+	float Tmax_cons = std::min(Tmax, Tmax * pBird_.cruiseSpeed / speed_);
+	// calculate Thrust for flapping. !!IMPORTANT, I don't yet have a cap on the maximum thrust due to torque constraints. How to do this?
+	float T = -CL*CL * area * dynamic / (pi * pBird_.wingAspectRatio) + (1 - CL*CL / (1.6f*1.6f))*Tmax_cons;
+	// and lift
+	float L = CL *dynamic *area;
+	//Sim.PrintFloat(L, "actual lift");
+	//Sim.PrintFloat(liftMax, "maximum lift");
+	lift_ = L*B_[1];
+	// what would the maximum lift have been? (for later)
+	liftMax_ = liftMax*B_[1];
+	// calculate the body drag and friction drag
+	float D = pBird_.cBody * dynamic *pBird_.bodyArea + pBird_.cFriction * dynamic * area;
+
+	// Now we calculate thrust lift and drag for gliding and wing retraction
+
+	// calculate the optimal wingspan, to decrease drag, given certain lift
+	float b = pow((bmax - bmin) * 4.0f * r_desired_lift / (3.0f * pBird_.cFriction*area*(pBird_.rho*speed_*speed_)*(pBird_.rho*speed_*speed_)), 1.0f / 3.0f);
+	// bound the wingspan to min and max
+	b = std::min(std::max(b, bmin), bmax);
+	// calculate CL given b
+	float CL2 = std::min(1.6f, r_desired_lift / (dynamic * area* (b - bmin) / (bmax - bmin)));
+	// make sure with the new CL, the new b is also still smaller than maximum wing span
+	b = std::min(r_desired_lift / (dynamic * area* CL2 / (bmax - bmin)) + bmin, bmax);
+	// calculate new area
+	float areaNew = area * (b - bmin) / (bmax - bmin);
 
 
+	//calculate roll acceleration with inertia and b maxlift
+	angular_acc_ = liftMax * (b_maxlift / 4) / (Inertia);
 
 
-  // How big should the cl be?
-  float r_desired_lift = std::min(desiredLift_, liftMax);
-  float CL = std::min(r_desired_lift / (dynamic*area), 1.6f);
-  // calculate Thrust for flapping
-  float T = -CL*CL * area * dynamic / (pi * pBird_.wingAspectRatio) + (1 - CL*CL / (1.6f*1.6f))*pi*pi*pi / 16 * pBird_.rho * pBird_.wingAspectRatio * area * (sin(0.5*pBird_.theta)*pBird_.wingBeatFreq)  * (sin(0.5*pBird_.theta)*pBird_.wingBeatFreq) * pBird_.wingLength *  pBird_.wingLength;
-  // and lift
-  float L = CL *dynamic *area;
-  //Sim.PrintFloat(L, "actual lift");
-  //Sim.PrintFloat(liftMax, "maximum lift");
-  lift_ = L*B_[1];
-  // what would the maximum lift have been? (for later)
-  liftMax_ = liftMax*B_[1];
-  // calculate the body drag and friction drag
-  float D = pBird_.cBody * dynamic *pBird_.bodyArea + pBird_.cFriction * dynamic * area;
-  
-  // Now we calculate thrust lift and drag for gliding and wing retraction
-
-  // calculate the optimal wingspan, to decrease drag, given certain lift
-  float b = pow((bmax - bmin) * 4.0f * r_desired_lift / (3.0f * pBird_.cFriction*area*(pBird_.rho*speed_*speed_)*(pBird_.rho*speed_*speed_)), 1.0f / 3.0f);
-  // bound the wingspan to min and max
-  b =  std::min(std::max(b,bmin),bmax);
-  // calculate CL given b
-  float CL2 = std::min(1.6f, r_desired_lift / (dynamic * area* (b - bmin) / (bmax - bmin)));
-  // make sure with the new CL, the new b is also still smaller than maximum wing span
-  b = std::min(r_desired_lift / (dynamic * area* CL2 / (bmax - bmin)) + bmin, bmax);
-  // calculate new area
-  float areaNew = area * (b - bmin) / (bmax - bmin);
-
-  // calculate angular acceleration due to lift
-  angular_acc_ = (1.6f *dynamic*area *bmax / 8) / pBird_.InertiaWing;
-  //alternative: (still super high...)
-  angular_acc_ = liftMax * (bmax / 8) / (pBird_.InertiaWing * 30);
-  
-  // calculate new aspect ratio
-  float AR2 = b*b / areaNew;
-  // calculate new drag 
-  float D2 = pBird_.cBody * dynamic *pBird_.bodyArea + pBird_.cFriction * dynamic * areaNew + CL2*CL2 * areaNew*dynamic / (pi * AR2);
-  // flap or glide?
-  if ((-D + T) > -D2) glide_ = false; else glide_ = true;
-  float forwardAccel = std::max(-D + T, -D2);
-  flightForce_ = lift_ + B_[0] * (forwardAccel);
-  flightForce_.y -= pBird_.bodyMass * 9.81;        // apply gravity
-  if (glide_ == true) span_ = 1.0f - (b - bmin) / (bmax - bmin); else span_ = 0.0f;
+	// calculate new aspect ratio
+	float AR2 = b*b / areaNew;
+	// calculate new drag 
+	float D2 = pBird_.cBody * dynamic *pBird_.bodyArea + pBird_.cFriction * dynamic * areaNew + CL2*CL2 * areaNew*dynamic / (pi * AR2);
+	// flap or glide?
+	if ((-D + T) > -D2) glide_ = false; else glide_ = true;
+	float forwardAccel = std::max(-D + T, -D2);
+	flightForce_ = lift_ + B_[0] * (forwardAccel);
+	flightForce_.y -= pBird_.bodyMass * 9.81;        // apply gravity
+	if (glide_ == true) span_ = 1.0f - (b - bmin) / (bmax - bmin); else span_ = 0.0f;
 }
 
 
@@ -644,7 +651,7 @@ void CPredator::PNDP(const glm::vec3& targetHeading, const glm::vec3& targetVelo
 void CPredator::proportionalNavigation(const glm::vec3& targetHeading, const glm::vec3& targetVelocity)
 {
 	//Hack
-	//N_ = 3.0f;
+	N_ = 8.0f;
 
 	glm::vec3 r = targetPoint_ - position_;
 
@@ -718,10 +725,6 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 	glm::vec3 Fl = glm::vec3(0, glm::dot(steering2, B_[1]), glm::dot(steering2, B_[2]));
 
 
-	//calculate whether there is enough lift for turning towards steering
-	// if so, then decrease lift untill it is equal in length as fSteer
-	// if not, then cut off the part of Fsteer that is not gravity, so it remains the desired angle of turn, but slower
-	float liftLsq = glm::dot(liftMax_, liftMax_);
 	desiredLift_ = glm::length(Fl);
 
 
@@ -732,8 +735,6 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 	//! determine the size of the turn towards desired angle (positive or negative)
 	float turn = asin(glm::cross(Ll, Fl).x / (glm::length(Ll) * glm::length(Fl)));
 
-	//hack: how long it takes to roll 30 degrees
-	float time = avx::fast_sqrt(2 * 0.53f / angular_acc_);
 
 	// calculate adaptation roll here. If the bird is able to have a roll rate of 0 at the desired bank angle, given maximal acceleration, then accelerate maximally. If this is not possible, decelerate maximally (bang-bang control)
 	// calculate timepoints at desired bank angle
@@ -741,22 +742,17 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 	float p = turn;
 	float a = angular_acc_;
 	float c = roll_rate_;
+	// first set the roll acceleration in the direction of the desired bank angle
 	if (p < 0) a *= -1;
+	// I calculate whether, if the bird would decelerate maximally from here, it would still reach the desired bank angle (it has a solution). If so, it means that the bird has to decelerate from now on in order to have a rollrate of zero 
+	// at the desired bank angle. I also check whether the rollrate is in the direction of desired bank angle, else always accelerate in the direction of the bank angle.
 	if (c*c > 2 * a*p & p*c > 0) a *= -1;
 
 	roll_rate_ = roll_rate_ + a*dt;
-
-	// distance, given this time, for a second
-	//roll_rate_ = 1 / time * 0.53f; // +pi * pBird_.wingBeatFreq;
-	//roll_rate_ = angular_acc;
-	//scaling!!!
 	float rollrate = roll_rate_;
 
-
-	//Sim.PrintFloat(rollrate, "rollrate");
-	//! Clamp anglular velocity 
-	float beta = std::max(std::min((turn), rollrate * dt), -rollrate * dt);
-	beta = rollrate* dt;
+	float beta = rollrate* dt;
+	
 	avx::vec3 bank = beta * side;
 
 

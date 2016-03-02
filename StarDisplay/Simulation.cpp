@@ -171,7 +171,10 @@ void Simulation::GetExperimentSettings(const luabind::object& obj)
 							if (strKey4 == "evolvemaxForce") experiment.param.evolution.evolvemaxForce = luabind::object_cast<bool>(evolution["evolvemaxForce"]);
 							if (strKey4 == "evolvewingSpan") experiment.param.evolution.evolvewingSpan = luabind::object_cast<bool>(evolution["evolvewingSpan"]);
 							if (strKey4 == "evolvebodyMass") experiment.param.evolution.evolvebodyMass = luabind::object_cast<bool>(evolution["evolvebodyMass"]);
+							if (strKey4 == "evolvewingMass") experiment.param.evolution.evolvewingMass = luabind::object_cast<bool>(evolution["evolvewingMass"]);
 							if (strKey4 == "evolveInertiaWing") experiment.param.evolution.evolveInertiaWing = luabind::object_cast<bool>(evolution["evolveInertiaWing"]);
+							if (strKey4 == "evolveInertiaBody") experiment.param.evolution.evolveInertiaBody = luabind::object_cast<bool>(evolution["evolveInertiaBody"]);
+							if (strKey4 == "evolveJ") experiment.param.evolution.evolveJ = luabind::object_cast<bool>(evolution["evolveJ"]);
 							if (strKey4 == "evolvecontrolCL") experiment.param.evolution.evolvecontrolCL = luabind::object_cast<bool>(evolution["evolvecontrolCL"]);
 							if (strKey4 == "evolvecruiseSpeed") experiment.param.evolution.evolvecruiseSpeed = luabind::object_cast<bool>(evolution["evolvecruiseSpeed"]);
 							if (strKey4 == "evolvemaxLift") experiment.param.evolution.evolvemaxLift = luabind::object_cast<bool>(evolution["evolvemaxLift"]);
@@ -326,7 +329,10 @@ void Simulation::copyBirdParam(luabind::object& obj, Param::Bird& bird)
 		if (strKey3 == "skipRightHemisphere") bird.skipRightHemisphere = luabind::object_cast<int>(obj["skipRightHemisphere"]);
 		if (strKey3 == "rho") bird.rho = luabind::object_cast<float>(obj["rho"]);
 		if (strKey3 == "bodyMass") bird.bodyMass = luabind::object_cast<float>(obj["bodyMass"]);
+		if (strKey3 == "wingMass") bird.bodyMass = luabind::object_cast<float>(obj["wingMass"]);
 		if (strKey3 == "InertiaWing") bird.InertiaWing = luabind::object_cast<float>(obj["InertiaWing"]);
+		if (strKey3 == "InertiaBody") bird.InertiaBody = luabind::object_cast<float>(obj["InertiaBody"]);
+		if (strKey3 == "J") bird.J = luabind::object_cast<float>(obj["J"]);
 		if (strKey3 == "bodyWeight") bird.bodyWeight = luabind::object_cast<float>(obj["bodyWeight"]);
 		if (strKey3 == "wingSpan") bird.wingSpan = luabind::object_cast<float>(obj["wingSpan"]);
 		if (strKey3 == "wingAspectRatio") bird.wingAspectRatio = luabind::object_cast<float>(obj["wingAspectRatio"]);

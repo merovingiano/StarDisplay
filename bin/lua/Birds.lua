@@ -201,8 +201,11 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
 
   --used: physical
   bird.rho = rho
-  bird.bodyMass = tonumber(bird_info["Mass male"] / 1000)       -- [kg]
-  bird.InertiaWing = tonumber(bird_info["moment of inertia male"])
+  bird.bodyMass = tonumber(bird_info["body mass male"]) / 1000     -- [kg]
+  bird.wingMass = tonumber(bird_info["wing mass male"])   
+  bird.InertiaWing = tonumber(bird_info["moment of inertia extended wing male"])
+  bird.InertiaBody = tonumber(bird_info["moment of inertia body male"])
+  bird.J = tonumber(bird_info["J wing male"])
   bird.wingSpan = tonumber(bird_info["Wingspan male"] / 100  )      -- [m]
   bird.wingAspectRatio = tonumber(bird_info["Aspect ratio male"])
   bird.wingBeatFreq = tonumber(bird_info["Wingbeat frequency"])
@@ -212,18 +215,20 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
   bird.cBody =  tonumber(bird_info["Body drag coefficient"] )
   bird.cFriction = tonumber(bird_info["Friction drag wing"])
   bird.wingArea = bird.wingSpan * (bird.wingSpan / bird.wingAspectRatio)   -- [m^2] 
-  bird.rollRate= tonumber(bird_info["Roll rate"])   -- Important: needs physical theory!
-
+  
+  bird.cruiseSpeed = tonumber(bird_info["Cruise speed male"])
+  
+  
   -- currently unused, to be deleted or may we useful later
   bird.CL = CL(bird)
   bird.CDCL= CDCL(bird)
   bird.controlCL = false
   bird.wingRetractionSpeed = 59
   bird.maxLift = 5   
-  bird.cruiseSpeed = 20
   bird.minSpeed = 1
   bird.maxSpeed = 40
   bird.maxForce = 3       -- max steering force [N]
+  bird.rollRate= tonumber(bird_info["Roll rate"])   -- has become redundent. Roll rate is now calculated with roll acceleration and inertia
 
 
 

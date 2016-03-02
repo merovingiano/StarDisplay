@@ -64,7 +64,10 @@ void SetGetAlleles(one_allele& allele, CFlock::pred_iterator pred, int type)
 	if (type == 1) allele.push_back(pred->GetBirdParams().maxForce); else if (Sim.Params().evolution.evolvemaxForce) bird.maxForce = allele[index]; index++;
 	if (type == 1) allele.push_back(pred->GetBirdParams().wingSpan); else if (Sim.Params().evolution.evolvewingSpan) bird.wingSpan = allele[index]; index++; 
 	if (type == 1) allele.push_back(pred->GetBirdParams().bodyMass); else if (Sim.Params().evolution.evolvebodyMass) bird.bodyMass = allele[index]; index++; 
+	if (type == 1) allele.push_back(pred->GetBirdParams().wingMass); else if (Sim.Params().evolution.evolvewingMass) bird.wingMass = allele[index]; index++;
 	if (type == 1) allele.push_back(pred->GetBirdParams().InertiaWing); else if (Sim.Params().evolution.evolveInertiaWing) bird.InertiaWing = allele[index]; index++;
+	if (type == 1) allele.push_back(pred->GetBirdParams().InertiaBody); else if (Sim.Params().evolution.evolveInertiaBody) bird.InertiaBody = allele[index]; index++;
+	if (type == 1) allele.push_back(pred->GetBirdParams().J); else if (Sim.Params().evolution.evolveJ) bird.J = allele[index]; index++;
 	if (type == 1) allele.push_back(pred->GetBirdParams().controlCL); else if (Sim.Params().evolution.evolvecontrolCL) bird.controlCL = allele[index]; index++; 
 	if (type == 1) allele.push_back(pred->GetBirdParams().cruiseSpeed); else if (Sim.Params().evolution.evolvecruiseSpeed) bird.cruiseSpeed = allele[index]; index++; 
 	if (type == 1) allele.push_back(pred->GetBirdParams().maxLift); else if (Sim.Params().evolution.evolvemaxLift) bird.maxLift = allele[index]; index++; 
@@ -280,7 +283,10 @@ void EvolvePN::loadFiles()
 			if (hoi.find("predCL") != std::string::npos)infile >> experiment.predBird.CL;
 			if (hoi.find("predWingSpan") != std::string::npos)infile >> experiment.predBird.wingSpan;
 			if (hoi.find("predMass") != std::string::npos)infile >> experiment.predBird.bodyMass;
+			if (hoi.find("predwingMass") != std::string::npos)infile >> experiment.predBird.wingMass;
 			if (hoi.find("predInertiaWing") != std::string::npos)infile >> experiment.predBird.InertiaWing;
+			if (hoi.find("predInertiaBody") != std::string::npos)infile >> experiment.predBird.InertiaBody;
+			if (hoi.find("predJ") != std::string::npos)infile >> experiment.predBird.J;
 			if (hoi.find("predMaxForce") != std::string::npos)infile >> experiment.predBird.maxForce;
 			if (hoi.find("predRTStochastic") != std::string::npos)infile >> experiment.predBird.reactionTime;
 			if (hoi.find("predBlindAngle") != std::string::npos)infile >> experiment.predBird.reactionStochastic;
@@ -337,7 +343,10 @@ void EvolvePN::loadFiles()
 			if (hoi.find("evolvemaxForce") != std::string::npos)infile >> experiment.param.evolution.evolvemaxForce;
 			if (hoi.find("evolvewingSpan") != std::string::npos) infile >> experiment.param.evolution.evolvewingSpan;
 			if (hoi.find("evolvebodyMass") != std::string::npos) infile >> experiment.param.evolution.evolvebodyMass;
+			if (hoi.find("evolvewingMass") != std::string::npos) infile >> experiment.param.evolution.evolvewingMass;
 			if (hoi.find("evolveInertiaWing") != std::string::npos) infile >> experiment.param.evolution.evolveInertiaWing;
+			if (hoi.find("evolveInertiaBody") != std::string::npos) infile >> experiment.param.evolution.evolveInertiaBody;
+			if (hoi.find("evolveJ") != std::string::npos) infile >> experiment.param.evolution.evolveJ;
 			if (hoi.find("evolvecontrolCL") != std::string::npos)infile >> experiment.param.evolution.evolvecontrolCL;
 			if (hoi.find("evolvecruiseSpeed") != std::string::npos)infile >> experiment.param.evolution.evolvecruiseSpeed;
 			if (hoi.find("evolvemaxLift") != std::string::npos)infile >> experiment.param.evolution.evolvemaxLift;
@@ -418,7 +427,10 @@ void EvolvePN::loadFiles()
 			if (hoi.find("preyControlCL") != std::string::npos)infile >> experiment.preyBird.controlCL;
 			if (hoi.find("preyCDCL") != std::string::npos)infile >> experiment.preyBird.CDCL;
 			if (hoi.find("preyMass") != std::string::npos)infile >> experiment.preyBird.bodyMass;
+			if (hoi.find("preywingMass") != std::string::npos)infile >> experiment.preyBird.wingMass;
 			if (hoi.find("preyInertiaWing") != std::string::npos)infile >> experiment.preyBird.InertiaWing;
+			if (hoi.find("preyInertiaBody") != std::string::npos)infile >> experiment.preyBird.InertiaBody;
+			if (hoi.find("preyJ") != std::string::npos)infile >> experiment.preyBird.J;
 			if (hoi.find("preyEvMaximizeDist") != std::string::npos)infile >> experiment.prey.EvasionStrategy[0].weight;
 			if (hoi.find("preyEvTurnInward") != std::string::npos)infile >> experiment.prey.EvasionStrategy[1].weight;
 			if (hoi.find("preyEvTurnAway") != std::string::npos)infile >> experiment.prey.EvasionStrategy[2].weight;
@@ -652,7 +664,10 @@ void EvolvePN::PrepareSave()
 		namesParameters_.push_back("predCL"); ValuesParameters_.push_back(first->GetBirdParams().CL);
 		namesParameters_.push_back("predWingSpan"); ValuesParameters_.push_back(first->GetBirdParams().wingSpan);
 		namesParameters_.push_back("predMass"); ValuesParameters_.push_back(first->GetBirdParams().bodyMass);
+		namesParameters_.push_back("predwingMass"); ValuesParameters_.push_back(first->GetBirdParams().wingMass);
 		namesParameters_.push_back("predInertiaWing"); ValuesParameters_.push_back(first->GetBirdParams().InertiaWing);
+		namesParameters_.push_back("predInertiaBody"); ValuesParameters_.push_back(first->GetBirdParams().InertiaBody);
+		namesParameters_.push_back("predJ"); ValuesParameters_.push_back(first->GetBirdParams().J);
 		namesParameters_.push_back("predMaxForce"); ValuesParameters_.push_back(first->GetBirdParams().maxForce);
 		namesParameters_.push_back("predRT"); ValuesParameters_.push_back(first->GetBirdParams().reactionTime);
 		namesParameters_.push_back("predRTStochastic"); ValuesParameters_.push_back(first->GetBirdParams().reactionStochastic);
@@ -703,7 +718,10 @@ void EvolvePN::PrepareSave()
 
 		namesParameters_.push_back("evolvewingSpan"); ValuesParameters_.push_back(Sim.Params().evolution.evolvewingSpan);
 		namesParameters_.push_back("evolvebodyMass"); ValuesParameters_.push_back(Sim.Params().evolution.evolvebodyMass);
+		namesParameters_.push_back("evolvewingMass"); ValuesParameters_.push_back(Sim.Params().evolution.evolvewingMass);
 		namesParameters_.push_back("evolveInertiaWing"); ValuesParameters_.push_back(Sim.Params().evolution.evolveInertiaWing);
+		namesParameters_.push_back("evolveInertiaBody"); ValuesParameters_.push_back(Sim.Params().evolution.evolveInertiaBody);
+		namesParameters_.push_back("evolveJ"); ValuesParameters_.push_back(Sim.Params().evolution.evolveJ);
 		namesParameters_.push_back("evolvecontrolCL"); ValuesParameters_.push_back(Sim.Params().evolution.evolvecontrolCL);
 		namesParameters_.push_back("evolvecruiseSpeed"); ValuesParameters_.push_back(Sim.Params().evolution.evolvecruiseSpeed);
 		namesParameters_.push_back("evolvemaxLift"); ValuesParameters_.push_back(Sim.Params().evolution.evolvemaxLift);
@@ -773,7 +791,10 @@ void EvolvePN::PrepareSave()
 		namesParameters_.push_back("preyControlCL"); ValuesParameters_.push_back(firstPrey->GetBirdParams().controlCL);
 		namesParameters_.push_back("preyCDCL"); ValuesParameters_.push_back(firstPrey->GetBirdParams().CDCL);
 		namesParameters_.push_back("preyMass"); ValuesParameters_.push_back(firstPrey->GetBirdParams().bodyMass);
+		namesParameters_.push_back("preywingMass"); ValuesParameters_.push_back(firstPrey->GetBirdParams().wingMass);
 		namesParameters_.push_back("preyInertiaWing"); ValuesParameters_.push_back(firstPrey->GetBirdParams().InertiaWing);
+		namesParameters_.push_back("preyInertiaBody"); ValuesParameters_.push_back(firstPrey->GetBirdParams().InertiaBody);
+		namesParameters_.push_back("preyJ"); ValuesParameters_.push_back(firstPrey->GetBirdParams().J);
 		namesParameters_.push_back("preyEvMaximizeDist"); ValuesParameters_.push_back(firstPrey->GetPreyParams().EvasionStrategy[0].weight);
 		namesParameters_.push_back("preyEvTurnInward"); ValuesParameters_.push_back(firstPrey->GetPreyParams().EvasionStrategy[1].weight);
 		namesParameters_.push_back("preyEvTurnAway"); ValuesParameters_.push_back(firstPrey->GetPreyParams().EvasionStrategy[2].weight);

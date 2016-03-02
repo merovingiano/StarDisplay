@@ -261,21 +261,39 @@ void CBird::regenerateLocalSpace(float dt)
 	glm::vec3 Fl = glm::vec3(0, glm::dot(steering2, B_[1]), glm::dot(steering2, B_[2]));
 
 
-	//calculate whether there is enough lift for turning towards steering
-	// if so, then decrease lift untill it is equal in length as fSteer
-	// if not, then cut off the part of Fsteer that is not gravity, so it remains the desired angle of turn, but slower
-	float liftLsq = glm::dot(liftMax_, liftMax_);
+
+
+	//Stuff to adapt here!! not finished
+	//also, make sure not to have a roll acceleration of too high near the desired bank angle, so that it won't oscillate due to finite model steps
+	glm::vec3 Ll = glm::vec3(0, glm::dot(lift_, B_[1]), glm::dot(lift_, B_[2]));
+	//! determine the size of the turn towards desired angle (positive or negative)
+	float turn = asin(glm::cross(Ll, Fl).x / (glm::length(Ll) * glm::length(Fl)));
+
+
+	// calculate adaptation roll here. If the bird is able to have a roll rate of 0 at the desired bank angle, given maximal acceleration, then accelerate maximally. If this is not possible, decelerate maximally (bang-bang control)
+	// calculate timepoints at desired bank angle
+
+	float p = turn;
+	float a = angular_acc_;
+	float c = roll_rate_;
+	// first set the roll acceleration in the direction of the desired bank angle
+	if (p < 0) a *= -1;
+	// I calculate whether, if the bird would decelerate maximally from here, it would still reach the desired bank angle (it has a solution). If so, it means that the bird has to decelerate from now on in order to have a rollrate of zero 
+	// at the desired bank angle. I also check whether the rollrate is in the direction of desired bank angle, else always accelerate in the direction of the bank angle.
+	if (c*c > 2 * a*p & p*c > 0) a *= -1;
+
+	roll_rate_ = roll_rate_ + a*dt;
+	float rollrate = roll_rate_;
+
+	float beta = rollrate* dt;
+
+
+
 	desiredLift_ = glm::length(Fl);
 
 
 
 
-	glm::vec3 Ll = glm::vec3(0, glm::dot(lift_, B_[1]), glm::dot(lift_, B_[2]));
-	//! determine the size of the turn towards desired angle
-	float turn = asin(glm::cross(Ll, Fl).x / (glm::length(Ll) * glm::length(Fl)));
-	float rollrate = roll_rate_;
-	//! Clamp anglular velocity 
-	float beta = std::max(std::min((turn), rollrate * dt), -rollrate * dt);
 
 	//roll_rate_ = beta;
 	avx::vec3 bank = beta * side;

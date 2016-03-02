@@ -302,31 +302,30 @@ void CPrey::flightDynamic()
 	// Now, first calculate the maximum lift, given torque constraints, the wing span is:
 	float bmax = pBird_.wingSpan;
 	float bmin = pBird_.wingSpan - 2 * pBird_.wingLength;
-
 	float L0 = 1.7f*pBird_.bodyMass*9.81f;
-	float b_maxlift = (bmax - bmin) * avx::fast_sqrt(L0 / (1.6f*dynamic*area)) + bmin;
+	float b_maxlift = std::min(bmax, (bmax - bmin) * avx::fast_sqrt(L0 / (1.6f*dynamic*area)) + bmin);
+    //Sim.PrintFloat(b_maxlift, "b max lift");
 	float liftMax = 1.6f *dynamic*area* (b_maxlift - bmin) / (bmax - bmin);
 
-	//Sim.PrintFloat(liftMax / pBird_.bodyMass, "max acceleration");
-	//Sim.PrintFloat(speed_, "speed_");
-
-	// calculate angular acceleration due to lift
-	float angular_acc = (1.6f *dynamic*area *bmax / 8) / pBird_.InertiaWing;
-	//alternative: (still super high...)
-	angular_acc = (liftMax *bmax / 8) / pBird_.InertiaWing;
-
-	//hack: how long it takes to roll 30 degrees
-	float time = avx::fast_sqrt(0.53f / angular_acc);
-	// distance, given this time, for a second
-	roll_rate_ = 1 / time * 0.53f + pi * pBird_.wingBeatFreq;
+	// calculate the inertia, bases on b_maxlift
+	float phi = (b_maxlift - bmin) / (bmax - bmin);
+	//
+	float InertiaWingCenter = pBird_.InertiaWing * phi*phi + 1 / 4 * 0.098*0.098 * pow(pBird_.bodyMass, 0.70f) * pBird_.wingMass + 0.098 * pow(pBird_.bodyMass, 0.35f) * pBird_.J*phi;
+	float Inertia = 2* InertiaWingCenter + pBird_.InertiaBody;
 
 	// How big should the cl be?
 	float r_desired_lift = std::min(desiredLift_, liftMax);
 	float CL = std::min(r_desired_lift / (dynamic*area), 1.6f);
-	// calculate Thrust for flapping
-	float T = -CL*CL * area * dynamic / (pi * pBird_.wingAspectRatio) + (1 - CL*CL / (1.6f*1.6f))*pi*pi*pi / 16 * pBird_.rho * pBird_.wingAspectRatio * area * (sin(0.5*pBird_.theta)*pBird_.wingBeatFreq)  * (sin(0.5*pBird_.theta)*pBird_.wingBeatFreq) * pBird_.wingLength *  pBird_.wingLength;
+	// unconstrained Tmax
+	float Tmax = pi*pi*pi / 16 * pBird_.rho * pBird_.wingAspectRatio * area * (sin(0.5*pBird_.theta)*pBird_.wingBeatFreq)  * (sin(0.5*pBird_.theta)*pBird_.wingBeatFreq) * pBird_.wingLength *  pBird_.wingLength;
+	// constrained Tmax
+	float Tmax_cons = std::min(Tmax, Tmax * pBird_.cruiseSpeed / speed_);
+	// calculate Thrust for flapping. !!IMPORTANT, I don't yet have a cap on the maximum thrust due to torque constraints. How to do this?
+	float T = -CL*CL * area * dynamic / (pi * pBird_.wingAspectRatio) + (1 - CL*CL / (1.6f*1.6f))*Tmax_cons;
 	// and lift
 	float L = CL *dynamic *area;
+	//Sim.PrintFloat(L, "actual lift");
+	//Sim.PrintFloat(liftMax, "maximum lift");
 	lift_ = L*B_[1];
 	// what would the maximum lift have been? (for later)
 	liftMax_ = liftMax*B_[1];
@@ -345,6 +344,12 @@ void CPrey::flightDynamic()
 	b = std::min(r_desired_lift / (dynamic * area* CL2 / (bmax - bmin)) + bmin, bmax);
 	// calculate new area
 	float areaNew = area * (b - bmin) / (bmax - bmin);
+
+
+	//calculate roll acceleration with inertia and b maxlift
+	angular_acc_ = liftMax * (b_maxlift / 4) / (Inertia);
+
+
 	// calculate new aspect ratio
 	float AR2 = b*b / areaNew;
 	// calculate new drag 
@@ -525,6 +530,10 @@ void CPrey::testSettings()
 {
 
 		Sim.PrintFloat(pPrey_.AlertedTopo,"alertedTopo") ;
+		Sim.PrintFloat(pBird_.wingMass, "wing mass");
+		Sim.PrintFloat(pBird_.InertiaBody, "InertiaBody");
+		Sim.PrintFloat(pBird_.J, "J");
+		Sim.PrintFloat(pPrey_.AlertedTopo, "alertedTopo");
 		Sim.PrintFloat(pPrey_.ReturnRelaxation, "ReturnRelaxation");
 		Sim.PrintFloat(pPrey_.IncurLatency, "IncurLatency");
 		Sim.PrintFloat(pBird_.bodyMass, "bodymass");

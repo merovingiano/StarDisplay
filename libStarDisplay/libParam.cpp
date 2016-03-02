@@ -274,7 +274,10 @@ namespace libParam
 	cobj.evolution.evolvewingSpan = object_cast<bool  >(luaobj["evolution"]["evolvewingSpan"]);
 	cobj.evolution.evolvemaxForce = object_cast<bool  >(luaobj["evolution"]["evolvemaxForce"]);
 	cobj.evolution.evolvebodyMass = object_cast<bool  >(luaobj["evolution"]["evolvebodyMass"]);
+	cobj.evolution.evolvewingMass = object_cast<bool  >(luaobj["evolution"]["evolvewingMass"]);
 	cobj.evolution.evolveInertiaWing = object_cast<bool  >(luaobj["evolution"]["evolveInertiaWing"]);
+	cobj.evolution.evolveInertiaBody = object_cast<bool  >(luaobj["evolution"]["evolveInertiaBody"]);
+	cobj.evolution.evolveJ = object_cast<bool  >(luaobj["evolution"]["evolveJ"]);
 	cobj.evolution.evolvecontrolCL = object_cast<bool  >(luaobj["evolution"]["evolvecontrolCL"]);
 	cobj.evolution.evolvecruiseSpeed = object_cast<bool  >(luaobj["evolution"]["evolvecruiseSpeed"]);
 	cobj.evolution.evolvemaxLift = object_cast<bool  >(luaobj["evolution"]["evolvemaxLift"]);
@@ -482,11 +485,20 @@ namespace libParam
     return bird.bodyMass;
   }
 
+  double GetwingMass(Bird& bird)
+  {
+	  return bird.wingMass;
+  }
 
   void SetBodyMass(Bird& bird, double newVal)
   {
     bird.bodyMass = float(newVal);
     bird.bodyWeight = float(9.81 * newVal);
+  }
+
+  void SetwingMass(Bird& bird, double newVal)
+  {
+	  bird.wingMass = float(newVal);
   }
 
   void SetGPWS(Bird* bird, const object& luaobj)
@@ -516,11 +528,14 @@ void luaopen_libParam(lua_State* L)
       .def_readwrite("skipLeftHemisphere", &Bird::skipLeftHemisphere)
       .def_readwrite("skipRightHemisphere", &Bird::skipRightHemisphere)
       .property("bodyMass", &libParam::GetBodyMass, &libParam::SetBodyMass)
+	  .property("wingMass", &libParam::GetwingMass, &libParam::SetwingMass)
       .property("GPWS", &libParam::GetGPWS, &libParam::SetGPWS)
       .def_readwrite("rho", &Bird::rho)
       .def_readonly("bodyWeight", &Bird::bodyWeight)
       .def_readwrite("wingSpan", &Bird::wingSpan)
 	  .def_readwrite("InertiaWing", &Bird::InertiaWing)
+	  .def_readwrite("InertiaBody", &Bird::InertiaBody)
+	  .def_readwrite("J", &Bird::J)
       .def_readwrite("wingAspectRatio", &Bird::wingAspectRatio)
 	  .def_readwrite("wingBeatFreq", &Bird::wingBeatFreq)
 	  .def_readwrite("theta", &Bird::theta)
