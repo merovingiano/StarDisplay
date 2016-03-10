@@ -367,6 +367,10 @@ namespace liblua {
     {
       ExePath /= ".";
     }
+	char buffer[MAX_PATH];
+	GetModuleFileName(NULL, buffer, MAX_PATH);
+	std::string thePath(buffer);
+	thePath = thePath.substr(0, thePath.find("x64\\"));
     Lua.cacheLuaSim();
     Lua()["hardware_concurrency"] = std::min<unsigned>(HRTREE_OMP_MAX_THREADS, std::thread::hardware_concurrency());
     Lua.DoFile((ExePath / "/../../lua/StarDisplay.lua").string().c_str());
@@ -377,7 +381,7 @@ namespace liblua {
     omp_set_num_threads(num_threads);
     omp_set_dynamic(dynamic ? num_threads : 0);
     Lua()["concurrency_num_threads"] = num_threads;
-    Lua("Initialize")(ExePath.string().c_str(), ConfigFile);
+	Lua("Initialize")(ExePath.string().c_str(), ConfigFile, thePath);
   }
 
 }

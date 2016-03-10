@@ -258,16 +258,16 @@ void CPredator::update(float dt, const CFlock&)
 	{
 		//std::cout << pPred_.VisualError << "\n";
 		//std::cout << pPred_.VisualBias.x << "  " << pPred_.VisualBias.y << "\n";
-		if (GetAsyncKeyState(VK_DOWN)) steering_ +=  B_[1];
-		if (GetAsyncKeyState(VK_NUMPAD2)) steering_ += 5.0f*B_[1];
-		if (GetAsyncKeyState(VK_UP)) steering_ -= B_[1];
-		if (GetAsyncKeyState(VK_NUMPAD8)) steering_ -= 5.0f*B_[1];
-		if (GetAsyncKeyState(VK_RIGHT)) steering_ += B_[2];
-		if (GetAsyncKeyState(VK_NUMPAD6)) steering_ += 5.0f*B_[2];
-		if (GetAsyncKeyState(VK_LEFT)) steering_ -= B_[2];
-		if (GetAsyncKeyState(VK_NUMPAD4)) steering_ -= 5.0f*B_[2];
-		if (GetAsyncKeyState(VK_NUMPAD5)) steering_ += 3.0f*B_[0];
-		if (GetAsyncKeyState(VK_NUMPAD0)) steering_ += 10.0f*B_[0];
+		if (GetAsyncKeyState(VK_DOWN)) steering_ += 5.0f*glm::vec3(0, 1, 0);
+		if (GetAsyncKeyState(VK_NUMPAD2)) steering_ += glm::length(liftMax_)*glm::vec3(0, 1, 0);
+		if (GetAsyncKeyState(VK_UP)) steering_ -= 5.0f*glm::vec3(0, 1, 0);;
+		if (GetAsyncKeyState(VK_NUMPAD8)) steering_ -= glm::length(liftMax_)*glm::vec3(0, 1, 0);
+		if (GetAsyncKeyState(VK_RIGHT)) steering_ += 5.0f*H_[2];
+		if (GetAsyncKeyState(VK_NUMPAD6)) steering_ += glm::length(liftMax_)*H_[2];
+		if (GetAsyncKeyState(VK_LEFT)) steering_ -= 5.0f*H_[2];
+		if (GetAsyncKeyState(VK_NUMPAD4)) steering_ -= glm::length(liftMax_)*H_[2];
+		if (GetAsyncKeyState(VK_NUMPAD5)) steering_ += 3.0f*H_[0];
+		if (GetAsyncKeyState(VK_NUMPAD0)) steering_ += 1.0f*H_[0];
 
 		if (GetAsyncKeyState(VK_F7))
 		{
@@ -281,6 +281,8 @@ void CPredator::update(float dt, const CFlock&)
 		}
 		if (GetAsyncKeyState(VK_NUMPAD5)) N_ = 5.0f;
 
+		//if (GetAsyncKeyState(VK_NUMPAD8)) std::cout << "\n Yes"; else std::cout << "\n No";
+
 	}
 	//! saving the position of some predator in a genetic algorithm (will be more general code when I come back)
 	if (GFLOCKNC.predator_begin()->id() == id_  && Sim.Params().evolution.TrajectoryBestPredator)
@@ -291,12 +293,12 @@ void CPredator::update(float dt, const CFlock&)
 	}
 
 	//! handle acceleration
-	Accelerate();
+	//Accelerate();
 	//!Quick hack for StarDisplay problem in steering when too low to the ground
-	if (position_.y < 1) steering_ += 5.0f*B_[1];
+	//if (position_.y < 1) steering_ += 5.0f*B_[1];
 	//! used to mimick wind effects in graphics
 	rand_ = float(rand()) / (float(RAND_MAX)*100) +0.8 * rand_;
-    noise();    // add some noise
+    //noise();    // add some noise
 	//! Clamped force no longer used. Just for graphics
     avx::vec3 force(steering_);
 
@@ -347,7 +349,8 @@ void CPredator::update(float dt, const CFlock&)
   
   appendTrail(trail_, position_, B_[2], color_tex_, dt);
 
-  //std::cout << "\n x: " << B_[0].x << " y: " <<  B_[0].y << " z: " <<B_[0].z;
+  //std::cout << "\n x: " << B_[0].x << " y: " <<  B_[0].y << " z: " <<B_[0].z;	
+  //testSettings();
 }
 
 
@@ -381,13 +384,13 @@ void CPredator::flightDynamic()
 	float Inertia = 2 * InertiaWingCenter + pBird_.InertiaBody;
 
 	// How big should the cl be?
-	float r_desired_lift = std::min(desiredLift_, liftMax);
+	float r_desired_lift = std::min(desiredLift_, liftMax);  //VISUAL ERROR, DT 
 	float CL = std::min(r_desired_lift / (dynamic*area), 1.6f);
 	// unconstrained Tmax
 	float Tmax = pi*pi*pi / 16 * pBird_.rho * pBird_.wingAspectRatio * area * (sin(0.5*pBird_.theta)*pBird_.wingBeatFreq)  * (sin(0.5*pBird_.theta)*pBird_.wingBeatFreq) * pBird_.wingLength *  pBird_.wingLength;
 	// constrained Tmax
 	float Tmax_cons = std::min(Tmax, Tmax * pBird_.cruiseSpeed / speed_);
-	// calculate Thrust for flapping. !!IMPORTANT, I don't yet have a cap on the maximum thrust due to torque constraints. How to do this?
+	// calculate Thrust for flapping. !!IMPORTANT, torque constraint is hacky
 	float T = -CL*CL * area * dynamic / (pi * pBird_.wingAspectRatio) + (1 - CL*CL / (1.6f*1.6f))*Tmax_cons;
 	// and lift
 	float L = CL *dynamic *area;
@@ -402,7 +405,7 @@ void CPredator::flightDynamic()
 	// Now we calculate thrust lift and drag for gliding and wing retraction
 
 	// calculate the optimal wingspan, to decrease drag, given certain lift
-	float b = pow((bmax - bmin) * 4.0f * r_desired_lift / (3.0f * pBird_.cFriction*area*(pBird_.rho*speed_*speed_)*(pBird_.rho*speed_*speed_)), 1.0f / 3.0f);
+	float b = pow((bmax - bmin) * 4.0f * r_desired_lift / (2.0f * pBird_.cFriction*area*(pBird_.rho*speed_*speed_)*(pBird_.rho*speed_*speed_)), 1.0f / 3.0f);
 	// bound the wingspan to min and max
 	b = std::min(std::max(b, bmin), bmax);
 	// calculate CL given b
@@ -414,8 +417,8 @@ void CPredator::flightDynamic()
 
 
 	//calculate roll acceleration with inertia and b maxlift
-	angular_acc_ = liftMax * (b_maxlift / 4) / (Inertia);
-
+	//HACK TIMES 2
+	angular_acc_ = liftMax * (b_maxlift / 4) / (Inertia) / 2 ;
 
 	// calculate new aspect ratio
 	float AR2 = b*b / areaNew;
@@ -426,7 +429,7 @@ void CPredator::flightDynamic()
 	float forwardAccel = std::max(-D + T, -D2);
 	flightForce_ = lift_ + B_[0] * (forwardAccel);
 	flightForce_.y -= pBird_.bodyMass * 9.81;        // apply gravity
-	if (glide_ == true) span_ = 1.0f - (b - bmin) / (bmax - bmin); else span_ = 0.0f;
+	if (glide_ == true) span_ = 1.0f - (b - bmin) / (bmax - bmin); else span_ = 0.0f;                     
 }
 
 
@@ -651,18 +654,18 @@ void CPredator::PNDP(const glm::vec3& targetHeading, const glm::vec3& targetVelo
 void CPredator::proportionalNavigation(const glm::vec3& targetHeading, const glm::vec3& targetVelocity)
 {
 	//Hack
-	N_ = 8.0f;
+	//N_ = 8.0f;
 
 	glm::vec3 r = targetPoint_ - position_;
 
 	//add visual error!! translate angular velocity to position. This is hacky: actually computations should be done on FOV pred (cant do bias like this)
 	//if ((GCAMERA.GetFocalBird())->id() == id_) Sim.PrintVector(r, "before");
 
-	float LOS = avx::fast_sqrt(glm::dot(r, r));
+	//float LOS = avx::fast_sqrt(glm::dot(r, r));
 	//if ((GCAMERA.GetFocalBird())->id() == id_) Sim.PrintFloat(LOS, "LOS");
-	r.x += (pPred_.VisualError * (float(rand()) / (float(RAND_MAX))) ) * LOS;
-	r.y += (pPred_.VisualError * (float(rand()) / (float(RAND_MAX))) ) * LOS;
-	r.z += (pPred_.VisualError * (float(rand()) / (float(RAND_MAX)))) * LOS;
+	//r.x += (pPred_.VisualError * (float(rand()) / (float(RAND_MAX))) ) * LOS;
+	//r.y += (pPred_.VisualError * (float(rand()) / (float(RAND_MAX))) ) * LOS;
+	//r.z += (pPred_.VisualError * (float(rand()) / (float(RAND_MAX)))) * LOS;
 
 	//if ((GCAMERA.GetFocalBird())->id() == id_) Sim.PrintFloat((float(rand()) / (float(RAND_MAX))), "random");
 	//if ((GCAMERA.GetFocalBird())->id() == id_) Sim.PrintVector(r, "after");
@@ -724,7 +727,7 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 	//!New steering method as discussed
 	glm::vec3 Fl = glm::vec3(0, glm::dot(steering2, B_[1]), glm::dot(steering2, B_[2]));
 
-
+	   
 	desiredLift_ = glm::length(Fl);
 
 
@@ -782,3 +785,34 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 	if (Sim.SimulationTime() < 0.1) beatCycle_ += rand_;
 }
 
+
+void CPredator::testSettings()
+{
+
+	Sim.PrintFloat(pBird_.wingMass, "wing mass");
+	Sim.PrintFloat(pBird_.InertiaBody, "InertiaBody");
+	Sim.PrintFloat(pBird_.J, "J");
+	Sim.PrintFloat(pBird_.bodyMass, "bodymass");
+	Sim.PrintFloat(pBird_.bodyArea, "bodyArea");
+	Sim.PrintFloat(pBird_.cBody, "cBody");
+	Sim.PrintFloat(pBird_.cFriction, "cFriction");
+	Sim.PrintFloat(pBird_.cruiseSpeed, "cruiseSpeed");
+	Sim.PrintFloat(pBird_.wingSpan, "wingSpan");
+	Sim.PrintFloat(pBird_.wingBeatFreq, "wingBeatFreq");
+	Sim.PrintFloat(pBird_.rollRate, "rollRate");
+	Sim.PrintFloat(pBird_.bodyWeight, "bodyWeight");
+	Sim.PrintFloat(pBird_.rho, "rho");
+	Sim.PrintFloat(pBird_.InertiaWing, "Inertia wing");
+	Sim.PrintFloat(pBird_.maxForce, "maxForce");
+	Sim.PrintFloat(pBird_.minSpeed, "minSpeed");
+	Sim.PrintFloat(pBird_.maxSpeed, "maxSpeed");
+	Sim.PrintFloat(pBird_.speedControl, "speedControl");
+	Sim.PrintFloat(pBird_.innerBoundary, "innerBoundary");
+	Sim.PrintFloat(pBird_.outerBoundary, "outerBoundary");
+	Sim.PrintVector(pBird_.boundaryWeight, "boundaryWeight");
+	Sim.PrintFloat(pBird_.randomWeight, "randomweight");
+	Sim.PrintVector(B_[0], "body x");
+	Sim.PrintVector(B_[1], "body y");
+	Sim.PrintVector(B_[2], "body z");
+	while (1 == 1){}
+}

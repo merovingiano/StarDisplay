@@ -129,7 +129,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;LUABIND_DYNAMIC_LINK;LUA_BUILD_AS_DLL;WIN32;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4351;4251;4217;</DisableSpecificWarnings>
-      <AdditionalIncludeDirectories>$(SolutionDir)StarDisplay;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)StarDisplay; $(CPPPATH)\boost_1_55_0;$(CPPPATH)\common\libs\glm;$(CPPPATH)\common\libs;$(SolutionDir)libStarDisplay;$(SolutionDir)libStarDisplay\luabind;$(SolutionDir)StarDisplay;$(SolutionDir)bin\$(Platform)\$(Configuration)\</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <CompileAs>Default</CompileAs>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -137,6 +137,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(CPPPATH)\boost_1_55_0\libs;$(CPPPATH)\common\lib\v120\64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

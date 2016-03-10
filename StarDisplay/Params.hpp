@@ -230,6 +230,7 @@ namespace Param {
     float wingAspectRatio;
     float wingArea;
 	float wingBeatFreq;
+	std::string birdName; 
 	float theta;
 	float wingLength;
 	float bodyArea;
@@ -264,7 +265,8 @@ namespace Param {
     float innerBoundary;
     float altitude;
     GPWS gpws;
-	float wingRetractionSpeed;
+	int wingRetractionSpeed;
+	int maneuver;
 	bool controlCL;
 	float CDCL;
   };

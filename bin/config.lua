@@ -18,7 +18,7 @@ doExperiments = 1
 -- Overwrite default initial parameter if required
 gParam.Roost = {
   numPrey = 1,
-  numPredators = 1,
+  numPredators = 2000,
   Radius = 500.0,
   minRadius = 150.0,
   maxRadius = 10000.0,
@@ -31,7 +31,7 @@ gParam.evolution.title = "PN new mutation test"
 gParam.evolution.durationGeneration = 1
 gParam.evolution.load = false
 gParam.evolution.loadFolder = "D:/ownCloud/2013-2014/phd hunting/dataStarDisplay/continue folder/"
-gParam.evolution.description = "I've added a new extra mutation, allowing it to vary more. I want to see the long term effects of this. "
+gParam.evolution.description = "Here, I compare the evolution of 4 species, 3 movements, and 2 RTs"
 
 function InitHook ()
   local sim = Simulation
@@ -46,6 +46,13 @@ function InitHook ()
 
   sim.SetInitialParameter(gParam)
  
+  local gParam = require "Defaults"
+  folder = sim.exeFolder
+  os.execute( gParam.Birds.csv_convertor  .. " "  .. folder .. gParam.Birds.csv_file_species_xlsm .. " " .. folder .. "lua\\bird_properties.csv")
+
+  --print(gParam.Birds.csv_convertor  .. " "  .. gParam.Birds.csv_file_species_xlsm .. " test.csv ")
+
+
   local win = sim.Window()
   win:SetTitle("StarDisplay V" .. sim.Version .. " " .. sim.ConfigFile)
   win:SetClientRect(glm.vec4(0,0,1024,720))

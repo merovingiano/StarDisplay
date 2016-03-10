@@ -234,7 +234,7 @@ void Simulation::GetExperimentSettings(const luabind::object& obj)
 			}
 			if (strKey2 == "preyBird" || strKey2 == "predBird")
 			{
-
+				std::cout << "\n" << strKey2;
 				luabind::object Bird = obj[intKey][strKey2];
 				if (strKey2 == "preyBird") copyBirdParam(Bird, experiment.preyBird);
 				if (strKey2 == "predBird") copyBirdParam(Bird, experiment.predBird);
@@ -312,8 +312,7 @@ void Simulation::GetExperimentSettings(const luabind::object& obj)
 				}
 			}
 		}
-		std::cout << "\n and it issss:::  " << experiment.param.evolution.fileName;
-		std::cout << "\n and visual error is:::  " << experiment.pred.VisualError;
+		Sim.PrintFloat(experiment.preyBird.wingMass, "wing mass here");
 		Sim.experiments.push_back(experiment);
 	}
 }
@@ -323,20 +322,26 @@ void Simulation::copyBirdParam(luabind::object& obj, Param::Bird& bird)
 	for (luabind::iterator iii(obj), end; iii != end; ++iii)
 	{
 		std::string strKey3 = luabind::object_cast<std::string>(iii.key());
+
+		//std::cout << "\n" << strKey3 << " " << luabind::object_cast<float>(obj[strKey3]);
 		if (strKey3 == "reactionTime") bird.reactionTime = luabind::object_cast<float>(obj["reactionTime"]);
 		if (strKey3 == "reactionStochastic") bird.reactionStochastic = luabind::object_cast<float>(obj["reactionStochastic"]);
 		if (strKey3 == "skipLeftHemisphere") bird.skipLeftHemisphere = luabind::object_cast<int>(obj["skipLeftHemisphere"]);
 		if (strKey3 == "skipRightHemisphere") bird.skipRightHemisphere = luabind::object_cast<int>(obj["skipRightHemisphere"]);
 		if (strKey3 == "rho") bird.rho = luabind::object_cast<float>(obj["rho"]);
 		if (strKey3 == "bodyMass") bird.bodyMass = luabind::object_cast<float>(obj["bodyMass"]);
-		if (strKey3 == "wingMass") bird.bodyMass = luabind::object_cast<float>(obj["wingMass"]);
+		if (strKey3 == "wingMass") bird.wingMass = luabind::object_cast<float>(obj["wingMass"]);
 		if (strKey3 == "InertiaWing") bird.InertiaWing = luabind::object_cast<float>(obj["InertiaWing"]);
 		if (strKey3 == "InertiaBody") bird.InertiaBody = luabind::object_cast<float>(obj["InertiaBody"]);
 		if (strKey3 == "J") bird.J = luabind::object_cast<float>(obj["J"]);
 		if (strKey3 == "bodyWeight") bird.bodyWeight = luabind::object_cast<float>(obj["bodyWeight"]);
 		if (strKey3 == "wingSpan") bird.wingSpan = luabind::object_cast<float>(obj["wingSpan"]);
-		if (strKey3 == "wingAspectRatio") bird.wingAspectRatio = luabind::object_cast<float>(obj["wingAspectRatio"]);
+		if (strKey3 == "wingAspectRatio")
+		{
+			bird.wingAspectRatio = luabind::object_cast<float>(obj["wingAspectRatio"]);
+		}
 		if (strKey3 == "wingBeatFreq") bird.wingBeatFreq = luabind::object_cast<float>(obj["wingBeatFreq"]);
+		if (strKey3 == "birdName") bird.birdName = luabind::object_cast<std::string>(obj["birdName"]);	
 		if (strKey3 == "theta") bird.theta = luabind::object_cast<float>(obj["theta"]);
 		if (strKey3 == "wingLength") bird.wingLength = luabind::object_cast<float>(obj["wingLength"]);
 		if (strKey3 == "bodyArea") bird.bodyArea = luabind::object_cast<float>(obj["bodyArea"]);
@@ -372,8 +377,11 @@ void Simulation::copyBirdParam(luabind::object& obj, Param::Bird& bird)
 		if (strKey3 == "altitude") bird.altitude = luabind::object_cast<float>(obj["altitude"]);
 		//if (strKey3 == "gpws") bird.gpws = luabind::object_cast<float>(obj["gpws"]);
 		if (strKey3 == "wingRetractionSpeed") bird.wingRetractionSpeed = luabind::object_cast<float>(obj["wingRetractionSpeed"]);
+		if (strKey3 == "maneuver") bird.maneuver = luabind::object_cast<int>(obj["maneuver"]);
 		if (strKey3 == "controlCL") bird.controlCL = luabind::object_cast<bool>(obj["controlCL"]);
 		if (strKey3 == "CDCL") bird.CDCL = luabind::object_cast<float>(obj["CDCL"]);
+
+		
 
 	}
 
@@ -567,6 +575,11 @@ void Simulation::PrintFloat(float input, std::string text)
 	std::cout << "\n" << text << " " << input;
 }
 
+void Simulation::PrintString(std::string text)
+{
+
+	std::cout << "\n" << text;
+}
 
 void Simulation::SaveCurrentStatistic(const char* fname, bool append)
 {

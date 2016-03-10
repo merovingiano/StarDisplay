@@ -123,6 +123,7 @@ public:
   HRTREE_ALIGN(16) glm::vec3 separation_;
   HRTREE_ALIGN(16) glm::vec3 alignment_;
   HRTREE_ALIGN(16) glm::vec3 cohesion_;
+  HRTREE_ALIGN(16) glm::vec3 random_orientation_;
 
 protected:
   HRTREE_ALIGN(16) glm::vec3 lift_;
@@ -140,6 +141,7 @@ protected:
   
   bool			   glide_;
   float		span_;
+  int     keyState_;
   float   reactionTime_;
   float   reactionInterval_;
   float   searchRadius_;

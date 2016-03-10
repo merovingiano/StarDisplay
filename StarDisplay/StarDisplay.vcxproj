@@ -160,7 +160,7 @@
       <AdditionalDependencies>libStarDisplay.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
-      <AdditionalLibraryDirectories>$(CPPPATH)\boost_1_55_0\libs;$(CPPPATH)\common\lib\v120\64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CPPPATH)\boost_1_55_0\libs;$(CPPPATH)\common\lib\v120\64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <CustomBuildStep>
       <Command>call $(SolutionDir)copyDlls.bat $(LuaLibs)DLL\ $(OutDir) $(Configuration)</Command>
