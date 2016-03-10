@@ -72,6 +72,8 @@ local Default = {
   },
 
   Birds = {
+     csv_convertor = "..\\..\\lua\\XlsToCsv.vbs",
+     csv_file_species_xlsm = "lua\\bird_properties.xlsm",
      csv_file_species = "../../lua/bird_properties.csv",
 	 csv_file_prey_predator_settings = "../../lua/prey_predator_settings.csv",
   },

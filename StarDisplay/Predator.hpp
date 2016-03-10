@@ -82,6 +82,7 @@ public:
   const glm::vec3& TargetPoint() const { return targetPoint_; }
   const hunt& hunts() const { return hunts_; }
   void BeginHunt();
+  void testSettings();
   void EndHunt(bool success);
   void ResetHunt();
   

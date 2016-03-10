@@ -143,7 +143,18 @@ local Birds = {
 
 
 
+function script_path() 
+    -- remember to strip off the starting @ 
+    return debug.getinfo(2, "S").source:sub(2) 
+end 
+
+
+
+
+
 function Birds.newBird (p, file,settingsFile, name, isPredator)
+  
+
   local bird = Params.Bird()
   local file = io.open(file, "r")
   local names = ParseCSVLine(file:read(),",")
@@ -209,9 +220,11 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
   bird.wingSpan = tonumber(bird_info["Wingspan male"] / 100  )      -- [m]
   bird.wingAspectRatio = tonumber(bird_info["Aspect ratio male"])
   bird.wingBeatFreq = tonumber(bird_info["Wingbeat frequency"])
+  bird.birdName = bird_info["Species(eng)"]
+  print(bird_info["Species(eng)"])
   bird.theta =  tonumber(bird_info["Span Angle Down to Upstroke"])
   bird.wingLength = tonumber(bird_info["Wing length male"]) / 100
-  bird.bodyArea = tonumber(bird_info["Body area"] )
+  bird.bodyArea = tonumber(bird_info["Body area male"] )
   bird.cBody =  tonumber(bird_info["Body drag coefficient"] )
   bird.cFriction = tonumber(bird_info["Friction drag wing"])
   bird.wingArea = bird.wingSpan * (bird.wingSpan / bird.wingAspectRatio)   -- [m^2] 
@@ -223,12 +236,12 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
   bird.CL = CL(bird)
   bird.CDCL= CDCL(bird)
   bird.controlCL = false
-  bird.wingRetractionSpeed = 59
+  bird.maneuver = 1
   bird.maxLift = 5   
   bird.minSpeed = 1
   bird.maxSpeed = 40
   bird.maxForce = 3       -- max steering force [N]
-  bird.rollRate= tonumber(bird_info["Roll rate"])   -- has become redundent. Roll rate is now calculated with roll acceleration and inertia
+  bird.rollRate= 5  -- has become redundent. Roll rate is now calculated with roll acceleration and inertia
 
 
 

@@ -109,7 +109,8 @@ private:
   //! Calculate flight forces
   void flightDynamic();
   void flightExternal();
-  void maneuver();
+  void maneuver_lat_roll();
+  void maneuver_lat();
   void calculateAccelerations();
   //! Handles main social interaction rules
   void steerToFlock(struct fov_filter const& filter);

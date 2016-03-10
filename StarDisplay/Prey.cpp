@@ -5,6 +5,7 @@
 #include <glm/gtx/transform.hpp>
 #include <glmutils/avx/vec.hpp>
 #include <glmutils/avx/mat3.hpp>
+#include <glmutils/random.hpp>
 #include <glmutils/homogeneous.hpp>
 #include <glmutils/clip_length.hpp>
 #include <glmutils/plane.hpp>
@@ -17,6 +18,7 @@
 #include "Globals.hpp"
 #include <iostream>
 #include <string>
+#include "random.hpp"
 
 using namespace Param;
 namespace avx = glmutils::avx;
@@ -226,7 +228,12 @@ void CPrey::update(float dt, const CFlock& flock)
       // alertness relaxation over.
       predatorReaction_ &= ~PredationReactions::Alerted;
     }
-	maneuver();
+	if (pBird_.maneuver == 1) 
+	{
+		steering_ = glm::vec3(1, 0, 0) * 20.0f;
+	};
+	if (pBird_.maneuver == 2) { maneuver_lat_roll(); };
+	if (pBird_.maneuver == 3){ maneuver_lat(); };
     steering_ += boundary_;
     steering_ += predatorForce_;
     steering_ += speedControl() * B_[0];
@@ -237,8 +244,7 @@ void CPrey::update(float dt, const CFlock& flock)
 
 
 	}
-
-    noise();    // add some noise
+    //noise();    // add some noise
 
     avx::vec3 force(steering_);
     const float f2 = avx::length2(force);
@@ -277,7 +283,14 @@ void CPrey::update(float dt, const CFlock& flock)
 
   //std::cout << "\n x: " << B_[0].x << " y: " << B_[0].y << " z: " << B_[0].z;
 
-  //testSettings();
+  if (!GetAsyncKeyState(VK_NUMPAD0) && keyState_ != 0) 
+  {
+	  keyState_ = 0;
+  }
+  if (GetAsyncKeyState(VK_NUMPAD0) && keyState_ == 0)
+  {
+	 testSettings();
+  }
 }
 
 
@@ -335,7 +348,7 @@ void CPrey::flightDynamic()
 	// Now we calculate thrust lift and drag for gliding and wing retraction
 
 	// calculate the optimal wingspan, to decrease drag, given certain lift
-	float b = pow((bmax - bmin) * 4.0f * r_desired_lift / (3.0f * pBird_.cFriction*area*(pBird_.rho*speed_*speed_)*(pBird_.rho*speed_*speed_)), 1.0f / 3.0f);
+	float b = pow((bmax - bmin) * 4.0f * r_desired_lift / (2.0f * pBird_.cFriction*area*(pBird_.rho*speed_*speed_)*(pBird_.rho*speed_*speed_)), 1.0f / 3.0f);
 	// bound the wingspan to min and max
 	b = std::min(std::max(b, bmin), bmax);
 	// calculate CL given b
@@ -347,7 +360,8 @@ void CPrey::flightDynamic()
 
 
 	//calculate roll acceleration with inertia and b maxlift
-	angular_acc_ = liftMax * (b_maxlift / 4) / (Inertia);
+	//HACK TIMES 2
+	angular_acc_ = liftMax * (b_maxlift / 4) / (Inertia) / 2;
 
 
 	// calculate new aspect ratio
@@ -365,13 +379,26 @@ void CPrey::flightDynamic()
 }
 
 
-void CPrey::maneuver()
+void CPrey::maneuver_lat_roll()
 {
 	float reversed = 1;
-	//if (fmod(Sim.SimulationTime(), 0.05) < 0.025) reversed *=-1;
-	steering_ += H_[2] * float(sin(Sim.SimulationTime() * 2.0f*reversed*pBird_.randomWeight));
-	steering_ += H_[1] * float(sin(Sim.SimulationTime()*1.4f * 2.0f*reversed*pBird_.randomWeight));
+	if (fmod(Sim.SimulationTime(), 0.05) < 0.025)
+	{
+		random_orientation_ = glmutils::unit_vec3(rnd_eng());
+	};
+	steering_ += random_orientation_ * float(sin(Sim.SimulationTime() * 5.0f*reversed*pBird_.randomWeight));
 	
+}
+
+void CPrey::maneuver_lat()
+{
+	float reversed = 1;
+	if (fmod(Sim.SimulationTime(), 5) < 2.5)
+	{
+		random_orientation_ = glmutils::unit_vec3(rnd_eng());
+	};
+	steering_ += (H_[1] + H_[2]) *float(sin(Sim.SimulationTime() * 5.0f*reversed*pBird_.randomWeight));
+
 }
 
 void CPrey::calculateAccelerations()
@@ -529,7 +556,12 @@ void CPrey::handleEvasion()
 void CPrey::testSettings()
 {
 
-		Sim.PrintFloat(pPrey_.AlertedTopo,"alertedTopo") ;
+
+		keyState_ = 1;
+		Sim.PrintFloat(Sim.SimulationTime(), "Prey settings. Simulation Time");
+		Sim.PrintString(pBird_.birdName);
+		Sim.PrintFloat(pBird_.maneuver, "maneuver");
+		Sim.PrintFloat(pPrey_.AlertedTopo, "alertedTopo");
 		Sim.PrintFloat(pBird_.wingMass, "wing mass");
 		Sim.PrintFloat(pBird_.InertiaBody, "InertiaBody");
 		Sim.PrintFloat(pBird_.J, "J");
@@ -557,7 +589,8 @@ void CPrey::testSettings()
 		Sim.PrintVector(B_[0], "body x");
 		Sim.PrintVector(B_[1], "body y");
 		Sim.PrintVector(B_[2], "body z");
-		while (1 == 1){}
+
+		
 }
 
 
