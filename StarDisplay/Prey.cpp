@@ -381,24 +381,22 @@ void CPrey::flightDynamic()
 
 void CPrey::maneuver_lat_roll()
 {
-	float reversed = 1;
+	float max = glm::length(liftMax_) - pBird_.bodyMass;
 	if (fmod(Sim.SimulationTime(), 0.05) < 0.025)
 	{
 		random_orientation_ = glmutils::unit_vec3(rnd_eng());
+		random_orientation_.y = random_orientation_.y / 3 ;
+		random_orientation_ = glm::normalize(random_orientation_);
 	};
-	steering_ += random_orientation_ * float(sin(Sim.SimulationTime() * 5.0f*reversed*pBird_.randomWeight));
+	steering_ += random_orientation_ * float((0.5*sin(Sim.SimulationTime()) + 0.5) * max);
 	
 }
 
 void CPrey::maneuver_lat()
 {
-	float reversed = 1;
-	if (fmod(Sim.SimulationTime(), 5) < 2.5)
-	{
-		random_orientation_ = glmutils::unit_vec3(rnd_eng());
-	};
-	steering_ += (H_[1] + H_[2]) *float(sin(Sim.SimulationTime() * 5.0f*reversed*pBird_.randomWeight));
-
+	float max = glm::sqrt(glm::length(liftMax_)*glm::length(liftMax_) - pBird_.bodyMass * pBird_.bodyMass);
+	steering_ += (H_[2]) *float((0.5*sin(Sim.SimulationTime()) + 0.5) * max);
+	if (B_[0].y < 0)  steering_ +=glm::vec3(0,0.2,0);
 }
 
 void CPrey::calculateAccelerations()
