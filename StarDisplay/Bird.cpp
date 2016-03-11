@@ -182,15 +182,16 @@ void CBird::handleGPWS()
     if (position_.y <= 0.0f)
     {
       // crash: skid
-      position_.y = 0.0f;
-      glm::vec3 f(B_[0]);
-      f.y = 0.0f;
-      B_[0] = glm::normalize(f);
-      B_[2] = glm::normalize(glm::cross(B_[0], B_[1]));
-      B_[1] = glm::cross(B_[2], B_[0]);
-      H_ = B_;
-      velocity_ = speed_ * B_[0];
-      steering_ = glm::vec3(0.0f);
+      //position_.y = 0.0f;
+      //glm::vec3 f(B_[0]);
+     // f.y = 0.0f;
+     // B_[0] = glm::normalize(f);
+     // B_[2] = glm::normalize(glm::cross(B_[0], B_[1]));
+     // B_[1] = glm::cross(B_[2], B_[0]);
+     // H_ = B_;
+     // velocity_ = speed_ * B_[0];
+     // steering_ = glm::vec3(0.0f);
+		steering_ += glm::vec3(0, 0.2, 0);
     }
   }
 }
