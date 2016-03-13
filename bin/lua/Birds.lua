@@ -230,7 +230,7 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
   bird.wingArea = bird.wingSpan * (bird.wingSpan / bird.wingAspectRatio)   -- [m^2] 
   
   bird.cruiseSpeed = tonumber(bird_info["Cruise speed male"])
-  
+  --test
   
   -- currently unused, to be deleted or may we useful later
   bird.CL = CL(bird)
