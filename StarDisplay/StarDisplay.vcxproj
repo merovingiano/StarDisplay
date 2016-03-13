@@ -150,7 +150,7 @@
       <FloatingPointModel>Fast</FloatingPointModel>
       <SmallerTypeCheck>true</SmallerTypeCheck>
       <BufferSecurityCheck>true</BufferSecurityCheck>
-      <AdditionalIncludeDirectories>$(CPPPATH)\boost_1_55_0;$(CPPPATH)\common\libs\glm;$(CPPPATH)\Cpp\common\libs;$(SolutionDir)libStarDisplay;$(SolutionDir)libStarDisplay\luabind;$(SolutionDir)StarDisplay;$(SolutionDir)bin\$(Platform)\$(Configuration)\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)libStarDisplay;$(SolutionDir)libStarDisplay\luabind; $(CPPPATH)\boost_1_55_0;$(CPPPATH)\common\libs\glm;$(CPPPATH)\common\libs;$(SolutionDir)libStarDisplay;$(SolutionDir)libStarDisplay\luabind;$(SolutionDir)StarDisplay;$(SolutionDir)bin\$(Platform)\$(Configuration)\</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
@@ -160,7 +160,7 @@
       <AdditionalDependencies>libStarDisplay.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
-      <AdditionalLibraryDirectories>$(CPPPATH)\boost_1_55_0\libs;$(CPPPATH)\common\lib\v120\64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CPPPATH)\boost_1_55_0\libs;$(CPPPATH)\common\lib\v120\64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <CustomBuildStep>
       <Command>call $(SolutionDir)copyDlls.bat $(LuaLibs)DLL\ $(OutDir) $(Configuration)</Command>
@@ -238,7 +238,7 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <DisableSpecificWarnings>4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <AdditionalIncludeDirectories>$(CPPPATH)\boost_1_55_0;$(CPPPATH)\common\libs\glm;$(CPPPATH)\Cpp\common\libs;$(SolutionDir)libStarDisplay;$(SolutionDir)libStarDisplay\luabind;$(SolutionDir)StarDisplay;$(SolutionDir)bin\$(Platform)\$(Configuration)\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CPPPATH)\boost_1_55_0;$(CPPPATH)\common\libs\glm;$(CPPPATH)\common\libs;$(SolutionDir)libStarDisplay;$(SolutionDir)libStarDisplay\luabind;$(SolutionDir)StarDisplay;$(SolutionDir)bin\$(Platform)\$(Configuration)\</AdditionalIncludeDirectories>
       <AdditionalOptions>/Qvec-report:1 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
