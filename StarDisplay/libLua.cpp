@@ -186,6 +186,12 @@ namespace liblua {
     Sim.RegisterFactories(PreyFactory, PredatorFactory);
   }
 
+
+  void RegisterDataStorage(const object& dataStorage)
+  {
+	  Sim.RegisterDataStorage(dataStorage);
+  }
+
   void RegisterCustomStatistic(class IStatistic* sp)
   {
     Sim.RegisterCustomStatistic(sp);
@@ -331,6 +337,7 @@ namespace liblua {
       def("NewPrey", &NewPrey),
       def("NewPredator", &NewPredator),
       def("RegisterFactories", &RegisterFactories),
+	  def("RegisterDataStorage", &RegisterDataStorage),
       def("ResetCurrentStatistic" , &ResetCurrentStatistic),
       def("PauseCurrentStatistic", &PauseCurrentStatistic),
       def("ResumeCurrentStatistic", &ResumeCurrentStatistic),

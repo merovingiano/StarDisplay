@@ -29,6 +29,7 @@ public:
   void SetPRoost(const Param::Roost&);
   void SetPRenderFlags(const Param::RenderFlags&);
   void RegisterFactories(const luabind::object&, const luabind::object&);
+  void RegisterDataStorage(const luabind::object&);
   void RegisterCustomStatistic(class IStatistic* sb);
   luabind::object& GetActiveCamera();
   void SetActiveCamera(const luabind::object& luaobj);
@@ -70,6 +71,8 @@ public:
   std::vector <Param::Experiment> experiments;
   int expNumb;
   
+  //data storage
+  luabind::object StorageData_;
 private:
   const class CBird* PickNearestBird2Ray(const glm::vec3& ray_position, const glm::vec3& ray_direction);
   void UpdateBirds(const float sim_dt);
@@ -116,6 +119,8 @@ private:
   // Registered callbacks
   luabind::object PreyFactory_;
   luabind::object PredatorFactory_;
+  
+
   std::shared_ptr<IStatistic> CustomStatistic_;
 
   mutable std::mutex omp_exception_mutex_;

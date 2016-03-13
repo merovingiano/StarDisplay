@@ -272,6 +272,7 @@
     <None Include="..\bin\lua\gpws.lua" />
     <None Include="..\bin\lua\inspect.lua" />
     <None Include="..\bin\lua\pursuits.lua" />
+    <None Include="..\bin\lua\StoreData.lua" />
     <None Include="..\bin\lua\valarray.lua" />
     <None Include="..\bin\wave.lua" />
     <None Include="..\bin\lua\Birds.lua" />

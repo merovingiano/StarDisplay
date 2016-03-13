@@ -4,7 +4,7 @@ local VK = require "VK"
 local Birds = require "Birds"
 local Camera = require "Camera"
 local gParam = require "Defaults"
-
+local storeData = require "StoreData"
 
 require "wave"
 
@@ -60,6 +60,9 @@ function InitHook ()
   camera:SetMode("Television", false)
 
   sim.RegisterFactories( PreyFactory(), PredatorFactory() )
+
+  --set data storage (just a test for now)
+  sim.RegisterDataStorage(storeData.DataStorage())
   if sim.CustomStatistic ~= nil then
     sim.RegisterCustomStatistic( Statistic.new( sim.CustomStatistic ) )
   end

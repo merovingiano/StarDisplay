@@ -290,7 +290,9 @@ void CPrey::update(float dt, const CFlock& flock)
   if (GetAsyncKeyState(VK_NUMPAD0) && keyState_ == 0)
   {
 	 testSettings();
+	 
   }
+  
 }
 
 

@@ -221,7 +221,6 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
   bird.wingAspectRatio = tonumber(bird_info["Aspect ratio male"])
   bird.wingBeatFreq = tonumber(bird_info["Wingbeat frequency"])
   bird.birdName = bird_info["Species(eng)"]
-  print(bird_info["Species(eng)"])
   bird.theta =  tonumber(bird_info["Span Angle Down to Upstroke"])
   bird.wingLength = tonumber(bird_info["Wing length male"]) / 100
   bird.bodyArea = tonumber(bird_info["Body area male"] )

@@ -117,6 +117,9 @@
     <None Include="..\bin\experiments.lua">
       <Filter>Lua</Filter>
     </None>
+    <None Include="..\bin\lua\StoreData.lua">
+      <Filter>Lua\lua</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="StarDisplay.rc">

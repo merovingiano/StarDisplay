@@ -139,9 +139,6 @@ void Simulation::GetExperimentSettings(const luabind::object& obj)
 				for (luabind::iterator iii(params), end; iii != end; ++iii)
 				{
 					std::string strKey3 = luabind::object_cast<std::string>(iii.key());
-					std::cout << "\n" << intKey;
-					std::cout << "\n" << strKey2;
-					std::cout << "\n" << strKey3;
 
 					if (strKey3 == "evolution")
 
@@ -234,7 +231,6 @@ void Simulation::GetExperimentSettings(const luabind::object& obj)
 			}
 			if (strKey2 == "preyBird" || strKey2 == "predBird")
 			{
-				std::cout << "\n" << strKey2;
 				luabind::object Bird = obj[intKey][strKey2];
 				if (strKey2 == "preyBird") copyBirdParam(Bird, experiment.preyBird);
 				if (strKey2 == "predBird") copyBirdParam(Bird, experiment.predBird);
@@ -414,6 +410,11 @@ void Simulation::RegisterFactories(const luabind::object& PreyFactory, const lua
 {
   PreyFactory_ = PreyFactory;
   PredatorFactory_ = PredatorFactory;
+}
+
+void Simulation::RegisterDataStorage(const luabind::object& dataStorage)
+{
+	StorageData_ = dataStorage;
 }
 
 
