@@ -1,6 +1,7 @@
 
 local pursuits = require "pursuits"
 local Birds = require "Birds"
+local inspect = require "inspect2"
 local gParam = require "Defaults"
 --You only need to change those variables that deviate from the first experiment
 
@@ -9,6 +10,16 @@ dove_bird, dove_prey = Birds.newBird(nil, gParam.Birds.csv_file_species , gParam
 robin_bird, robin_prey = Birds.newBird(nil, gParam.Birds.csv_file_species , gParam.Birds.csv_file_prey_predator_settings,"European robin", 0)
 peregrine_bird, peregrine_prey = Birds.newBird(nil, gParam.Birds.csv_file_species , gParam.Birds.csv_file_prey_predator_settings,"Peregrine falcon", 0)
 
+print(inspect(getmetatable(starling_bird)))
+print(inspect(starling_bird))
+print(type(starling_bird.bodyMass))
+
+for k,v in pairs(starling_bird) do
+  print(k)
+end
+while 1 ==1 do 
+
+end
 
 -- 2 reaction times
 -- 4 species
