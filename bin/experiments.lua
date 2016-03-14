@@ -32,7 +32,7 @@ female =
 }
 
 local getBirdData = function (birdy)
-
+--This function extracts the relevent  morphological data from an userData to a lua table
   bird = {}
   bird.bodyMass =birdy.bodyMass 
   bird.wingMass =birdy.wingMass
@@ -49,10 +49,7 @@ local getBirdData = function (birdy)
   bird.cBody =  birdy.cBody
   bird.cFriction = birdy.cFriction 
   bird.wingArea = birdy.wingArea -- [m^2] 
-  
   bird.cruiseSpeed = birdy.cruiseSpeed
-
-
   return bird
 end
 
@@ -154,8 +151,9 @@ end
 RT = {0.001,0.05}
 
 counter = 0
-for n = 0,(30),1 do
-counter = n + 1
+for n = 20,(30),1 do
+print(n)
+counter = counter + 1
     experiments[counter] = newExp(n)
 
 
