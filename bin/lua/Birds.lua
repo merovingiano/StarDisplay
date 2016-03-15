@@ -74,7 +74,7 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
 		  bird.wingSpan = tonumber(bird_info["Wingspan male"] / 100  )      -- [m]
 		  bird.wingAspectRatio = tonumber(bird_info["Aspect ratio male"])
 		  bird.wingBeatFreq = tonumber(bird_info["Wingbeat frequency"])
-		  bird.birdName = bird_info["Species(eng)"]
+		  bird.birdName = string.gsub(bird_info["Species(eng)"], " ", "_")
 		  bird.theta =  tonumber(bird_info["Span Angle Down to Upstroke"])
 		  bird.wingLength = tonumber(bird_info["Wing length male"]) / 100
 		  bird.bodyArea = tonumber(bird_info["Body area male"] )
@@ -101,13 +101,12 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
 		  prey.AlertedWBetaOut = { x = 0, y = 0, z = 0 }
 
 
-
   
 		  if isPredator == 0 then
 		     cBird = Params.Bird()
 			 cPrey = Params.Prey()
-			 tableToBird(bird, "cBird")
-		     tableToBird(prey, "cPrey")
+			 tableToUserData(bird, "cBird")
+		     tableToUserData(prey, "cPrey")
 			 if p ~= nil then
 				 p.BirdParams = cBird
 				 p.PreyParams = cPrey
@@ -117,8 +116,8 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
 		     cBird = Params.Bird()
 
 		     cPred = Params.Predator()
-			 tableToBird(bird, "cBird")
-		     tableToBird(predator, "cPred")
+			 tableToUserData(bird, "cBird")
+		     tableToUserData(predator, "cPred")
 			 if p ~= nil then
 				 p.BirdParams = cBird
 				 p.PredParams = cPred
@@ -148,6 +147,7 @@ function Birds.getMorphology(birdy)
 		  bird.cruiseSpeed = birdy.cruiseSpeed
 		  return bird
 end
+
 
 
 return Birds

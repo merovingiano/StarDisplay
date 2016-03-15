@@ -2,6 +2,9 @@ local random = require "Random"
 local pursuits = require "pursuits"
 local gpws = require "gpws"
 
+
+
+--________________________________________________________________________________________________________________________________________________
 function shallowcopy(orig)
     local orig_type = type(orig)
     local copy
@@ -15,9 +18,11 @@ function shallowcopy(orig)
     end
     return copy
 end
+--________________________________________________________________________________________________________________________________________________
 
 
 
+--________________________________________________________________________________________________________________________________________________
 function deepcopy(orig)
     local orig_type = type(orig)
     local copy
@@ -32,7 +37,11 @@ function deepcopy(orig)
     end
     return copy
 end
+--________________________________________________________________________________________________________________________________________________
 
+
+
+--________________________________________________________________________________________________________________________________________________
 function tableToFile(orig, skip, string, file)
     local orig_type = type(orig)
     if orig_type == 'table' then
@@ -48,118 +57,88 @@ function tableToFile(orig, skip, string, file)
 		end
     end
 end
+--________________________________________________________________________________________________________________________________________________
 
-function tableToBird(orig, bird)
+
+
+--________________________________________________________________________________________________________________________________________________
+function tableToUserData(orig, bird)
     local orig_type = type(orig)
     if orig_type == 'table' then
         for orig_key, orig_value in next, orig, nil do
 			newstring = bird .. "." .. orig_key
-			tableToBird(orig_value, newstring )
+			tableToUserData(orig_value, newstring )
         end
     else -- number, string, boolean, etc 
-		if tostring(orig_type) ~= 'nil' then 
-		    
+		if tostring(orig_type) ~= 'nil' then 		    
 			if tostring(orig_type) == 'string' then orig = "\"" .. orig .. "\"" else orig = tostring(orig) end
 			--print(tostring(bird) .. " =  " .. orig)
 			loadstring(  tostring(bird) .. " =  " .. orig)()
 		end
     end
 end
+--________________________________________________________________________________________________________________________________________________
 
-function BirdtoTable2(output_table, bird, tableName)
+
+
+--________________________________________________________________________________________________________________________________________________
+function userDatatoTable(output_table, bird, tableName)
     local orig_type = type(output_table)
     if orig_type == 'table' then
         for orig_key, orig_value in next, output_table, nil do
 		    --print(orig_key)
 			newbird = bird .. "." .. orig_key
 			newtable = tableName .. "." .. orig_key
-            BirdtoTable2(orig_value, newbird, newtable)
+            userDatatoTable(orig_value, newbird, newtable)
         end
     else -- number, string, boolean, etc 
 		if tostring(orig_type) ~= 'nil' then 
-		print(  tostring(tableName) .. " =  " .. tostring(bird))
+		--print(  tostring(tableName) .. " =  " .. tostring(bird))
 			loadstring(  tostring(tableName) .. " =  " .. tostring(bird))()
 		end
     end
 end
+--________________________________________________________________________________________________________________________________________________
 
 
-function birdToTable(birdy)
-   		  bird = {}
-  bird.reactionTime 	=	  birdy.reactionTime 
-  bird.reactionStochastic 	=	  birdy.reactionStochastic 
-  bird.skipLeftHemisphere 	=	  birdy.skipLeftHemisphere 
-  bird.skipRightHemisphere  	=	  birdy.skipRightHemisphere  
-  bird.rho  	=	  birdy.rho 
-  bird.bodyMass  	=	  birdy.bodyMass  
-  bird.wingMass 	=	  birdy.wingMass 
-  bird.InertiaWing 	=	  birdy.InertiaWing 
-  bird.InertiaBody 	=	  birdy.InertiaBody 
-  bird.J 	=	  birdy.J 
-  bird.bodyWeight 	=	  birdy.bodyWeight 
-  bird.wingSpan 	=	  birdy.wingSpan 
-  bird.wingAspectRatio	=	  birdy.wingAspectRatio
-  bird.wingArea	=	  birdy.wingArea
-  bird.wingBeatFreq	=	  birdy.wingBeatFreq
-  bird.birdName	=	  birdy.birdName
-  bird.theta	=	  birdy.theta
-  bird.wingLength	=	  birdy.wingLength
-  bird.bodyArea	=	  birdy.bodyArea
-  bird.cBody	=	  birdy.cBody
-  bird.cFriction	=	  birdy.cFriction
-  bird.CL	=	  birdy.CL
-  bird.maxForce	=	  birdy.maxForce
-  bird.maxLift	=	  birdy.maxLift
-  bird.cruiseSpeed	=	  birdy.cruiseSpeed
-  bird.speedControl	=	  birdy.speedControl
-  bird.houjebek	=	  birdy.houjebek
-  bird.maxSpeed	=	  birdy.maxSpeed
-  bird.rollRate	=	  birdy.rollRate
-  bird.minSpeed	=	  birdy.minSpeed
-  bird.wBetaOut 	=	  {x = birdy.wBetaOut.x, y = birdy.wBetaOut.y, z = birdy.wBetaOut.z }
-  bird.wBetaIn 	=	   {x = birdy.wBetaIn.x, y = birdy.wBetaIn.y, z = birdy.wBetaIn.z }
-  bird.maxRadius	=	  birdy.maxRadius
-  bird.neighborLerp	=	  birdy.neighborLerp
-  bird.topologicalRange	=	  birdy.topologicalRange
-  bird.circularityInc	=	  birdy.circularityInc
-  bird.binocularOverlap	=	  birdy.binocularOverlap
-  bird.blindAngle	=	  birdy.blindAngle
-  bird.maxSeparationTopo	=	  birdy.maxSeparationTopo
-  bird.separationStep 	=	 {x = birdy.separationStep.x, y = birdy.separationStep.y}
-  bird.separationWeight 	= {x = birdy.separationWeight.x, y = birdy.separationWeight.y, z = birdy.separationWeight.z }
-  bird.alignmentWeight 	=	 {x = birdy.alignmentWeight.x, y = birdy.alignmentWeight.y}
-  bird.cohesionWeight 	=	   {x = birdy.cohesionWeight.x, y = birdy.cohesionWeight.y, z = birdy.cohesionWeight.z }
-  bird.randomWeight	=	  birdy.randomWeight
-  bird.boundaryWeight 	=	  {x = birdy.boundaryWeight.x, y = birdy.boundaryWeight.y, z = birdy.boundaryWeight.z }
-  bird.boundaryReflectAngle	=	  birdy.boundaryReflectAngle
-  bird.outerBoundary	=	  birdy.outerBoundary
-  bird.innerBoundary	=	  birdy.innerBoundary
-  bird.altitude	=	  birdy.altitude
-  bird.wingRetractionSpeed	=	  birdy.wingRetractionSpeed
-  bird.maneuver	=	  birdy.maneuver
-  bird.controlCL	=	  birdy.controlCL
-  bird.CDCL =  birdy.CDCL 
-  bird.PursuitStrategy = birdy.PursuitStrategy
-  --print("yolo " .. birdy.PursuitStrategy)
-		  return bird
+
+
+--________________________________________________________________________________________________________________________________________________
+function experimentToTable(expNum)
+    exp_table = {}
+	for key, value in pairs(experiments[expNum]) do
+	   if type(experiments[expNum][key]) == 'table' then exp_table[key] = deepcopy(experiment[key]) end
+	end
+	userData =experiments[expNum]['predBird']
+	userDatatoTable(predBird,"userData", "predBird")
+	userData =experiments[expNum]['preyBird']
+	userDatatoTable(preyBird,"userData", "preyBird")
+	userData =experiments[expNum]['pred']
+	userDatatoTable(pred,"userData", "pred")
+	userData =experiments[expNum]['prey']
+	userDatatoTable(prey,"userData", "prey")
+	 exp_table.preyBird = deepcopy(preyBird) 
+	 exp_table.prey = deepcopy(prey)
+	 exp_table.predBird = deepcopy(predBird) 
+	 exp_table.pred = deepcopy(pred)	 
+	 return exp_table
 end
+--________________________________________________________________________________________________________________________________________________
 
-function PreyToTable(prey)
-  --prey.
-end
 
-function PredToTable(pred)
 
-end
 
+--________________________________________________________________________________________________________________________________________________
 repeater = function(n, reps, counts)
   return ((n - (n % reps)) / reps ) % counts + 1
 end
+--________________________________________________________________________________________________________________________________________________
 
 
 
 
 
+--________________________________________________________________________________________________________________________________________________
 function process_CSV_cell(cell, type)
    sep = ';'
    if type == "list" then
@@ -190,9 +169,13 @@ function process_CSV_cell(cell, type)
    end
    return tonumber(cell)
 end
+--________________________________________________________________________________________________________________________________________________
 
 
 
+
+
+--________________________________________________________________________________________________________________________________________________
 function ParseCSVLine (line,sep) 
 	local res = {}
 	local pos = 1
@@ -232,11 +215,15 @@ function ParseCSVLine (line,sep)
 	end
 	return res
 end
+--________________________________________________________________________________________________________________________________________________
+
+
 
 
 
 -- CL after Van Dijk (1964)
 --
+--________________________________________________________________________________________________________________________________________________
 CL = function (bird, alpha)
   alpha = alpha or 0.28
   local AR = bird.wingAspectRatio
@@ -245,35 +232,55 @@ CL = function (bird, alpha)
              (1 + 2/AR + 16*(math.log(piAR) - 9/8) / (piAR * piAR))
   return CL
 end
+--________________________________________________________________________________________________________________________________________________
+
+
 
 
 -- Allometric scaling with wing load
 -- Alerstam et al PLOS Biol 5, 2007
---
+--________________________________________________________________________________________________________________________________________________
 CruiseSpeed = function (bird)
   local wingLoad = bird.bodyMass * 9.81 / bird.wingArea
   local U =  4.8 * math.pow(wingLoad, 0.28)
   return U
 end
+--________________________________________________________________________________________________________________________________________________
+
+
+
+
 
 --drag to lift ratio
-
+--________________________________________________________________________________________________________________________________________________
 CDCL = function (bird)
 	local cdcl = 1.0 / ((math.pi * bird.wingAspectRatio) / CL(bird))
 	return cdcl
 end
+--________________________________________________________________________________________________________________________________________________
 
+
+--________________________________________________________________________________________________________________________________________________
 CDCL2 = function (bird)
 	local cdcl = 1.0 / ((math.pi * bird.wingAspectRatio) / CL(bird,1))
 	return cdcl
 end
+--________________________________________________________________________________________________________________________________________________
 
+
+
+
+--________________________________________________________________________________________________________________________________________________
 maxForce = function (bird)
 	local maxForce = (bird.maxSpeed^2 / bird.cruiseSpeed^2) * bird.bodyMass * 9.81 * (CDCL(bird) + bird.bodyDrag/CL(bird)) -- removed:  - CDCL(bird)* bird.bodyMass * 9.81 
 	return maxForce
 end 
+--________________________________________________________________________________________________________________________________________________
 
 
+
+
+--________________________________________________________________________________________________________________________________________________
 skipHemisphere = function (P)
   if random:uniform01() < P then
     return 0, 1
@@ -281,10 +288,14 @@ skipHemisphere = function (P)
     return 1, 0
   end
 end
+--________________________________________________________________________________________________________________________________________________
 
 
 
+
+--________________________________________________________________________________________________________________________________________________
 function script_path() 
     -- remember to strip off the starting @ 
     return debug.getinfo(2, "S").source:sub(2) 
 end 
+--________________________________________________________________________________________________________________________________________________
