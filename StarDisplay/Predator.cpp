@@ -258,6 +258,18 @@ void CPredator::update(float dt, const CFlock&)
 	{
 		//std::cout << pPred_.VisualError << "\n";
 		//std::cout << pPred_.VisualBias.x << "  " << pPred_.VisualBias.y << "\n";
+
+
+		if (!GetAsyncKeyState(VK_F11) && keyState_ != 0)
+		{
+			keyState_ = 0;
+		}
+		if (GetAsyncKeyState(VK_F11) && keyState_ == 0)
+		{
+			testSettings();
+
+		}
+
 		if (GetAsyncKeyState(VK_DOWN)) steering_ += 5.0f*glm::vec3(0, 1, 0);
 		if (GetAsyncKeyState(VK_NUMPAD2)) steering_ += glm::length(liftMax_)*glm::vec3(0, 1, 0);
 		if (GetAsyncKeyState(VK_UP)) steering_ -= 5.0f*glm::vec3(0, 1, 0);;
@@ -788,7 +800,7 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 
 void CPredator::testSettings()
 {
-
+	keyState_ = 1;
 	Sim.PrintFloat(pBird_.wingMass, "wing mass");
 	Sim.PrintFloat(pBird_.InertiaBody, "InertiaBody");
 	Sim.PrintFloat(pBird_.J, "J");
@@ -811,8 +823,8 @@ void CPredator::testSettings()
 	Sim.PrintFloat(pBird_.outerBoundary, "outerBoundary");
 	Sim.PrintVector(pBird_.boundaryWeight, "boundaryWeight");
 	Sim.PrintFloat(pBird_.randomWeight, "randomweight");
+	Sim.PrintFloat(pPred_.VisualError, "VisualError");
 	Sim.PrintVector(B_[0], "body x");
 	Sim.PrintVector(B_[1], "body y");
 	Sim.PrintVector(B_[2], "body z");
-	while (1 == 1){}
 }

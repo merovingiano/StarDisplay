@@ -150,11 +150,9 @@ void EvolvePN::Reset()
 		}
 		std::cout << "\n Generation: " << Generation_;
 		std::cout << "\n expnum: " << Sim.expNumb;
-		std::cout << "\n rollrate: " << Sim.experiments[Sim.expNumb - 1].predBird.rollRate;
-		std::cout << "\n Visual Error: " << Sim.experiments[Sim.expNumb - 1].pred.VisualError;
+
 
 		CFlock::prey_iterator testfirstPrey(GFLOCKNC.prey_begin());
-		std::cout << "\n testing alterness relaxation: " << testfirstPrey->GetPreyParams().AlertnessRelexation.x << " " << testfirstPrey->GetPreyParams().AlertnessRelexation.y;
 
 
 	}

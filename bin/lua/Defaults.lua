@@ -78,6 +78,11 @@ local Default = {
 	 csv_file_prey_predator_settings = "../../lua/prey_predator_settings.csv",
   },
 
+  DataStorage = {
+     folder = "D:\\ownCloud\\2013-2014\\phd hunting\\dataStarDisplay\\",
+  
+  },
+
   Trail = {
     Length = 5,           -- length in seconds (read-once)
     Width = 0.25,          -- [m]

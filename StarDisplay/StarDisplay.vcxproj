@@ -271,6 +271,7 @@
     <None Include="..\bin\experiments.lua" />
     <None Include="..\bin\lua\config_functions.lua" />
     <None Include="..\bin\lua\gpws.lua" />
+    <None Include="..\bin\lua\helper_functions.lua" />
     <None Include="..\bin\lua\inspect.lua" />
     <None Include="..\bin\lua\inspect2.lua" />
     <None Include="..\bin\lua\pursuits.lua" />

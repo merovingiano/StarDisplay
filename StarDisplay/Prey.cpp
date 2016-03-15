@@ -283,11 +283,11 @@ void CPrey::update(float dt, const CFlock& flock)
 
   //std::cout << "\n x: " << B_[0].x << " y: " << B_[0].y << " z: " << B_[0].z;
 
-  if (!GetAsyncKeyState(VK_NUMPAD0) && keyState_ != 0) 
+  if (!GetAsyncKeyState(VK_F11) && keyState_ != 0)
   {
 	  keyState_ = 0;
   }
-  if (GetAsyncKeyState(VK_NUMPAD0) && keyState_ == 0)
+  if (GetAsyncKeyState(VK_F11) && keyState_ == 0)
   {
 	 testSettings();
 	 
@@ -555,8 +555,6 @@ void CPrey::handleEvasion()
 
 void CPrey::testSettings()
 {
-
-
 		keyState_ = 1;
 		Sim.PrintFloat(Sim.SimulationTime(), "Prey settings. Simulation Time");
 		Sim.PrintString(pBird_.birdName);
@@ -568,6 +566,7 @@ void CPrey::testSettings()
 		Sim.PrintFloat(pPrey_.AlertedTopo, "alertedTopo");
 		Sim.PrintFloat(pPrey_.ReturnRelaxation, "ReturnRelaxation");
 		Sim.PrintFloat(pPrey_.IncurLatency, "IncurLatency");
+		Sim.PrintFloat(pPrey_.DetectCruising, "DetectCruising");
 		Sim.PrintFloat(pBird_.bodyMass, "bodymass");
 		Sim.PrintFloat(pBird_.bodyArea, "bodyArea");
 		Sim.PrintFloat(pBird_.cBody, "cBody");
