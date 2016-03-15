@@ -36,7 +36,7 @@ local newExp = function (a)
 		prey = defaultPrey_prey,
 		pred = defaultPred_pred,
 	}
-	experiment.pred.PursuitStrategy = { type = pursuits._ProportionalNavigation, hook = pursuits.ProportionalNavigation(5) }
+	experiment.pred.PursuitStrategy = 1
 	experiment.Param.evolution.fileName =  "hoi"  .. ".txt"
 	experiment.Param.evolution.TrajectoryBestPredator = false
 	experiment.Param.evolution.title =  ""

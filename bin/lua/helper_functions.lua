@@ -53,13 +53,14 @@ function tableToBird(orig, bird)
     local orig_type = type(orig)
     if orig_type == 'table' then
         for orig_key, orig_value in next, orig, nil do
-		    --print(orig_key)
 			newstring = bird .. "." .. orig_key
-            tableToBird(orig_value, newstring )
+			tableToBird(orig_value, newstring )
         end
     else -- number, string, boolean, etc 
 		if tostring(orig_type) ~= 'nil' then 
+		    
 			if tostring(orig_type) == 'string' then orig = "\"" .. orig .. "\"" else orig = tostring(orig) end
+			--print(tostring(bird) .. " =  " .. orig)
 			loadstring(  tostring(bird) .. " =  " .. orig)()
 		end
     end
@@ -76,6 +77,7 @@ function BirdtoTable2(output_table, bird, tableName)
         end
     else -- number, string, boolean, etc 
 		if tostring(orig_type) ~= 'nil' then 
+		print(  tostring(tableName) .. " =  " .. tostring(bird))
 			loadstring(  tostring(tableName) .. " =  " .. tostring(bird))()
 		end
     end
@@ -137,6 +139,8 @@ function birdToTable(birdy)
   bird.maneuver	=	  birdy.maneuver
   bird.controlCL	=	  birdy.controlCL
   bird.CDCL =  birdy.CDCL 
+  bird.PursuitStrategy = birdy.PursuitStrategy
+  --print("yolo " .. birdy.PursuitStrategy)
 		  return bird
 end
 
@@ -178,8 +182,11 @@ function process_CSV_cell(cell, type)
 	     counter = counter + 1
 		 list[counter] = tonumber(word)
 	  end
-	  if counter == 2 then return glm.vec2(list[1],list[2]) end
-	  if counter == 3 then return glm.vec3(list[1],list[2], list[3]) end
+	  if counter == 2 then return {x = list[1], y = list[2]} end
+	  if counter == 3 then return {x = list[1],y = list[2],z = list[3]} end
+   end
+   if type == "string" then
+      return tostring(cell)
    end
    return tonumber(cell)
 end

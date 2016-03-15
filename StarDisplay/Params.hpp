@@ -296,6 +296,7 @@ namespace Param {
     };
 
     Panic EvasionStrategy[MaxEvasionStrategy__];
+	int EvasionStrategyTEMP;
     bool DetectCruising;
     float DetectionDistance;
     float DetectionSurfaceProb;
@@ -351,6 +352,7 @@ namespace Param {
     };
 
     Pursuit pursuit;
+	int PursuitStrategy;
     glm::vec3 AttackWBetaIn;
     glm::vec3 AttackWBetaOut;
     float CatchDistance;

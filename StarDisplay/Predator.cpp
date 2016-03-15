@@ -485,10 +485,10 @@ void CPredator::steerToFlock()
   if (cohesion_neighbors_)
   {
 	  //! Proportional navigation function in c++
-	  if (pPred_.pursuit.type == 1) proportionalNavigation(aveHeading, aveVelocity);
-	  if (pPred_.pursuit.type == 2) DirectPursuit(aveHeading, aveVelocity);
-	  if (pPred_.pursuit.type == 3) DirectPursuit2(aveHeading, aveVelocity);
-	  if (pPred_.pursuit.type == 4) PNDP(aveHeading, aveVelocity);
+	  if (pPred_.PursuitStrategy == 1) proportionalNavigation(aveHeading, aveVelocity);
+	  if (pPred_.PursuitStrategy == 2) DirectPursuit(aveHeading, aveVelocity);
+	  if (pPred_.PursuitStrategy == 3) DirectPursuit2(aveHeading, aveVelocity);
+	  if (pPred_.PursuitStrategy == 4) PNDP(aveHeading, aveVelocity);
     //PursuitCustom(aveHeading, aveVelocity);
     //cohesion_ = H_ * (cohesion_ * H_);
     //steering_ += cohesion_;

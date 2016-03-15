@@ -15,7 +15,7 @@ local Birds = {
 
 
 function Birds.newBird (p, file,settingsFile, name, isPredator)
-		  local bird = Params.Bird()
+		  local bird = {}
 		  local file = io.open(file, "r")
 		  local names = ParseCSVLine(file:read(),",")
 		  local bird_info = {}
@@ -23,8 +23,8 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
 		  local prey_pred = 0
 		  local bird_spec = 0
 		  local line = ParseCSVLine(file:read(),",")
-		  local predator = Params.Predator()
-		  local prey = Params.Prey()
+		  local predator = {}
+		  local prey = {}
 		  while line[2] ~= "" do  
 			if(line[2] == name) then
 				tmp = line
@@ -62,7 +62,7 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
 			line = ParseCSVLine(settings:read(),",")
 		  end
 		  io.close(settings)
-		  --prey.EvasionStrategy = { type = EvasionStrategies.None, weight = 1.0, edges = glm.vec4(0, 2, 2, 2) }
+		  prey.EvasionStrategyTEMP = 0
 
 		  --used: physical
 		  bird.rho = 1.2
@@ -95,23 +95,35 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
 		  bird.rollRate= 5  -- has become redundent. Roll rate is now calculated with roll acceleration and inertia
 
 		  -- currently unused, to be deleted or may we useful later
-		  bird.wBetaIn = glm.vec3( 4, 1, 0 )    -- roll, pitch, yaw
-		  bird.wBetaOut = glm.vec3( 0, 0, 0 )     -- roll, pitch, yaw 
-		  prey.AlertedWBetaIn = bird.wBetaIn
-		  prey.AlertedWBetaOut = bird.wBetaOut
+		  bird.wBetaIn = { x = 4, y = 1, z = 0 }    -- roll, pitch, yaw
+		  bird.wBetaOut = { x = 0, y = 0, z = 0 }    -- roll, pitch, yaw 
+		  prey.AlertedWBetaIn = { x = 4, y = 1, z = 0 } 
+		  prey.AlertedWBetaOut = { x = 0, y = 0, z = 0 }
 
+
+
+  
 		  if isPredator == 0 then
+		     cBird = Params.Bird()
+			 cPrey = Params.Prey()
+			 tableToBird(bird, "cBird")
+		     tableToBird(prey, "cPrey")
 			 if p ~= nil then
-				 p.BirdParams = bird
-				 p.PreyParams = prey
+				 p.BirdParams = cBird
+				 p.PreyParams = cPrey
 			 end
-			 return bird, prey
+			 return cBird, cPrey, bird, prey
 		  else
+		     cBird = Params.Bird()
+
+		     cPred = Params.Predator()
+			 tableToBird(bird, "cBird")
+		     tableToBird(predator, "cPred")
 			 if p ~= nil then
-				 p.BirdParams = bird
-				 p.PredParams = predator
+				 p.BirdParams = cBird
+				 p.PredParams = cPred
 			 end
-			 return bird, predator
+			 return cBird, cPred, bird, predator
 		  end
 end
 

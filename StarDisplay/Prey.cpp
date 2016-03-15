@@ -179,7 +179,7 @@ void CPrey::update(float dt, const CFlock& flock)
         panicCopy_ = cit->panicCopy + 1;
       }
     }
-    handleEvasion();
+    if (pPrey_.EvasionStrategyTEMP != 0 ) handleEvasion();
 	
     if (0 == (predatorReaction_ & PredationReactions::Panic)) 
     {
