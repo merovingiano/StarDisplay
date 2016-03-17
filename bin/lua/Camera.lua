@@ -75,9 +75,10 @@ function Camera:SetMode (mode, pred)
   cc.up = glm.vec3(0,1,0)   -- 'untilt'
   if mode == "Television" then
     cc.center = ti.pos
+	
     local eye = cc.eye
     eye.y = self.televisionDescent
-    cc.eye = eye
+    cc.eye = ti.pos
     cc.lerp = self.fixedLerp
     cc.fovy = self.fixedFovy
     cc.up = glm.vec3(0,1,0)
@@ -152,6 +153,8 @@ function Camera:UpdateHook (sim_dt)
   local ti = cc:GetTargetInfo()
   if mode == "Television" then
     cc.center = ti.pos
+
+	if glm.length(ti.pos - cc.eye) > 80 then cc.eye = ti.pos end
   elseif mode == "Observer" then
     local dist = glm.length(cc.eye - cc.center)
     cc.center = ti.pos

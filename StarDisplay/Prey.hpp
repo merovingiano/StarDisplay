@@ -77,8 +77,8 @@ public:
   float get_max_roll_rate() const { return max_roll_rate_; }
   long get_counter_acc() const { return counter_acc_; }
   void set_counter_acc(float counter) { counter_acc_ = counter; }
-
-
+  void handleTrajectoryStorage();
+  void handleManeuvers();
 
   //! \return predator reaction
   int predatorReaction() const { return predatorReaction_; }

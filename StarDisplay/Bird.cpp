@@ -275,7 +275,11 @@ void CBird::regenerateLocalSpace(float dt)
 	// calculate timepoints at desired bank angle
 
 	float p = turn;
-	float a = angular_acc_;
+	
+	
+	//HACK
+	angular_acc_ = 60;
+    float a = angular_acc_;
 	float c = roll_rate_;
 	// first set the roll acceleration in the direction of the desired bank angle
 	if (p < 0) a *= -1;

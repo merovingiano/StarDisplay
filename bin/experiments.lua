@@ -4,7 +4,6 @@ local Birds = require "Birds"
 local inspect = require "inspect2"
 local gParam = require "Defaults"
 require "helper_functions"
---You only need to change those variables that deviate from the first experiment
 
 cBird, cPrey, preyBird, prey = Birds.newBird(nil, gParam.Birds.csv_file_species , gParam.Birds.csv_file_prey_predator_settings,"Common starling", 0)
 cBird, cPred, predBird, pred = Birds.newBird(nil, gParam.Birds.csv_file_species , gParam.Birds.csv_file_prey_predator_settings,"Peregrine falcon", 1)
@@ -44,15 +43,24 @@ local newExp = function (a)
 	experiment.Param.evolution.TrajectoryBestPredator = false
 	experiment.Param.evolution.title =  ""
 	experiment.Param.evolution.description = ""
-	experiment.Param.evolution.terminationGeneration = 50
+	experiment.Param.evolution.terminationGeneration = 100
 	experiment.Param.evolution.durationGeneration = 25
 	experiment.Param.evolution.evolveDPAdjParam = false
 
-    experiment.preyBird = robin_bird
-	experiment.prey.DetectCruising = true
+  
+	RTCounter = repeater(a, 1,2)
+	PreyCounter = repeater(a, 2,4)
+	maneuverCounter = repeater(a,8,3)
+	experiment.preyBird = starling_bird
+    --if (PreyCounter == 1) then experiment.preyBird = robin_bird end
+	--if (PreyCounter == 2) then experiment.preyBird = dove_bird  end
+	--if (PreyCounter == 3) then experiment.preyBird = starling_bird end
+	--if (PreyCounter == 4) then experiment.preyBird = peregrine_bird end
 	experiment.preyBird.maneuver = maneuverCounter
 	experiment.predBird.reactionTime = RT[RTCounter]
 	experiment.Param.evolution.fileName = "n" .. (a + 1) .. "_" .. experiment.preyBird.birdName .. "_RT_" ..   RT[RTCounter] .. "_man_" ..   maneuverCounter .. ".txt"
+	experiment.pred['VisualError'] = 0
+
 
 	return experiment
 end
@@ -61,7 +69,7 @@ end
 RT = {0.001,0.05}
 
 counter = 0
-for n = 20,(30),1 do
+for n = 0,(60),1 do
 	print(n)
 	counter = counter + 1
     experiments[counter] = newExp(n)

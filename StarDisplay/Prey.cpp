@@ -158,154 +158,50 @@ void CPrey::update(float dt, const CFlock& flock)
   //
 
 	calculateAccelerations();
-
+	handleTrajectoryStorage();
   if (reactionTime_ >= reactionInterval_)
   {
-    bool alreadyAlerted = (0 != (predatorReaction_ & PredationReactions::Alerted));
-    predatorReaction_ = PredationReactions::None;
-    predatorForce_ = boundary_ = gyro_ = glm::vec3(0);
-    if ((panicOnset_ < 0.0) && (pPrey_.IncurNeighborPanic > 0))
-    {
-      double now = Sim.SimulationTime();
-      double latency = pPrey_.IncurLatency;
-      auto cit = std::find_if(neighbors_.begin(), neighbors_.end(), [now, latency] (const neighborInfo& ni) {
-        bool detectable = (0 != (ni.predatorReaction & PredationReactions::Detectable));
-        return detectable && ((now - ni.panicOnset) >= latency);
-      });
-      if ((cit != neighbors_.end()) && ((int)std::distance(neighbors_.begin(), cit) < pPrey_.IncurNeighborPanic))
-      {
-        panicOnset_ = now;
-        predatorReaction_ |= (PredationReactions::Panic | PredationReactions::Alerted);
-        panicCopy_ = cit->panicCopy + 1;
-      }
-    }
-    if (pPrey_.EvasionStrategyTEMP != 0 ) handleEvasion();
-	
-    if (0 == (predatorReaction_ & PredationReactions::Panic)) 
-    {
-      return2Flock(flock); 
+	  predatorForce_ = boundary_ = gyro_ = steering_ = glm::vec3(0);
+      if (pPrey_.EvasionStrategyTEMP != 0 ) handleEvasion();
       handleBoundary(pBird_.altitude, position_.y);
-      panicOnset_ = -1;
-      panicCopy_ = 0;
-    }
-    handleGPWS();
-
-    // flocking
-    if (skippedLeftHemisphere_ >= pBird_.skipLeftHemisphere) skippedLeftHemisphere_ = 0; else  ++skippedLeftHemisphere_;
-    if (skippedRightHemisphere_ >= pBird_.skipRightHemisphere) skippedRightHemisphere_ = 0; else  ++skippedRightHemisphere_;
-    float a = -180.0f + 0.5f * pBird_.blindAngle;     // default: both sided view
-    float b = 180.0f - 0.5f * pBird_.blindAngle;      // default: both sided view
-    if (skippedLeftHemisphere_)
-    {  // left side skipped
-      a = -0.5f * pBird_.binocularOverlap;
-    }
-    else if (skippedRightHemisphere_)
-    {  // right side skipped
-      b = 0.5f * pBird_.binocularOverlap;
-    }
-    steerToFlock(fov_filter(a, b));
-
-    // Default parameter
-    wBetaIn_ = pBird_.wBetaIn;
-    wBetaOut_ = pBird_.wBetaOut;
-    alignmentWeight_ = pBird_.alignmentWeight;
-
-    // Adjust for the case of alertness
-    if (!alreadyAlerted && (predatorReaction_ & PredationReactions::Alerted))
-    {
-      // the prey became alerted in the current update.
-      alertnessRelaxation_ = pPrey_.AlertnessRelexation;
-    }
-    if (alertnessRelaxation_.x > 0.0f)
-    {
-      reactionInterval_ *= pPrey_.AlertedReactionTimeFactor;
-      wBetaIn_ = pPrey_.AlertedWBetaIn;
-      wBetaOut_ = pPrey_.AlertedWBetaOut;
-      alignmentWeight_ = pPrey_.AlertedAlignmentWeight;
-    }
-    else
-    {
-      // alertness relaxation over.
-      predatorReaction_ &= ~PredationReactions::Alerted;
-    }
-	if (pBird_.maneuver == 1) 
-	{
-		steering_ = glm::vec3(1, 0, 0) * 20.0f;
-	};
-	if (pBird_.maneuver == 2) { maneuver_lat_roll(); };
-	if (pBird_.maneuver == 3){ maneuver_lat(); };
-    steering_ += boundary_;
-    steering_ += predatorForce_;
-    steering_ += speedControl() * B_[0];
-
-	if (GFLOCKNC.prey_begin()->id() == id_ && Sim.Params().evolution.TrajectoryPrey)
-	{
-		positionsAndSpeed.push_back(glm::vec4(position_, glm::length(velocity_)));
-
-
-	}
-    //noise();    // add some noise
-
-    avx::vec3 force(steering_);
-    const float f2 = avx::length2(force);
-    if (f2 > pBird_.maxForce * pBird_.maxForce) {
-      force /= avx::fast_sqrt(f2);
-      force *= pBird_.maxForce;
-      //force.store(steering_);
-    }
-    force.store(force_);
-	steering_ = glm::normalize(steering_) * speed_ * speed_ *  pBird_.randomWeight;
-	//Sim.PrintVector(steering_, "steering");
-    // calculate time of next reaction
-    nextReactionTime();
+	  handleManeuvers(); 
+      // calculate time of next reaction
+      nextReactionTime();
   }
-  // Physics works in real time...
-  alertnessRelaxation_ -= dt;
-  returnRelaxation_ -= dt;
 
   if (Sim.Params().evolution.externalPrey)
   {
-
 	  flightExternal();
-	  
-
+	 
   }
   else
   {
 		flightDynamic();
 		integration(dt);
   }
-  
-  
   regenerateLocalSpace(dt);
-
   appendTrail(trail_, position_, B_[2], color_tex_, dt);
-
-  //std::cout << "\n x: " << B_[0].x << " y: " << B_[0].y << " z: " << B_[0].z;
-
-  if (!GetAsyncKeyState(VK_F11) && keyState_ != 0)
-  {
-	  keyState_ = 0;
-  }
-  if (GetAsyncKeyState(VK_F11) && keyState_ == 0)
-  {
-	 testSettings();
-	 
-  }
-  
+  testSettings();
 }
 
 
-//! \brief Calculates the flight force
-//! 
-//! \return Flight force
-//! \f[    L = \frac{1}{2}p S v^2 C_l                                    \f]
-//! \f[    D = \frac{1}{2}p S v^2 C_d                                    \f]
-//! \f[    L_0 = \frac{1}{2}p S v_0^2 C_l = mg                           \f]
-//! \f[    L = \frac{v^2}{v_0^2} \cdot L_0 = \frac{v^2}{v_0^2} \cdot mg  \f]
-//! \f[    D = \frac{C_d}{C_l} \cdot L                                   \f]
-//! \f[    D_0 = \frac{C_d}{C_l} \cdot L_0 = T_0                         \f]
-//! 
+
+void CPrey::handleTrajectoryStorage()
+{
+	if (GFLOCKNC.prey_begin()->id() == id_ && Sim.Params().evolution.TrajectoryPrey)
+	{
+		positionsAndSpeed.push_back(glm::vec4(position_, glm::length(velocity_)));
+	}
+}
+
+void CPrey::handleManeuvers()
+{
+	if (pBird_.maneuver == 1) steering_ = glm::vec3(1, 0, 0) * 20.0f;
+	if (pBird_.maneuver == 2) { maneuver_lat_roll(); };
+	if (pBird_.maneuver == 3){ maneuver_lat(); };
+}
+
+
 void CPrey::flightDynamic()
 {
 
@@ -362,7 +258,7 @@ void CPrey::flightDynamic()
 
 
 	//calculate roll acceleration with inertia and b maxlift
-	//HACK TIMES 2
+	//HACK TIMES 2 (no negative lift)
 	angular_acc_ = liftMax * (b_maxlift / 4) / (Inertia) / 2;
 
 
@@ -383,14 +279,22 @@ void CPrey::flightDynamic()
 
 void CPrey::maneuver_lat_roll()
 {
-	float max = glm::length(liftMax_) - pBird_.bodyMass;
-	if (fmod(Sim.SimulationTime(), 0.05) < 0.025)
+	float max = glm::length(liftMax_) - pBird_.bodyMass*9.81 / 2.0f;
+	//if (fmod(Sim.SimulationTime(), 0.05) < 0.025)
+	//HACK
+	if ((float(rand()) / float(RAND_MAX)) > (1.0f - reactionInterval_*2.0f))
 	{
-		random_orientation_ = glmutils::unit_vec3(rnd_eng());
-		random_orientation_.y = random_orientation_.y / 3 ;
+		random_orientation_ = (0.8f * glmutils::unit_vec3(rnd_eng()) + 0.2f * random_orientation_);
+		random_orientation_.y = 0.0f ;
 		random_orientation_ = glm::normalize(random_orientation_);
+		random_orientation_.y = float(rand()) / float(RAND_MAX) * 0.5f -0.25f;
+		random_orientation_ = glm::normalize(random_orientation_);
+		//random_orientation_ = float(rand()) / float(RAND_MAX) * B_
+		Sim.PrintVector(random_orientation_, "random vec");
 	};
-	steering_ += random_orientation_ * float((0.5*sin(Sim.SimulationTime()) + 0.5) * max);
+	//Hack
+	//max /= 1.5f;
+	steering_ += random_orientation_ * float((0.5f*sin(Sim.SimulationTime()) + 0.5f) * max);
 	
 }
 
@@ -500,9 +404,9 @@ inline void CPrey::steerToFlock(fov_filter const& filter)
   bankAlignment *= alignmentWeight_.y;
   alignment_ -= bankAlignment * B_[2];
 
-  steering_ = separation_;
-  steering_ += alignment_;
-  steering_ += cohesion_;
+  //steering_ = separation_;
+  //steering_ += alignment_;
+  //steering_ += cohesion_;
 }
 
 
@@ -555,6 +459,12 @@ void CPrey::handleEvasion()
 
 void CPrey::testSettings()
 {
+	if (!GetAsyncKeyState(VK_F11) && keyState_ != 0)
+	{
+		keyState_ = 0;
+	}
+	if (GetAsyncKeyState(VK_F11) && keyState_ == 0)
+	{
 		keyState_ = 1;
 		Sim.PrintFloat(Sim.SimulationTime(), "Prey settings. Simulation Time");
 		Sim.PrintString(pBird_.birdName);
@@ -588,7 +498,7 @@ void CPrey::testSettings()
 		Sim.PrintVector(B_[0], "body x");
 		Sim.PrintVector(B_[1], "body y");
 		Sim.PrintVector(B_[2], "body z");
-
+	}
 		
 }
 
