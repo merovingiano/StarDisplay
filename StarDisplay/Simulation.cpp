@@ -786,7 +786,8 @@ void Simulation::main(int argc, char** argv)
   setNumPredators(params_.roost.numPredators);
   AppWindow.InitContextMenu();
   ResetCurrentStatistic();
-  EnterGameLoop();
+  EnterGameLoopNoGraphicsNoLua();
+ // EnterGameLoop();
 }
 
 
@@ -819,4 +820,36 @@ int main(int argc, char** argv)
   if (AppWindow.IsWindow()) AppWindow.DestroyWindow();
   std::cout << "Regards\n";
   return 0;
+}
+
+
+
+void Simulation::EnterGameLoopNoGraphicsNoLua()
+{
+	GlobalTimerRestart();
+	const double dt = params_.IntegrationTimeStep;
+	SimulationTime_ = 0.0;
+
+	double frameBegin = GlobalTimerNow();
+	luabind::object LuaTimeTickHook;
+	for (;;)
+	{
+		// Serve message pump
+		MSG msg;
+		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) != 0)
+		{
+			if (msg.message == WM_QUIT)
+			{
+				return;
+			}
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+			LuaTimeTickHook = luabind::globals(Lua)["TimeTickHook"];
+		}
+
+		UpdateSimulation(dt);
+		SimulationTime_ += dt;
+		if (fmod(SimulationTime_, 1.0f) > 0 && fmod(SimulationTime_, 1.0f) <= dt) PrintFloat(SimulationTime_, "time = ");
+		timeSinceEvolution += dt;
+	}
 }

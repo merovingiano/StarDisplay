@@ -91,7 +91,7 @@ private:
   void copyBirdParam(luabind::object& obj, Param::Bird& bird);
 private:
   void EnterGameLoop();
-
+  void EnterGameLoopNoGraphicsNoLua();
 private:
   double  SimulationTime_;
   double  UpdateTime_;
