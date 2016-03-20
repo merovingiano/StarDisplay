@@ -68,20 +68,10 @@ end
 RT = {0.001,0.05}
 
 thecounter = 0
-for n = 0,60,1 do
+for n = 12,60,1 do
 	print(n)
 	thecounter = thecounter + 1
 	print("counter: " .. thecounter)
     experiments[tostring(thecounter)] = newExp(n)
 end
 
-experiments['53']['preyBird']['maneuver'] = 8
-
-for key, value in pairs(experiments) do
-	print("key: ".. key)
-	print(experiments[key]['Param']['evolution']['fileName'])
-	print(experiments[key]['preyBird']['maneuver'])
-	--for key, value in pairs(experiments[key]['Param']['evolution']) do
-	--   print("key: ".. key)
-	--end
-end
