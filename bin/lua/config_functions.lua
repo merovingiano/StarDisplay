@@ -98,7 +98,7 @@ PredatorFactory = PredatorFactory or function ()
       predator = Simulation.NewPredator(id, position, forward)
     end
     Birds.newBird(predator, gParam.Birds.csv_file_species , gParam.Birds.csv_file_prey_predator_settings,"Peregrine falcon", 1)
-    predator:SetTrail(true)
+    predator:SetTrail(false)
     predator:SetTargetPrey(Simulation.GetActiveCamera():GetFocalPrey())
     predator:StartAttack()
     return predator
