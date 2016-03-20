@@ -11,6 +11,7 @@ defaultPred_bird_userdata, defaultPred_pred_userdata, defaultPred_bird_table, de
 function DataStorage.DataStorage()
 --store data of experiment parameters, assuming all prey have the same parameters and all predators have too.
    return function(expNum)
+   print("\n expNUM " .. expNum)
 	   folder = experiments[expNum]['Param']['DataStorage']['folder'] .. "test\\" .. tostring(expNum) .. "\\" 
 	   os.execute( "mkdir " ..  "\"" .. experiments[expNum]['Param']['DataStorage']['folder'] .. "test\"" )
 	   os.execute( "mkdir " ..  "\"" .. experiments[expNum]['Param']['DataStorage']['folder'] .. "test\\" .. tostring(expNum) .."\"" )

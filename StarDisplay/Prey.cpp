@@ -93,6 +93,8 @@ CPrey::CPrey(int ID, const glm::vec3& position, const glm::vec3& forward)
   flockId_(-1),                // 'invalid'
   flockSize_(0)
 {
+	random_orientation_ = glm::vec3(1.0f,0.0f,0.0f);
+	Sim.PrintString("newBird!");
 }
 
 
@@ -163,11 +165,12 @@ void CPrey::update(float dt, const CFlock& flock)
   {
 	  predatorForce_ = boundary_ = gyro_ = steering_ = glm::vec3(0);
       if (pPrey_.EvasionStrategyTEMP != 0 ) handleEvasion();
-      handleBoundary(pBird_.altitude, position_.y);
 	  handleManeuvers(); 
+	  handleBoundary(pBird_.altitude, position_.y);
       // calculate time of next reaction
       nextReactionTime();
   }
+
 
   if (Sim.Params().evolution.externalPrey)
   {
@@ -282,19 +285,17 @@ void CPrey::maneuver_lat_roll()
 	float max = glm::length(liftMax_) - pBird_.bodyMass*9.81 / 2.0f;
 	//if (fmod(Sim.SimulationTime(), 0.05) < 0.025)
 	//HACK
-	if ((float(rand()) / float(RAND_MAX)) > (1.0f - reactionInterval_*2.0f))
+	if ((float(rand()) / float(RAND_MAX)) > (1.0f - reactionInterval_*10.0f))
 	{
-		random_orientation_ = (0.8f * glmutils::unit_vec3(rnd_eng()) + 0.2f * random_orientation_);
+		random_orientation_ = (1.0f * glmutils::unit_vec3(rnd_eng()) + 0.0f * random_orientation_);
 		random_orientation_.y = 0.0f ;
 		random_orientation_ = glm::normalize(random_orientation_);
 		random_orientation_.y = float(rand()) / float(RAND_MAX) * 0.5f -0.25f;
 		random_orientation_ = glm::normalize(random_orientation_);
 		//random_orientation_ = float(rand()) / float(RAND_MAX) * B_
-		Sim.PrintVector(random_orientation_, "random vec");
+		//Sim.PrintVector(random_orientation_, "random vec");
 	};
-	//Hack
-	//max /= 1.5f;
-	steering_ += random_orientation_ * float((0.5f*sin(Sim.SimulationTime()) + 0.5f) * max);
+	steering_ += random_orientation_ * max;
 	
 }
 
@@ -302,7 +303,7 @@ void CPrey::maneuver_lat()
 {
 	float max = glm::sqrt(glm::length(liftMax_)*glm::length(liftMax_) - pBird_.bodyMass * pBird_.bodyMass);
 	steering_ += (H_[2]) *float((0.5*sin(Sim.SimulationTime()) + 0.5) * max);
-	if (B_[0].y < 0)  steering_ +=glm::vec3(0,0.2,0);
+	// if (B_[0].y < 0)  steering_ += glm::vec3(0, 0.2, 0);
 }
 
 void CPrey::calculateAccelerations()
@@ -466,6 +467,7 @@ void CPrey::testSettings()
 	if (GetAsyncKeyState(VK_F11) && keyState_ == 0)
 	{
 		keyState_ = 1;
+		Sim.PrintString(Sim.Params().evolution.fileName);
 		Sim.PrintFloat(Sim.SimulationTime(), "Prey settings. Simulation Time");
 		Sim.PrintString(pBird_.birdName);
 		Sim.PrintFloat(pBird_.maneuver, "maneuver");

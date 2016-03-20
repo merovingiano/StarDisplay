@@ -154,7 +154,7 @@ function Camera:UpdateHook (sim_dt)
   if mode == "Television" then
     cc.center = ti.pos
 
-	if glm.length(ti.pos - cc.eye) > 80 then cc.eye = ti.pos end
+	if glm.length(ti.pos - cc.eye) > 110 then cc.eye = ti.pos + cc:GetFocalBird().forward * 100 +  cc:GetFocalBird().side * 10 end
   elseif mode == "Observer" then
     local dist = glm.length(cc.eye - cc.center)
     cc.center = ti.pos

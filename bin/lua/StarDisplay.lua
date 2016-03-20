@@ -69,22 +69,19 @@ Simulation.ModelSet = {
   --{ name = "Delta", LOD = { {acFile = "delta.ac", pxCoverage = 0} }, Scale = 1.5, texMix = 0.0 }, 
   --{ name = "Delta", LOD = { {acFile = "delta.ac", pxCoverage = 0} }, Scale = 1.5, texMix = 0.0 }, 
   --{ name = "Peregrine", LOD = { {acFile = "peregrine.ac", pxCoverage = 0} }, Scale = 1.5, texMix = 0.0 }, 
-  -- { name = "DSMALLFILLthreePeregrineUV", LOD = { {acFile = "DSMALLFILLthreePeregrineUV.ac", pxCoverage = 0} }, Scale = 1.2, texMix = 0.0 }, 
+   --{ name = "DSMALLFILLthreePeregrineUV", LOD = { {acFile = "DSMALLFILLthreePeregrineUV.ac", pxCoverage = 0} }, Scale = 1.2, texMix = 0.0 }, 
   --{ name = "eagle2", LOD = { {acFile = "eagle2.ac", pxCoverage = 0} }, Scale = 1.5, texMix = 0.0 }, 
   { name = "eagle3", LOD = { {acFile = "eagle3.ac", pxCoverage = 0} }, Scale = 0.7, texMix = 0.0 }, 
   { name = "Dove", LOD = { {acFile = "dove.ac", pxCoverage = 0} }, Scale = 1.6, texMix = 0.9 }, 
   --{ name = "Eagle", LOD = { {acFile = "eagle.ac", pxCoverage = 0} }, Scale = 1.5, texMix = 0.9 }, 
-   { name = "Humbird", 
-    LOD = { 
-      {acFile = "humbirdLOD1.ac", pxCoverage = 100},
-      {acFile = "humbirdLOD2.ac", pxCoverage = 50},
-      {acFile = "humbirdLOD3.ac", pxCoverage = 0},
-    },
+  -- { name = "Humbird", 
+  --  LOD = { 
+  --    {acFile = "humbirdLOD1.ac", pxCoverage = 100},
+  --    {acFile = "humbirdLOD2.ac", pxCoverage = 50},
+  --    {acFile = "humbirdLOD3.ac", pxCoverage = 0},
+   -- },
     { name = "Blancer", LOD = { {acFile = "blancer.ac", pxCoverage = 0} }, Scale = 0.165, texMix = 0.9 }, 
   { name = "Rabbit", LOD = { {acFile = "rabbit.ac", pxCoverage = 0} }, Scale = 1.5, texMix = 0.9 }, 
-
-    Scale = 1.0, texMix = 0.9 
-  },  
   { name = "Condor", LOD = { {acFile = "condor.ac", pxCoverage = 0} }, Scale = 1.5, texMix = 0.9 },
   --{ name = "Sphere", LOD = {}, Scale = 1.0, texMix = 1.0 },
 

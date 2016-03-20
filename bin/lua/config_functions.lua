@@ -76,6 +76,7 @@ PreyFactory = PreyFactory or function ()
       position.y = 120
       prey = Simulation.NewPrey(id, position, Init_flockForward)
     end
+	prey:SetTrail(true)
     Birds.newBird(prey, gParam.Birds.csv_file_species , gParam.Birds.csv_file_prey_predator_settings,"Common starling", 0)
 
 	
