@@ -78,6 +78,7 @@ private:
   void UpdateBirds(const float sim_dt);
   void UpdateCurrentStatistic(double stat_dt);
   void UpdateSimulation(double sim_dt);
+  void UpdateSimulationNoGraphicsNoFlock(double sim_dt);
   void deleteInvisibles();
 
 private:

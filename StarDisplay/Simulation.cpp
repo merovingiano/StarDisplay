@@ -844,12 +844,38 @@ void Simulation::EnterGameLoopNoGraphicsNoLua()
 			}
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
-			LuaTimeTickHook = luabind::globals(Lua)["TimeTickHook"];
+			
 		}
 
-		UpdateSimulation(dt);
+		UpdateSimulationNoGraphicsNoFlock(dt);
 		SimulationTime_ += dt;
 		if (fmod(SimulationTime_, 1.0f) > 0 && fmod(SimulationTime_, 1.0f) <= dt) PrintFloat(SimulationTime_, "time = ");
 		timeSinceEvolution += dt;
 	}
+}
+
+
+
+void Simulation::UpdateSimulationNoGraphicsNoFlock(double sim_dt)
+{
+	
+		UpdateBirds(static_cast<float>(sim_dt));
+		flock_->update(static_cast<float>(sim_dt), 0);
+		
+
+		// specifically for evolution setting:
+		if (params_.evolution.type == "PN")
+		{
+			if (timeSinceEvolution > params_.evolution.durationGeneration)
+			{
+				evolution.apply();
+				evolution.save(params_.evolution.fileName.c_str(), 0);
+				Sim.PrintFloat(Sim.experiments[0].pred.pursuit.type, "pursuit c++");
+				//Sim.StorageData_(Sim.expNumb);
+				std::cout << "\n test";
+				timeSinceEvolution = 0.0f;
+			}
+		}
+
+	
 }
