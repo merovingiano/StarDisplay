@@ -441,7 +441,8 @@ void CPredator::flightDynamic()
 	float forwardAccel = std::max(-D + T, -D2);
 	flightForce_ = lift_ + B_[0] * (forwardAccel);
 	flightForce_.y -= pBird_.bodyMass * 9.81;        // apply gravity
-	if (glide_ == true) span_ = 1.0f - (b - bmin) / (bmax - bmin); else span_ = 0.0f;                     
+	if (glide_ == true) span_ = 1.0f - (b - bmin) / (bmax - bmin); else span_ = 0.0f;    
+
 }
 
 

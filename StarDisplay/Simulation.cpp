@@ -109,7 +109,7 @@ void Simulation::GetExperimentSettings(const luabind::object& obj)
 		CFlock::prey_iterator Prey = GFLOCKNC.prey_begin();
 		CFlock::pred_iterator Pred = GFLOCKNC.predator_begin();
 		Param::Experiment experiment;
-		int intKey = luabind::object_cast<int>(i.key());
+		std::string intKey = luabind::object_cast<std::string>(i.key());
 		experiment.preyBird = luabind::object_cast<Param::Bird>(obj[intKey]["preyBird"]);
 		experiment.predBird = luabind::object_cast<Param::Bird>(obj[intKey]["predBird"]);
 		experiment.pred = luabind::object_cast<Param::Predator>(obj[intKey]["pred"]);
@@ -616,7 +616,7 @@ void Simulation::UpdateSimulation(double sim_dt)
 			evolution.apply();
 			evolution.save(params_.evolution.fileName.c_str(), 0); 
 			Sim.PrintFloat(Sim.experiments[0].pred.pursuit.type, "pursuit c++");
-			Sim.StorageData_(Sim.expNumb);
+			//Sim.StorageData_(Sim.expNumb);
 			std::cout << "\n test";
 			timeSinceEvolution = 0.0f;
 		}

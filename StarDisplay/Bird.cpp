@@ -137,33 +137,7 @@ float CBird::speedControl() const
 
 void CBird::handleBoundary(float preferredAltitude, float refAltitude)
 {
-  avx::vec2 n(position_.x, position_.z);
-  const float distance2Center = avx::length(n);
-  const float distance2Border = distance2Center - effBoundary_;
-  if (distance2Border > 0.0f) 
-  {
-    effBoundary_ = PROOST.Radius - pBird_.innerBoundary * PROOST.Radius;
-    n /= distance2Center;      // boundary normal
-    avx::vec2 f(H_[0].x, H_[0].z);
-    f = avx::fast_normalize(f);
-    const float outwardHeading = 0.5f * (1.0f + avx::dot(f,n));    // rescale to (0..1) 
-    if (outwardHeading > ::cos(glm::radians(pBird_.boundaryReflectAngle)))
-    {
-      if (avx::perpDot(n, f) > 0.0f)
-      {
-        boundary_ = (+outwardHeading * distance2Border) * H_[2];
-      } else {
-        boundary_ = (-outwardHeading * distance2Border) * H_[2];
-      }
-    }
-  }
-  else if (distance2Center < (PROOST.Radius - pBird_.innerBoundary * PROOST.Radius))
-  {
-    effBoundary_ = PROOST.Radius;
-  }
-  // vertical boundary force ~ altitude deviation
-  boundary_.y = glm::clamp((preferredAltitude - refAltitude), -10.0f, 10.0f);
-  boundary_ *= pBird_.boundaryWeight;
+	steering_.y += glm::clamp((preferredAltitude - refAltitude), -pBird_.bodyMass*9.81f*3, pBird_.bodyMass*9.81f*3);
 }
 
 
@@ -275,7 +249,11 @@ void CBird::regenerateLocalSpace(float dt)
 	// calculate timepoints at desired bank angle
 
 	float p = turn;
-	float a = angular_acc_;
+	
+	
+	//HACK
+
+    float a = angular_acc_;
 	float c = roll_rate_;
 	// first set the roll acceleration in the direction of the desired bank angle
 	if (p < 0) a *= -1;
@@ -290,7 +268,7 @@ void CBird::regenerateLocalSpace(float dt)
 
 
 
-	desiredLift_ = glm::length(Fl);
+	desiredLift_ = glm::length(Fl); 
 
 
 

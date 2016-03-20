@@ -99,7 +99,7 @@ void GLSLInstancingProg<LOD>::do_instance(const CBird& bird, size_t ofs, int lod
   if (ofs < (lod + 1) * MaxN_)
   { 
     attrib_t* dst = ((attrib_t*)mAttrib_.get() + lod * MaxN_ + ofs);
-    const float scale = (bird.id() == ignoreId) ? 0 : bird.wingSpan() * model_->modelScale();
+    const float scale = (bird.id() == ignoreId) ? 0 : bird.wingSpan() * model_->modelScale()*2.0f;
     avx::vec4 c0(bird.forward(), scale);
     avx::vec4 c1(bird.up(), 0);
     avx::vec4 c2(bird.position(), bird.getCurrentColorTex());
