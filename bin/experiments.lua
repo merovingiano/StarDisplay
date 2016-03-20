@@ -50,7 +50,7 @@ local newExp = function (a)
 
     experiment.preyBird = robin_bird
 	experiment.prey.DetectCruising = true
-	experiment.preyBird.maneuver = maneuverCounter
+	experiment.preyBird.maneuver = 2
 	experiment.predBird.reactionTime = RT[RTCounter]
 	experiment.Param.evolution.fileName = "n" .. (a + 1) .. "_" .. experiment.preyBird.birdName .. "_RT_" ..   RT[RTCounter] .. "_man_" ..   maneuverCounter .. ".txt"
 
@@ -61,7 +61,7 @@ end
 RT = {0.001,0.05}
 
 counter = 0
-for n = 20,(30),1 do
+for n = 14,(30),1 do
 	print(n)
 	counter = counter + 1
     experiments[counter] = newExp(n)
