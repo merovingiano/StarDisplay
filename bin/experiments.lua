@@ -2,7 +2,6 @@
 local pursuits = require "pursuits"
 local Birds = require "Birds"
 local inspect = require "inspect2"
-local gParam = require "Defaults"
 require "helper_functions"
 
 cBird, cPrey, preyBird, prey = Birds.newBird(nil, gParam.Birds.csv_file_species , gParam.Birds.csv_file_prey_predator_settings,"Common starling", 0)
@@ -72,7 +71,7 @@ end
 RT = {0.001,0.05}
 
 thecounter = 0
-for n = 1,24,1 do
+for n = 0,48,1 do
 	print(n)
 	thecounter = thecounter + 1
 	print("counter: " .. thecounter)
@@ -81,7 +80,7 @@ end
 
 for key, value in pairs(experiments) do
 	print("key: ".. key)
-	for key, value in pairs(experiments[key]) do
-	   print("key: ".. key)
-	end
+	--for key, value in pairs(experiments[key]) do
+	--   print("key: ".. key)
+	--end
 end
