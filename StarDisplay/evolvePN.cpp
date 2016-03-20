@@ -677,7 +677,7 @@ void EvolvePN::Shuffle()
 
 
 
-		first->setTrail(true);
+		//first->setTrail(true);
 		first->BeginHunt(); 
 		//std::cout << "\npred num " << first->id();
 		//std::cout << "\nN :  " << first->get_N() << " startAltitude :  " << first->getStartAltitude() << " startXDist :  " << first->getStartXDist() << " maxForce :  " << first->GetBirdParams().maxForce << " DPadjParam :  " << first->getDPAdjParam() << " Generation: " << first->getGeneration();

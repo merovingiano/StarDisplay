@@ -8,10 +8,6 @@ cBird, cPrey, preyBird, prey = Birds.newBird(nil, gParam.Birds.csv_file_species 
 cBird, cPred, predBird, pred = Birds.newBird(nil, gParam.Birds.csv_file_species , gParam.Birds.csv_file_prey_predator_settings,"Peregrine falcon", 1)
 
 
-starling_bird, starling_prey = Birds.newBird(nil, gParam.Birds.csv_file_species , gParam.Birds.csv_file_prey_predator_settings,"Common starling", 0)
-dove_bird, dove_prey = Birds.newBird(nil, gParam.Birds.csv_file_species , gParam.Birds.csv_file_prey_predator_settings,"Rock dove", 0)
-robin_bird, robin_prey = Birds.newBird(nil, gParam.Birds.csv_file_species , gParam.Birds.csv_file_prey_predator_settings,"European robin", 0)
-peregrine_bird, peregrine_prey = Birds.newBird(nil, gParam.Birds.csv_file_species , gParam.Birds.csv_file_prey_predator_settings,"Peregrine falcon", 0)
 
 
 
@@ -25,12 +21,17 @@ experiments = {}
 
 
 local newExp = function (a)
-    defaultPrey_bird, defaultPrey_prey = Birds.newBird(nil, gParam.Birds.csv_file_species , gParam.Birds.csv_file_prey_predator_settings,"Common starling", 0)
-    defaultPred_bird, defaultPred_pred = Birds.newBird(nil, gParam.Birds.csv_file_species , gParam.Birds.csv_file_prey_predator_settings,"Peregrine falcon", 1)
-    RTCounter = repeater(a, 1,2)
-	PreyCounter = repeater(a, 2,4)
-	maneuverCounter = repeater(a,8,3)
-	experiment = 
+    local starling_bird,  starling_prey = Birds.newBird(nil, gParam.Birds.csv_file_species , gParam.Birds.csv_file_prey_predator_settings,"Common starling", 0)
+    local dove_bird,  dove_prey = Birds.newBird(nil, gParam.Birds.csv_file_species , gParam.Birds.csv_file_prey_predator_settings,"Rock dove", 0)
+    local robin_bird,  robin_prey = Birds.newBird(nil, gParam.Birds.csv_file_species , gParam.Birds.csv_file_prey_predator_settings,"European robin", 0)
+    local peregrine_bird,  peregrine_prey = Birds.newBird(nil, gParam.Birds.csv_file_species , gParam.Birds.csv_file_prey_predator_settings,"Peregrine falcon", 0)
+
+    local defaultPrey_bird, defaultPrey_prey = Birds.newBird(nil, gParam.Birds.csv_file_species , gParam.Birds.csv_file_prey_predator_settings,"Common starling", 0)
+    local defaultPred_bird, defaultPred_pred = Birds.newBird(nil, gParam.Birds.csv_file_species , gParam.Birds.csv_file_prey_predator_settings,"Peregrine falcon", 1)
+    local RTCounter = repeater(a, 1,2)
+	local PreyCounter = repeater(a, 2,4)
+	local maneuverCounter = repeater(a,8,3)
+	local experiment = 
 	{
 		Param = deepcopy(gParam),
 		preyBird = defaultPrey_bird,
@@ -47,10 +48,6 @@ local newExp = function (a)
 	experiment.Param.evolution.durationGeneration = 40
 	experiment.Param.evolution.evolveDPAdjParam = false
 
-  
-	RTCounter = repeater(a, 1,2)
-	PreyCounter = repeater(a, 2,4)
-	maneuverCounter = repeater(a,8,3)
 	--experiment.preyBird = peregrine_bird
     if (PreyCounter == 1) then experiment.preyBird = robin_bird end
 	if (PreyCounter == 2) then experiment.preyBird = dove_bird  end
@@ -59,7 +56,7 @@ local newExp = function (a)
 	experiment.preyBird.maneuver = maneuverCounter
 	
 	experiment.predBird.reactionTime = RT[RTCounter]
-	experiment.Param.evolution.fileName = "n" .. (a + 1) .. "_" .. experiment.preyBird.birdName .. "_RT_" ..   RT[RTCounter] .. "_man_" ..   maneuverCounter .. ".txt"
+	experiment.Param.evolution.fileName = "LAP" .. (a + 1) .. "_" .. experiment.preyBird.birdName .. "_RT_" ..   RT[RTCounter] .. "_man_" ..   maneuverCounter .. ".txt"
 	experiment.pred['VisualError'] = 0
 
 	print(experiment.Param.evolution.fileName)
@@ -71,16 +68,20 @@ end
 RT = {0.001,0.05}
 
 thecounter = 0
-for n = 0,48,1 do
+for n = 0,60,1 do
 	print(n)
 	thecounter = thecounter + 1
 	print("counter: " .. thecounter)
     experiments[tostring(thecounter)] = newExp(n)
 end
 
+experiments['53']['preyBird']['maneuver'] = 8
+
 for key, value in pairs(experiments) do
 	print("key: ".. key)
-	--for key, value in pairs(experiments[key]) do
+	print(experiments[key]['Param']['evolution']['fileName'])
+	print(experiments[key]['preyBird']['maneuver'])
+	--for key, value in pairs(experiments[key]['Param']['evolution']) do
 	--   print("key: ".. key)
 	--end
 end
