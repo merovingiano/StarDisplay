@@ -56,7 +56,7 @@ local newExp = function (a)
 	experiment.preyBird.maneuver = maneuverCounter
 	
 	experiment.predBird.reactionTime = RT[RTCounter]
-	experiment.Param.evolution.fileName = "LAP" .. (a + 1) .. "_" .. experiment.preyBird.birdName .. "_RT_" ..   RT[RTCounter] .. "_man_" ..   maneuverCounter .. ".txt"
+	experiment.Param.evolution.fileName = "PC" .. (a + 1) .. "_" .. experiment.preyBird.birdName .. "_RT_" ..   RT[RTCounter] .. "_man_" ..   maneuverCounter .. ".txt"
 	experiment.pred['VisualError'] = 0
 
 	print(experiment.Param.evolution.fileName)
@@ -74,4 +74,5 @@ for n = 12,60,1 do
 	print("counter: " .. thecounter)
     experiments[tostring(thecounter)] = newExp(n)
 end
+
 
