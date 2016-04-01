@@ -202,6 +202,7 @@ void CPrey::handleManeuvers()
 	if (pBird_.maneuver == 1) steering_ = glm::vec3(1, 0, 0) * 20.0f;
 	if (pBird_.maneuver == 2) { maneuver_lat_roll(); };
 	if (pBird_.maneuver == 3){ maneuver_lat(); };
+	if (pBird_.maneuver == 4){ maneuver_lat_roll2(); };
 }
 
 
@@ -298,6 +299,27 @@ void CPrey::maneuver_lat_roll()
 	steering_ += random_orientation_ * max;
 	
 }
+
+
+void CPrey::maneuver_lat_roll2()
+{
+	float max = glm::length(liftMax_);
+	//if (fmod(Sim.SimulationTime(), 0.05) < 0.025)
+	//HACK
+	if ((float(rand()) / float(RAND_MAX)) > (1.0f - reactionInterval_*20.0f))
+	{
+		random_orientation_ = (1.0f * glmutils::unit_vec3(rnd_eng()) + 0.0f * random_orientation_);
+		random_orientation_.y = 0.0f;
+		random_orientation_ = glm::normalize(random_orientation_);
+		random_orientation_.y = float(rand()) / float(RAND_MAX) * 0.5f - 0.25f;
+		random_orientation_ = glm::normalize(random_orientation_);
+		//random_orientation_ = float(rand()) / float(RAND_MAX) * B_
+		//Sim.PrintVector(random_orientation_, "random vec");
+	};
+	steering_ += random_orientation_ * max;
+
+}
+
 
 void CPrey::maneuver_lat()
 {

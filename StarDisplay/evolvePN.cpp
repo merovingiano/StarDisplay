@@ -625,10 +625,10 @@ void EvolvePN::Shuffle()
 	{
 		if (Generation_ == 1)
 		{
-			if (Sim.Params().evolution.evolvePN) first->set_N((float(rand()) / (float(RAND_MAX) / 200.0f) ) - 100.0f);
+			if (Sim.Params().evolution.evolvePN) first->set_N((float(rand()) / (float(RAND_MAX) / 10.0f) ));
 			if (Sim.Params().evolution.evolveDPAdjParam) first->setDPAdjParam((float(rand()) / (float(RAND_MAX) / 200.0f)) - 100.0f);
 			if (Sim.Params().evolution.evolvemaxForce) first->GetBirdParams().maxForce = ((float(rand()) / (float(RAND_MAX) / 100.0f)));
-			first->setStartAltitude(float(rand()) / (float(RAND_MAX) / (100.0f * 6.0f)));
+			first->setStartAltitude(float(rand()) / (float(RAND_MAX) / (100.0f * 12.0f)));
 			first->setStartXDist(float(rand()) / (float(RAND_MAX) / (100.0f * 6.0f)));
 			first->setGeneration(Generation_);
 
