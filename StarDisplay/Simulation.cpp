@@ -785,9 +785,8 @@ void Simulation::main(int argc, char** argv)
   setNumPrey(params_.roost.numPrey);
   setNumPredators(params_.roost.numPredators);
   AppWindow.InitContextMenu();
-  ResetCurrentStatistic();
-  EnterGameLoopNoGraphicsNoLua();
- // EnterGameLoop();
+   ResetCurrentStatistic();
+   if (params_.renderFlags.turnOffGraphics) EnterGameLoopNoGraphicsNoLua(); else EnterGameLoop();
 }
 
 

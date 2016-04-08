@@ -114,6 +114,7 @@ local Default = {
     slowMotion = false,
     rtreeLevel = 0,
     helpMsg = "",
+	turnOffGraphics = false,
   },
 
 }

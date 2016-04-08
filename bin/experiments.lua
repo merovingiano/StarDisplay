@@ -68,7 +68,7 @@ end
 RT = {0.001,0.05}
 
 thecounter = 0
-for n = 0,60,1 do
+for n = 1,24,2 do
 	print(n)
 	thecounter = thecounter + 1
 	print("counter: " .. thecounter)

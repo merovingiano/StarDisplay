@@ -201,6 +201,7 @@ namespace libParam
     cobj.slowMotion = object_cast<bool>(luaobj["slowMotion"]);
     cobj.rtreeLevel = object_cast<int>(luaobj["rtreeLevel"]);
     cobj.helpMsg = object_cast<const char*>(luaobj["helpMsg"]);
+	cobj.turnOffGraphics = object_cast<bool>(luaobj["turnOffGraphics"]);
     return cobj;
   }
 
@@ -454,6 +455,7 @@ namespace libParam
     luaobj["slowMotion"] = cobj.slowMotion;
     luaobj["rtreeLevel"] = cobj.rtreeLevel;
     luaobj["helpMsg"] = cobj.helpMsg;
+	luaobj["turnOffGraphics"] = cobj.turnOffGraphics;
     return luaobj;
   }
 
