@@ -29,8 +29,8 @@ local newExp = function (a)
     local defaultPrey_bird, defaultPrey_prey = Birds.newBird(nil, gParam.Birds.csv_file_species , gParam.Birds.csv_file_prey_predator_settings,"Common starling", 0)
     local defaultPred_bird, defaultPred_pred = Birds.newBird(nil, gParam.Birds.csv_file_species , gParam.Birds.csv_file_prey_predator_settings,"Peregrine falcon", 1)
     local RTCounter = repeater(a, 1,2)
-	local PreyCounter = repeater(a, 2,4)
-	local maneuverCounter = repeater(a,8,3)
+	local PreyCounter = repeater(a, 2,3)
+	local maneuverCounter = repeater(a,6,4)
 	local experiment = 
 	{
 		Param = deepcopy(gParam),
@@ -50,13 +50,13 @@ local newExp = function (a)
 
 	--experiment.preyBird = peregrine_bird
     if (PreyCounter == 1) then experiment.preyBird = robin_bird end
-	if (PreyCounter == 2) then experiment.preyBird = dove_bird  end
+	if (PreyCounter == 2) then experiment.preyBird = peregrine_bird  end
 	if (PreyCounter == 3) then experiment.preyBird = starling_bird end
-	if (PreyCounter == 4) then experiment.preyBird = peregrine_bird end
+	--if (PreyCounter == 4) then experiment.preyBird = peregrine_bird end
 	experiment.preyBird.maneuver = maneuverCounter
 	
 	experiment.predBird.reactionTime = RT[RTCounter]
-	experiment.Param.evolution.fileName = "LAP" .. (a + 1) .. "_" .. experiment.preyBird.birdName .. "_RT_" ..   RT[RTCounter] .. "_man_" ..   maneuverCounter .. ".txt"
+	experiment.Param.evolution.fileName = "TW" .. (a + 1) .. "_" .. experiment.preyBird.birdName .. "_RT_" ..   RT[RTCounter] .. "_man_" ..   maneuverCounter .. ".txt"
 	experiment.pred['VisualError'] = 0
 
 	print(experiment.Param.evolution.fileName)
@@ -68,7 +68,7 @@ end
 RT = {0.001,0.05}
 
 thecounter = 0
-for n = 1,24,2 do
+for n = 0,25,1 do
 	print(n)
 	thecounter = thecounter + 1
 	print("counter: " .. thecounter)

@@ -110,6 +110,7 @@ private:
   void flightDynamic();
   void flightExternal();
   void maneuver_lat_roll();
+  void maneuver_lat_roll2();
   void maneuver_lat();
   void calculateAccelerations();
   //! Handles main social interaction rules
