@@ -392,6 +392,7 @@ namespace Param {
     bool slowMotion;
     int rtreeLevel;
     std::string helpMsg;
+	bool turnOffGraphics;
   };
 
 
