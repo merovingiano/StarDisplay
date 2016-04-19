@@ -4,7 +4,7 @@
 #include <hrtree/config.hpp>
 #include "random.hpp"
 
-#define PI (3.14159265358979323846)
+
 static std::atomic<unsigned long> rnd_eng_seed = rnd_eng_type::default_seed;
 
 
@@ -25,12 +25,5 @@ rnd_eng_type& rnd_eng()
   return *tls;
 }
 
-
-float cauchy()
-{
-	float x = float(rand()) / float(RAND_MAX);
-
-	return tan(PI * (x - 0.5));
-}
 
 

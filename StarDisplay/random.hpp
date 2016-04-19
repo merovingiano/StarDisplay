@@ -10,8 +10,6 @@ typedef std::mt19937 rnd_eng_type;
 // Seeding
 void rnd_seed(unsigned long seed);
 
-float cauchy(void);
-
 // Returns thread local random number engine
 rnd_eng_type& rnd_eng();
 
