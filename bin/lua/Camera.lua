@@ -78,7 +78,7 @@ function Camera:SetMode (mode, pred)
 	
     local eye = cc.eye
     eye.y = self.televisionDescent
-    cc.eye = ti.pos
+    cc.eye = ti.pos + cc:GetFocalBird().forward * 100 +  cc:GetFocalBird().side * 10
     cc.lerp = self.fixedLerp
     cc.fovy = self.fixedFovy
     cc.up = glm.vec3(0,1,0)
@@ -241,18 +241,18 @@ function Camera:Use ()
     { VK.NEXT, false, false, false, self:KBH_Move("moveForward", -1) },
     { VK.PRIOR, false, true, false, self:KBH_Zoom(-1) },
     { VK.NEXT, false, true, false, self:KBH_Zoom(1) },
-    --{ VK.LEFT, false, false, false, self:KBH_Rotate("rotateRightLeft", -1) },
-    --{ VK.RIGHT, false, false, false, self:KBH_Rotate("rotateRightLeft", 1) },
+    { VK.LEFT, false, false, false, self:KBH_Rotate("rotateRightLeft", -1) },
+    { VK.RIGHT, false, false, false, self:KBH_Rotate("rotateRightLeft", 1) },
     { VK.LEFT, true, false, false, self:KBH_Rotate("tilt", 1) },
     { VK.RIGHT, true, false, false, self:KBH_Rotate("tilt", -1) },
-    --{ VK.UP, false, false, false, self:KBH_Rotate("rotateUpDown", -1) },
-    --{ VK.DOWN, false, false, false, self:KBH_Rotate("rotateUpDown", 1) },
-   -- { VK.NUMPAD4, false, false, false, self:KBH_Move("moveSidewardXZ", -1) },
-   -- { VK.NUMPAD6, false, false, false, self:KBH_Move("moveSidewardXZ", 1) },
-   -- { VK.NUMPAD2, false, false, false, self:KBH_Move("moveForwardXZ", -1) },
-   -- { VK.NUMPAD8, false, false, false, self:KBH_Move("moveForwardXZ", 1) },
-   -- { VK.NUMPAD3, false, false, false, self:KBH_Move("moveUpDown", -1) },
-   -- { VK.NUMPAD9, false, false, false, self:KBH_Move("moveUpDown", 1) },
+    { VK.UP, false, false, false, self:KBH_Rotate("rotateUpDown", -1) },
+    { VK.DOWN, false, false, false, self:KBH_Rotate("rotateUpDown", 1) },
+    { VK.NUMPAD4, false, false, false, self:KBH_Move("moveSidewardXZ", -1) },
+    { VK.NUMPAD6, false, false, false, self:KBH_Move("moveSidewardXZ", 1) },
+    { VK.NUMPAD2, false, false, false, self:KBH_Move("moveForwardXZ", -1) },
+    { VK.NUMPAD8, false, false, false, self:KBH_Move("moveForwardXZ", 1) },
+    { VK.NUMPAD3, false, false, false, self:KBH_Move("moveUpDown", -1) },
+    { VK.NUMPAD9, false, false, false, self:KBH_Move("moveUpDown", 1) },
   }
   Simulation.SetActiveCamera(self)
   CameraUpdateHook = Camera.UpdateHook

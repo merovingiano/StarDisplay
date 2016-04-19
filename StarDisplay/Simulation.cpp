@@ -870,7 +870,7 @@ void Simulation::UpdateSimulationNoGraphicsNoFlock(double sim_dt)
 				evolution.apply();
 				evolution.save(params_.evolution.fileName.c_str(), 0);
 				Sim.PrintFloat(Sim.experiments[0].pred.pursuit.type, "pursuit c++");
-				//Sim.StorageData_(Sim.expNumb);
+				Sim.StorageData_(Sim.expNumb);
 				std::cout << "\n test";
 				timeSinceEvolution = 0.0f;
 			}

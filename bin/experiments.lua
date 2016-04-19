@@ -48,12 +48,12 @@ local newExp = function (a)
 	experiment.Param.evolution.durationGeneration = 40
 	experiment.Param.evolution.evolveDPAdjParam = false
 
-	--experiment.preyBird = peregrine_bird
-    if (PreyCounter == 1) then experiment.preyBird = robin_bird end
-	if (PreyCounter == 2) then experiment.preyBird = peregrine_bird  end
-	if (PreyCounter == 3) then experiment.preyBird = starling_bird end
+	experiment.preyBird = starling_bird
+    --if (PreyCounter == 1) then experiment.preyBird = robin_bird end
+	--if (PreyCounter == 2) then experiment.preyBird = peregrine_bird  end
+	--if (PreyCounter == 3) then experiment.preyBird = starling_bird end
 	--if (PreyCounter == 4) then experiment.preyBird = peregrine_bird end
-	experiment.preyBird.maneuver = maneuverCounter
+	experiment.preyBird.maneuver = 3
 	
 	experiment.predBird.reactionTime = RT[RTCounter]
 	experiment.Param.evolution.fileName = "TW" .. (a + 1) .. "_" .. experiment.preyBird.birdName .. "_RT_" ..   RT[RTCounter] .. "_man_" ..   maneuverCounter .. ".txt"

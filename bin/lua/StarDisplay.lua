@@ -57,7 +57,8 @@ Simulation.Fonts = {
 
 
 Simulation.Skybox = {
-  name = "BlueishSky",
+  --name = "BlueishSky",
+  name = "mountain",
   ColorCorr = glm.vec3(1.0, 1.0, 1.0),
   ColorCorrAlt = glm.vec3(0.1, 0.1, 0.1),
   fovy = 45.0
