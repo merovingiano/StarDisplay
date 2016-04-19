@@ -44,23 +44,25 @@ local newExp = function (a)
 	experiment.Param.evolution.TrajectoryBestPredator = false
 	experiment.Param.evolution.title =  ""
 	experiment.Param.evolution.description = ""
-	experiment.Param.evolution.terminationGeneration = 100
+	experiment.Param.evolution.terminationGeneration = 3000
 	experiment.Param.evolution.durationGeneration = 40
 	experiment.Param.evolution.evolveDPAdjParam = false
 
-	experiment.preyBird = starling_bird
-    --if (PreyCounter == 1) then experiment.preyBird = robin_bird end
+	--experiment.preyBird = peregrine_bird
+   experiment.preyBird = starling_bird 
 	--if (PreyCounter == 2) then experiment.preyBird = peregrine_bird  end
 	--if (PreyCounter == 3) then experiment.preyBird = starling_bird end
 	--if (PreyCounter == 4) then experiment.preyBird = peregrine_bird end
-	experiment.preyBird.maneuver = 3
+	experiment.preyBird.maneuver = 2
 	
-	experiment.predBird.reactionTime = RT[RTCounter]
-	experiment.Param.evolution.fileName = "TW" .. (a + 1) .. "_" .. experiment.preyBird.birdName .. "_RT_" ..   RT[RTCounter] .. "_man_" ..   maneuverCounter .. ".txt"
+	experiment.predBird.reactionTime = 0.05
+	experiment.Param.evolution.fileName = "Long_experiment3_rt50_erratic_starling.txt"
 	experiment.pred['VisualError'] = 0
 
 	print(experiment.Param.evolution.fileName)
 	print("maneuver " .. maneuverCounter)
+	print(experiment.Param.Roost.numPredators)
+	print(gParam.Roost.numPredators)
 	return experiment
 end
 
@@ -68,11 +70,11 @@ end
 RT = {0.001,0.05}
 
 thecounter = 0
-for n = 0,25,1 do
+for n = 0,1,1 do
 	print(n)
 	thecounter = thecounter + 1
 	print("counter: " .. thecounter)
-    experiments[tostring(thecounter)] = newExp(n)
+    experiments[thecounter] = newExp(n)
 end
 
 
