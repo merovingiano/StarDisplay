@@ -5,7 +5,7 @@ require "config_functions"
 --experiment or free flying?
 doExperiments = 1
 
--- Overwrite default initial parameter if required
+-- Overwrite default initial parameters if required
 gParam.Roost.numPrey = 1
 gParam.Roost.numPredators = 2
 gParam.Roost.Radius = 500.0
@@ -26,12 +26,6 @@ gParam.RenderFlags.turnOffGraphics = true
 
 
 
+--after changing the settings as desired, run the experiments lua file:
+dofile(Simulation.WorkingPath .. "experiments.lua")
 
-
-
-
-
-
-
-
-return gParam

@@ -19,6 +19,9 @@ function DataStorage.DataStorage()
 	   file = io.open (folder .. "settings.txt", "w")
 	   tableToFile(exp,  "Clustering Ruler Trail RenderFlags FeatureMap", "", file)
 	   file:close()
+	   file = io.open (folder .. "evolutionn.txt", "a")
+	  -- evolutionToFile(exp,  "Clustering Ruler Trail RenderFlags FeatureMap", "", file)
+	   file:close()
    end
 end
 

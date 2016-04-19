@@ -61,6 +61,8 @@ local newExp = function (a)
 
 	print(experiment.Param.evolution.fileName)
 	print("maneuver " .. maneuverCounter)
+	print(experiment.Param.Roost.numPredators)
+	print(gParam.Roost.numPredators)
 	return experiment
 end
 
@@ -72,7 +74,7 @@ for n = 0,1,1 do
 	print(n)
 	thecounter = thecounter + 1
 	print("counter: " .. thecounter)
-    experiments[tostring(thecounter)] = newExp(n)
+    experiments[thecounter] = newExp(n)
 end
 
 

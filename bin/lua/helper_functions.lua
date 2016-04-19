@@ -61,6 +61,27 @@ end
 
 
 
+
+--________________________________________________________________________________________________________________________________________________
+function evolutionToFile(orig, skip, string, file)
+    local orig_type = type(orig)
+    if orig_type == 'table' then
+        for orig_key, orig_value in next, orig, nil do
+		    --print(orig_key)
+			newstring = string .. "." .. orig_key
+            if not string.match(skip, orig_key) then tableToFile(orig_value, skip, newstring, file ) end
+        end
+    else -- number, string, boolean, etc 
+		if tostring(orig_type) ~= 'nil' then 
+		--print( tostring(type(orig)) " " .. tostring(string) .. " " .. tostring(orig) .. "\n")
+			file:write( tostring(type(orig)) .. " " .. tostring(string) .. " " .. tostring(orig) .. "\n")
+		end
+    end
+end
+--________________________________________________________________________________________________________________________________________________
+
+
+
 --________________________________________________________________________________________________________________________________________________
 function tableToUserData(orig, bird)
     local orig_type = type(orig)
@@ -107,7 +128,7 @@ end
 function experimentToTable(expNum)
     exp_table = {}
 	for key, value in pairs(experiments[expNum]) do
-	   if type(experiments[expNum][key]) == 'table' then exp_table[key] = deepcopy(experiment[key]) end
+	   if type(experiments[expNum][key]) == 'table' then exp_table[key] = deepcopy(experiments[expNum][key]) end
 	end
 	userData =experiments[expNum]['predBird']
 	userDatatoTable(predBird,"userData", "predBird")
