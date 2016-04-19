@@ -622,6 +622,9 @@ void luaopen_libParam(lua_State* L)
       .def_readwrite("HandleTime", &Predator::HandleTime)
 	  .def_readwrite("VisualError", &Predator::VisualError)
 	  .def_readwrite("VisualBias", &Predator::VisualBias)
+	  .def_readwrite("InitialPosition", &Predator::InitialPosition)
+	  .def_readwrite("DPAdjParam", &Predator::DPAdjParam)
+	  .def_readwrite("N", &Predator::N)
   ];
 }
 

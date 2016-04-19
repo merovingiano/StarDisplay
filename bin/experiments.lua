@@ -63,6 +63,7 @@ local newExp = function (a)
 	print("maneuver " .. maneuverCounter)
 	print(experiment.Param.Roost.numPredators)
 	print(gParam.Roost.numPredators)
+	print("initial " .. experiment.pred.InitialPosition.x)
 	return experiment
 end
 

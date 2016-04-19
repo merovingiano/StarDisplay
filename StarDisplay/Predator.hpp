@@ -38,10 +38,6 @@ public:
     float minDistLockedOn;
     double seqTime;
     double lookTime;
-	float startAltitude;
-	float startXdist;
-	float DPAdjParam;
-	float N;
     std::vector<unsigned> attackSize;
     std::vector<unsigned> catchSize;
 	//! add the miss distance of last attack too

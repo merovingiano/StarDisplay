@@ -367,6 +367,9 @@ namespace Param {
     float HandleTime;
 	float VisualError;
 	glm::vec2 VisualBias;
+	glm::vec3 InitialPosition;
+	float DPAdjParam;
+	float N;
   };
 
 

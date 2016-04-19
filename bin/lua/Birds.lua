@@ -83,6 +83,12 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
 		  bird.wingArea = bird.wingSpan * (bird.wingSpan / bird.wingAspectRatio)   -- [m^2] 
 		  bird.cruiseSpeed = tonumber(bird_info["Cruise speed male"])
 
+
+		  --intitial pred parameters
+		  predator.InitialPosition = {x = 500, y = 500, z = 500}
+		  predator.DPAdjParam = 0
+		  predator.N = 3
+
 		  -- currently unused, to be deleted or may we useful later
 		  bird.CL = CL(bird)
 		  bird.CDCL= CDCL(bird)
@@ -100,7 +106,7 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
 		  prey.AlertedWBetaIn = { x = 4, y = 1, z = 0 } 
 		  prey.AlertedWBetaOut = { x = 0, y = 0, z = 0 }
 
-
+		  print("pos.x" .. predator.InitialPosition.x)
   
 		  if isPredator == 0 then
 		     cBird = Params.Bird()
@@ -118,6 +124,10 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
 		     cPred = Params.Predator()
 			 tableToUserData(bird, "cBird")
 		     tableToUserData(predator, "cPred")
+			 print("cpred x ", cPred.InitialPosition.x)
+			 cPred.ExposureThreshold = glm.vec2(3,5)
+			 print("handle ", cPred.ExposureThreshold.x)
+			 print()
 			 if p ~= nil then
 				 p.BirdParams = cBird
 				 p.PredParams = cPred
