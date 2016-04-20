@@ -822,7 +822,7 @@ void CPredator::testSettings()
 	Sim.PrintFloat(pBird_.speedControl, "speedControl");
 	Sim.PrintFloat(pBird_.innerBoundary, "innerBoundary");
 	Sim.PrintFloat(pBird_.outerBoundary, "outerBoundary");
-	Sim.PrintVector(pBird_.boundaryWeight, "boundaryWeight");
+	Sim.PrintVector(glm::vec3(pBird_.boundaryWeight), "boundaryWeight");
 	Sim.PrintFloat(pBird_.randomWeight, "randomweight");
 	Sim.PrintFloat(pPred_.VisualError, "VisualError");
 	Sim.PrintVector(B_[0], "body x");

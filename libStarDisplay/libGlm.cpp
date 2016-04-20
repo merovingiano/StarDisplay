@@ -97,6 +97,16 @@ void luaopen_libGlm(lua_State* L)
     def("distance", (double(*)(double const &, double const &)) &glm::distance),
     def("distance2", (double(*)(double const &, double const &)) &glm::distance2),
 
+	class_<glm::detail::tvec3<double>>("tvec3")
+	.def(constructor<const glm::vec3&>())
+	.def(constructor<const double&>())
+	.def(constructor<const double&, const double&, const double&>())
+	.def_readwrite("x", &glm::detail::tvec3<double>::x)
+	.def_readwrite("y", &glm::detail::tvec3<double>::y)
+	.def_readwrite("z", &glm::detail::tvec3<double>::z),
+
+
+
     class_<dvec2>("vec2")
       .def(constructor<const dvec2&>())
       .def(constructor<const double&>())

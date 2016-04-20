@@ -700,8 +700,10 @@ void EvolvePN::Shuffle()
 	for (; firstPrey != lastPrey; ++firstPrey)
 	{
 		firstPrey->position_ = glm::vec3(0, 120, 0);
+		firstPrey->B_[0] = glmutils::vec3_in_sphere(rnd_eng());
 		// reset the couunter to compute the averages
-		firstPrey->set_counter_acc(0);
+		firstPrey->velocity_ = 20.0f * firstPrey->B_[0];
+		firstPrey->SetSpeed(20.0f);
 	};
 
 	GFLOCKNC.meanN = meanN;

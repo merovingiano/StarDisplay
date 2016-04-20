@@ -523,6 +523,34 @@ void luaopen_libParam(lua_State* L)
   using namespace Param;
 
   module(L, "Params")[
+
+	  class_<NepGLM>("NepGLM")
+		  .def(constructor<>())
+		  .def_readwrite("x", &NepGLM::x)
+		  .def_readwrite("y", &NepGLM::y)
+		  .def_readwrite("z", &NepGLM::z),
+    
+	class_<poezie>("poezie")
+		  .def(constructor<>())
+		  .def_readwrite("jezus", &poezie::jezus),
+
+    class_<Vec3>("Vec3")
+	.def(constructor<>())
+	.def_readwrite("x", &Vec3::x)
+	.def_readwrite("y", &Vec3::y)
+	.def_readwrite("z", &Vec3::x)
+	.def_readwrite("basis", &Vec3::basis_),
+
+	class_<poep>("poep")
+		  .def(constructor<>())
+		  .def_readwrite("vlees", &poep::vlees)
+		  .def_readwrite("canaries", &poep::canaries)
+		  .def_readwrite("wonderDokter", &poep::wonderDokter)
+		  .def_readwrite("trein", &poep::trein)
+		  .def_readwrite("trein2", &poep::trein2)
+		  .def_readwrite("trein3", &poep::trein3)
+		  .def_readwrite("waarom", &poep::waarom),
+
     class_<Bird>("Bird")
       .def(constructor<>())
       .def_readwrite("reactionTime", &Bird::reactionTime)

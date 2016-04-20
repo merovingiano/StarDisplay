@@ -87,8 +87,8 @@ function tableToUserData(orig, bird)
     local orig_type = type(orig)
     if orig_type == 'table' then
         for orig_key, orig_value in next, orig, nil do
-			newstring = bird .. "." .. orig_key
-			tableToUserData(orig_value, newstring )
+				newstring = bird .. "." .. orig_key
+				tableToUserData(orig_value, newstring )
         end
     else -- number, string, boolean, etc 
 		if tostring(orig_type) ~= 'nil' then 		    
@@ -145,6 +145,15 @@ function experimentToTable(expNum)
 	 return exp_table
 end
 --________________________________________________________________________________________________________________________________________________
+
+
+function tableToGlm(glm, table)
+   if table.z == nil then
+      loadstring(  tostring(glm) .. " =  glm.vec2(" .. tostring(table.x) .. "," .. tostring(table.y) ..")" )()
+   else
+		loadstring(  tostring(glm) .. " =  glm.vec3(" .. tostring(table.x) .. "," .. tostring(table.y) .. "," .. tostring(table.z) ..")" )()
+   end
+end
 
 
 

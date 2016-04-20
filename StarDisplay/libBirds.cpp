@@ -91,6 +91,8 @@ void luaopen_libBirds(lua_State* L)
       .def_readonly("minDistLockedOn", &CPredator::hunt::minDistLockedOn)
       .def_readonly("seqTime", &CPredator::hunt::seqTime)
       .def_readonly("lockTime", &CPredator::hunt::lookTime),
+    
+
 
     class_<CBird>("__bird")
 		  .def("isPrey", &CBird::isPrey)

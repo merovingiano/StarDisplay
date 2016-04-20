@@ -387,7 +387,7 @@ inline void CPrey::steerToFlock(fov_filter const& filter)
       const float distance = (*first).distance;
 
       // Separation
-      const float sstep = glmutils::smootherstep(pBird_.separationStep.x, pBird_.separationStep.y, distance);
+      const float sstep = glmutils::smootherstep(float(pBird_.separationStep.x), float(pBird_.separationStep.y), distance);
       if ((separation_neighbors_ < pBird_.maxSeparationTopo) && (distance < pBird_.separationStep.y))
       {
         separation_ += (1.0f - sstep) * (*first).direction;
@@ -421,8 +421,8 @@ inline void CPrey::steerToFlock(fov_filter const& filter)
   interaction_neighbors_ = std::max(std::max(alignment_neighbors_, separation_neighbors_), cohesion_neighbors_);
 
   // apply weights to components
-  separation_ = H_ * ((separation_ * H_) * pBird_.separationWeight);
-  cohesion_ = H_ * ((cohesion_ * H_) * pBird_.cohesionWeight);  
+  separation_ = H_ * ((separation_ * H_) * glm::vec3(pBird_.separationWeight));
+  cohesion_ = H_ * ((cohesion_ * H_) * glm::vec3(pBird_.cohesionWeight));
   alignment_ *= alignmentWeight_.x;
   bankAlignment *= alignmentWeight_.y;
   alignment_ -= bankAlignment * B_[2];
@@ -492,6 +492,7 @@ void CPrey::testSettings()
 		Sim.PrintString(Sim.Params().evolution.fileName);
 		Sim.PrintFloat(Sim.SimulationTime(), "Prey settings. Simulation Time");
 		Sim.PrintString(pBird_.birdName);
+		Sim.PrintVector(glm::vec3(pBird_.separationWeight), "separation weight ");
 		Sim.PrintFloat(pBird_.maneuver, "maneuver");
 		Sim.PrintFloat(pPrey_.AlertedTopo, "alertedTopo");
 		Sim.PrintFloat(pBird_.wingMass, "wing mass");
@@ -518,10 +519,17 @@ void CPrey::testSettings()
 		Sim.PrintFloat(pBird_.speedControl, "speedControl");
 		Sim.PrintFloat(pBird_.innerBoundary, "innerBoundary");
 		Sim.PrintFloat(pBird_.outerBoundary, "outerBoundary");
-		Sim.PrintVector(pBird_.boundaryWeight, "boundaryWeight");
+		Sim.PrintVector(glm::vec3(pBird_.boundaryWeight), "boundaryWeight");
 		Sim.PrintVector(B_[0], "body x");
 		Sim.PrintVector(B_[1], "body y");
 		Sim.PrintVector(B_[2], "body z");
+
+		glm::dvec3 haha;
+		glm::dvec3 hihi;
+
+		haha.x = 6;
+		glm::normalize(haha);
+		glm::dot(haha, hihi);
 	}
 		
 }
@@ -698,7 +706,7 @@ void CPrey::return2Flock(const CFlock& flock)
     if (pce && (f != flockId_) && (flockSize_ < pce->size) && (flockSize_ < pPrey_.ReturnThreshold.y)) 
     {
       glm::vec3 force = glmutils::save_normalize(glmutils::center(pce->bbox) - position_, glm::vec3(0));
-      returnForce_ += H_ * ((force * H_) * pPrey_.ReturnWeight);
+      returnForce_ += H_ * ((force * H_) * glm::vec3(pPrey_.ReturnWeight));
       predatorReaction_ |= PredationReactions::Return;
     }
   }

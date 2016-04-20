@@ -60,7 +60,7 @@ void EvolveDeflection::apply(double stat_dt)
   allele.clear();
   std::for_each(GFLOCK.predator_begin(), GFLOCK.predator_end(), [&allele] (const CPredator& pred)
   {
-    const glm::vec3& defl = pred.getDeflection();
+    const glm::vec3& defl = glm::vec3(pred.getDeflection());
     pred.setCurrentColorTex( visit<FeatureMap::Default>(pred) );
     allele.push_back( glm::vec4(defl.x, defl.y, defl.z, pred.hunts().minDistLockedOn) );
   });
@@ -134,7 +134,7 @@ void EvolveDeflection::Shuffle()
   //looping over the predators and placing all 
   std::for_each(GFLOCK.predator_begin(), GFLOCK.predator_end(), [&allele] (const CPredator& pred)
   {
-    const glm::vec3& defl = pred.getDeflection();
+    const glm::vec3& defl = glm::vec3(pred.getDeflection());
     allele.push_back( glm::vec4(defl.x, defl.y, defl.z, pred.hunts().minDist) );
   });
   //resort on having the minimum distance

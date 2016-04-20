@@ -7,7 +7,7 @@ doExperiments = 1
 
 -- Overwrite default initial parameters if required
 gParam.Roost.numPrey = 1
-gParam.Roost.numPredators = 2
+gParam.Roost.numPredators = 20
 gParam.Roost.Radius = 500.0
 gParam.Roost.minRadius = 150.0
 gParam.Roost.maxRadius = 10000.0

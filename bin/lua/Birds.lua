@@ -107,7 +107,43 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
 		  prey.AlertedWBetaOut = { x = 0, y = 0, z = 0 }
 
 		  print("pos.x" .. predator.InitialPosition.x)
-  
+          
+		  print("yo ")
+		  hoi = Params.NepGLM()
+		  print("yoyo")
+		  hoi.x = 5
+		  print("hi")
+		  print(hoi.x)
+
+		  yo = Params.poep()
+		  yo.canaries = 7
+		  print(yo.canaries)
+
+		  
+		  yo.wonderDokter.x = 3
+		  print(yo.wonderDokter.x)
+
+		  yo.waarom.jezus.x = 13
+		  print(yo.waarom.jezus.x)
+			yo.trein.x = 9
+			print(yo.trein.x)
+
+				yo.trein2.x = 14
+			print(yo.trein2.x)
+
+			yo.trein3.x = 17
+			print(yo.trein3.x)
+
+			huh = glm.vec3(3,2,3)
+
+			print(huh)
+			huh.x = 5
+			print(huh.x)
+		 -- while 1==1 do
+
+		 -- end
+
+
 		  if isPredator == 0 then
 		     cBird = Params.Bird()
 			 cPrey = Params.Prey()
@@ -127,7 +163,8 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
 			 print("cpred x ", cPred.InitialPosition.x)
 			 cPred.ExposureThreshold = glm.vec2(3,5)
 			 print("handle ", cPred.ExposureThreshold.x)
-			 print()
+
+			 --print("should be nothing ".. cPred.ExposureThreshold.z)
 			 if p ~= nil then
 				 p.BirdParams = cBird
 				 p.PredParams = cPred

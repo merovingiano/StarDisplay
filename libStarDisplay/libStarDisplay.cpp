@@ -1,6 +1,7 @@
 #include "libStarDisplay.hpp"
 #include "libGlm.hpp"
 #include "libRnd.hpp"
+#include "luabind/class_info.hpp"
 
 using namespace luabind;
 
@@ -49,6 +50,7 @@ void LuaStarDisplay::Open()
   set_pcall_callback(&pcall_error_callback);
   luaL_openlibs(L_); 
   luabind::open(L_);
+  luabind::bind_class_info(L_);
   luaopen_libGlm(L_);
   luaopen_libRnd(L_);
   luaopen_libWin(L_);

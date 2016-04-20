@@ -18,6 +18,43 @@ namespace Param {
     float maxRadius;
   };
 
+  struct NepGLM
+  {
+	  float x;
+	  float y;
+	  float z;
+
+  };
+
+
+  class Vec3 : public glm::vec3
+  {
+	  float q;
+
+  public:
+	  float basis_;
+  };
+
+
+
+
+  struct poezie
+  {
+	  NepGLM jezus;
+  };
+	  
+  struct poep
+  {
+	  float vlees;
+	  float canaries;
+	  NepGLM wonderDokter;
+	  Vec3 trein;
+	  glm::dvec3 trein2;
+	  poezie waarom;
+	  glm::vec3 trein3;
+  };
+
+
   struct Birds
   {
 	  std::string csv_file_species;
@@ -245,8 +282,8 @@ namespace Param {
     float maxSpeed;
 	float rollRate;
     float minSpeed;
-    glm::vec3 wBetaOut;
-    glm::vec3 wBetaIn;
+    glm::dvec3 wBetaOut;
+    glm::dvec3 wBetaIn;
     float maxRadius;
     float neighborLerp;
     float topologicalRange;
@@ -254,12 +291,12 @@ namespace Param {
     float binocularOverlap;
     float blindAngle;
     int maxSeparationTopo;
-    glm::vec2 separationStep;
-    glm::vec3 separationWeight;
-    glm::vec2 alignmentWeight;
-    glm::vec3 cohesionWeight;
+    glm::dvec2 separationStep;
+    glm::dvec3 separationWeight;
+    glm::dvec2 alignmentWeight;
+    glm::dvec3 cohesionWeight;
     float randomWeight;
-    glm::vec3 boundaryWeight;
+    glm::dvec3 boundaryWeight;
     float boundaryReflectAngle;
     float outerBoundary;
     float innerBoundary;
@@ -303,23 +340,23 @@ namespace Param {
     float DetectionHemisphereFOV;
     int IncurNeighborPanic;
     double IncurLatency;
-    glm::vec2 AlertnessRelexation;
+    glm::dvec2 AlertnessRelexation;
     float AlertedReactionTimeFactor;
-    glm::vec3 AlertedWBetaIn;
-    glm::vec3 AlertedWBetaOut;
+    glm::dvec3 AlertedWBetaIn;
+    glm::dvec3 AlertedWBetaOut;
     float AlertedTopo;
-    glm::vec2 AlertedAlignmentWeight;
+    glm::dvec2 AlertedAlignmentWeight;
     bool Return2Flock;
     float ReturnRelaxation;
-    glm::vec3 ReturnWeight;
-    glm::vec2 ReturnThreshold;
+    glm::dvec3 ReturnWeight;
+    glm::dvec2 ReturnThreshold;
   };
 
 
   struct Pursuit {
     Pursuit() : type(0), deflection(0) {}
     int type;
-    glm::vec3 deflection;
+    glm::dvec3 deflection;
     luabind::object hook;
   };
 
@@ -353,8 +390,8 @@ namespace Param {
 
     Pursuit pursuit;
 	int PursuitStrategy;
-    glm::vec3 AttackWBetaIn;
-    glm::vec3 AttackWBetaOut;
+    glm::dvec3 AttackWBetaIn;
+    glm::dvec3 AttackWBetaOut;
     float CatchDistance;
     float AttackSpan;
     float Dogfight;
@@ -362,12 +399,12 @@ namespace Param {
     float LockBlindAngle;
     float LockDistance;
     int maxLocks;
-    glm::vec2 ExposureThreshold;
+    glm::dvec2 ExposureThreshold;
     float AttractMix;
     float HandleTime;
 	float VisualError;
-	glm::vec2 VisualBias;
-	glm::vec3 InitialPosition;
+	glm::dvec2 VisualBias;
+	glm::dvec3 InitialPosition;
 	float DPAdjParam;
 	float N;
   };
@@ -415,6 +452,7 @@ namespace Param {
     unsigned maxTopologicalRange;
     Roost roost;
 	vaderJacob vaderJacob;
+	NepGLM draagkracht;
     double ClusterDetectionTime;
     float ClusterDistance1D;
     float ClusterDistance3D;
