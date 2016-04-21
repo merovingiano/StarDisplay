@@ -276,6 +276,7 @@ namespace Param {
     float CL;
     float maxForce;
     float maxLift;
+	int generation;
     float cruiseSpeed;
     float speedControl;
 	float houjebek;

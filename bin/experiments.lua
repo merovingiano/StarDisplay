@@ -45,7 +45,7 @@ local newExp = function (a)
 	experiment.Param.evolution.title =  ""
 	experiment.Param.evolution.description = ""
 	experiment.Param.evolution.terminationGeneration = 3000
-	experiment.Param.evolution.durationGeneration = 4
+	experiment.Param.evolution.durationGeneration = 20
 	experiment.Param.evolution.evolveDPAdjParam = false
 
 	--experiment.preyBird = peregrine_bird

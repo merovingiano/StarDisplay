@@ -71,9 +71,17 @@ local Default = {
 		terminationGeneration = 100000000,
 
 		evolving_parameters = {
-			{name = "pred.InitialPosition.y", type = "gaussian", initial = {min = 0, max = 600}, },
+			{name = "pred_params.InitialPosition.y", type = "gaussian", initial = {min = 0, max = 600}, },
+		    {name = "pred_params.InitialPosition.x", type = "gaussian", initial = {min = 0, max = 600}, },
+			{name = "pred_params.N", type = "gaussian", initial = {min = 0, max = 400}, },
 		
-		
+		},
+
+		to_be_saved = {
+		   {"pred_stat.minDist"},
+		   {"pred_stat.velocityMinDist"},
+		   {"pred_stat.seqTime"},
+		   {"predBird_params.generation"},
 		},
   },
 

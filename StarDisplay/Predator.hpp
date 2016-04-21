@@ -59,6 +59,8 @@ public:
   Param::Predator& GetPredParams() { return pPred_; }
   void SetPredParams(const Param::Predator& pPred);
 
+
+  Param::Predator  pPred_;
   void updateNeighbors(float dt, const CFlock& flock);
   void update(float dt, const CFlock&);
 
@@ -119,7 +121,7 @@ private:
   void DirectPursuit2(const glm::vec3& targetHeading, const glm::vec3& targetVelocity);
   void checkEndHunt(const glm::vec3& targetHeading, const glm::vec3& targetVelocity);
 
-  Param::Predator  pPred_;
+  
   float            attackTime_;
 
   float            handleTime_;

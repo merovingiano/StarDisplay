@@ -802,7 +802,9 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 void CPredator::testSettings()
 {
 	keyState_ = 1;
+	Sim.PrintFloat(GetTargetPrey()->id() , "targetID");
 	Sim.PrintFloat(pBird_.wingMass, "wing mass");
+	Sim.PrintFloat(pBird_.generation, "Generation");
 	Sim.PrintFloat(pBird_.InertiaBody, "InertiaBody");
 	Sim.PrintFloat(pBird_.J, "J");
 	Sim.PrintFloat(pBird_.bodyMass, "bodymass");

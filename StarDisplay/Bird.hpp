@@ -125,6 +125,8 @@ public:
   HRTREE_ALIGN(16) glm::vec3 cohesion_;
   HRTREE_ALIGN(16) glm::vec3 random_orientation_;
 
+  Param::Bird pBird_;
+
 protected:
   HRTREE_ALIGN(16) glm::vec3 lift_;
   
@@ -156,7 +158,7 @@ protected:
   neighbors_vect  neighbors_;
   trail_buffer*   trail_;
 
-  Param::Bird pBird_;
+  
   int         id_;
 };
 

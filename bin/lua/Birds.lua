@@ -88,6 +88,7 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
 		  predator.InitialPosition = {x = 500, y = 500, z = 500}
 		  predator.DPAdjParam = 0
 		  predator.N = 3
+		  bird.generation = 0
 
 		  -- currently unused, to be deleted or may we useful later
 		  bird.CL = CL(bird)
@@ -148,6 +149,7 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
 			end
 			print(tostring(nil))
 			print(tostring({hello = 5}))
+			yo.trein4 = "varkensvlees"
 		 -- while 1==1 do
 
 		-- end

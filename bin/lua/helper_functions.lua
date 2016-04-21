@@ -69,12 +69,25 @@ function evolutionToFile(experiment, generation, file)
 		for num,table in pairs(experiment.Param.evolution.evolving_parameters) do
 		   file:write(table.name .. " ")
 		end
+		for num,table in pairs(experiment.Param.evolution.to_be_saved) do
+		   file:write(table[1] .. " ")
+		end
 		file:write("\n")
 	end
 	for p in Simulation.Predators() do
-	   local pred = p.PredParams
+	       pred_stat = p:GetHuntStat()
+	       pred_params = p.PredParams
+		   predBird_params = p.BirdParams
+	       prey_params = p:GetTargetPrey()
 	       for num,table in pairs(experiment.Param.evolution.evolving_parameters) do
 		       var_name = table.name
+			   loadstring("val_var = " .. var_name )()
+			   loadstring("print(" .. var_name .. ")")()
+			   file:write(tostring(val_var) .. " ")
+		   end
+		   for num,table in pairs(experiment.Param.evolution.to_be_saved) do
+
+		       var_name = table[1]
 			   loadstring("val_var = " .. var_name )()
 			   loadstring("print(" .. var_name .. ")")()
 			   file:write(tostring(val_var) .. " ")
