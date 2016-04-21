@@ -98,9 +98,18 @@ end
 --________________________________________________________________________________________________________________________________________________
 
 
+function tableToGlm(glm, table)
+   if table.z == nil then
+      loadstring(  tostring(glm) .. " =  glm.vec2(" .. tostring(table.x) .. "," .. tostring(table.y) ..")" )()
+   else
+		loadstring(  tostring(glm) .. " =  glm.vec3(" .. tostring(table.x) .. "," .. tostring(table.y) .. "," .. tostring(table.z) ..")" )()
+   end
+end
+
+
 
 --________________________________________________________________________________________________________________________________________________
-function tableToUserData(orig, userdata)
+function tableToUserDataREAL(orig, userdata)
     local orig_type = type(orig)
     if orig_type == 'table' then
         for orig_key, orig_value in next, orig, nil do
@@ -116,6 +125,28 @@ function tableToUserData(orig, userdata)
     end
 end
 --________________________________________________________________________________________________________________________________________________
+
+
+function tableToUserData(orig, bird)
+    local orig_type = type(orig)
+    if orig_type == 'table' then
+        for orig_key, orig_value in next, orig, nil do
+		    if orig_key ~= "x" and orig_key ~= "y" and orig_key ~= "z" then  
+				newstring = bird .. "." .. orig_key
+				tableToUserData(orig_value, newstring )
+			end
+			if orig_key == "x" then
+			   tableToGlm(bird, orig)
+			end
+        end
+    else -- number, string, boolean, etc 
+		if tostring(orig_type) ~= 'nil' then 		    
+			if tostring(orig_type) == 'string' then orig = "\"" .. orig .. "\"" else orig = tostring(orig) end
+			--print(tostring(bird) .. " =  " .. orig)
+			loadstring(  tostring(bird) .. " =  " .. orig)()
+		end
+    end
+end
 
 
 
