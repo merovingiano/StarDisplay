@@ -270,6 +270,7 @@
     <None Include="..\bin\evasion.lua" />
     <None Include="..\bin\experiments.lua" />
     <None Include="..\bin\lua\config_functions.lua" />
+    <None Include="..\bin\lua\evolution.lua" />
     <None Include="..\bin\lua\gpws.lua" />
     <None Include="..\bin\lua\helper_functions.lua" />
     <None Include="..\bin\lua\inspect.lua" />

@@ -129,6 +129,9 @@
     <None Include="..\bin\lua\helper_functions.lua">
       <Filter>Lua\lua</Filter>
     </None>
+    <None Include="..\bin\lua\evolution.lua">
+      <Filter>Lua\lua</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="StarDisplay.rc">

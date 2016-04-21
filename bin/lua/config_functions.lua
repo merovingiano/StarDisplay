@@ -4,6 +4,7 @@
  Camera = require "Camera"
  gParam = require "Defaults"
  storeData = require "StoreData"
+ evolution = require "evolution"
 require "wave"
 dofile(Simulation.WorkingPath .. "attacks.lua")
 dofile(Simulation.WorkingPath .. "evasion.lua")
@@ -37,6 +38,7 @@ function InitHook ()
 
   --set data storage (just a test for now)
   sim.RegisterDataStorage(storeData.DataStorage())
+  sim.RegisterEvolution(evolution.evolve_next())
   if sim.CustomStatistic ~= nil then
     sim.RegisterCustomStatistic( Statistic.new( sim.CustomStatistic ) )
   end
