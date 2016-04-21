@@ -92,7 +92,7 @@ public:
   void setDefaultColorTex() const;
 
   // Evolving deflection needs this
-  const glm::dvec3& getDeflection() const { return pPred_.pursuit.deflection; }
+  const glm::vec3& getDeflection() const { return pPred_.pursuit.deflection; }
   void setDeflection(const glm::vec3& deflection) { pPred_.pursuit.deflection = deflection; }
 
 private:

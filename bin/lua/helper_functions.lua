@@ -64,37 +64,28 @@ end
 
 --________________________________________________________________________________________________________________________________________________
 function evolutionToFile(orig, skip, string, file)
-    local orig_type = type(orig)
-    if orig_type == 'table' then
-        for orig_key, orig_value in next, orig, nil do
-		    --print(orig_key)
-			newstring = string .. "." .. orig_key
-            if not string.match(skip, orig_key) then tableToFile(orig_value, skip, newstring, file ) end
-        end
-    else -- number, string, boolean, etc 
-		if tostring(orig_type) ~= 'nil' then 
-		--print( tostring(type(orig)) " " .. tostring(string) .. " " .. tostring(orig) .. "\n")
-			file:write( tostring(type(orig)) .. " " .. tostring(string) .. " " .. tostring(orig) .. "\n")
-		end
-    end
+    -- get all pred param.
+	for p in Simulation.predators() do
+	   print(p.position)
+	end
 end
 --________________________________________________________________________________________________________________________________________________
 
 
 
 --________________________________________________________________________________________________________________________________________________
-function tableToUserData(orig, bird)
+function tableToUserData(orig, userdata)
     local orig_type = type(orig)
     if orig_type == 'table' then
         for orig_key, orig_value in next, orig, nil do
-				newstring = bird .. "." .. orig_key
+				newstring = userdata .. "." .. orig_key
 				tableToUserData(orig_value, newstring )
         end
     else -- number, string, boolean, etc 
 		if tostring(orig_type) ~= 'nil' then 		    
 			if tostring(orig_type) == 'string' then orig = "\"" .. orig .. "\"" else orig = tostring(orig) end
-			--print(tostring(bird) .. " =  " .. orig)
-			loadstring(  tostring(bird) .. " =  " .. orig)()
+			--print(tostring(userdata) .. " =  " .. orig)
+			loadstring(  tostring(userdata) .. " =  " .. orig)()
 		end
     end
 end
@@ -102,20 +93,23 @@ end
 
 
 
+
+
+
 --________________________________________________________________________________________________________________________________________________
-function userDatatoTable(output_table, bird, tableName)
+function userDatatoTable(output_table, userdata, tableName)
     local orig_type = type(output_table)
     if orig_type == 'table' then
         for orig_key, orig_value in next, output_table, nil do
 		    --print(orig_key)
-			newbird = bird .. "." .. orig_key
+			newuserdata = userdata .. "." .. orig_key
 			newtable = tableName .. "." .. orig_key
-            userDatatoTable(orig_value, newbird, newtable)
+            userDatatoTable(orig_value, newuserdata, newtable)
         end
     else -- number, string, boolean, etc 
 		if tostring(orig_type) ~= 'nil' then 
-		--print(  tostring(tableName) .. " =  " .. tostring(bird))
-			loadstring(  tostring(tableName) .. " =  " .. tostring(bird))()
+		--print(  tostring(tableName) .. " =  " .. tostring(userdata))
+			loadstring(  tostring(tableName) .. " =  " .. tostring(userdata))()
 		end
     end
 end
@@ -146,14 +140,6 @@ function experimentToTable(expNum)
 end
 --________________________________________________________________________________________________________________________________________________
 
-
-function tableToGlm(glm, table)
-   if table.z == nil then
-      loadstring(  tostring(glm) .. " =  glm.vec2(" .. tostring(table.x) .. "," .. tostring(table.y) ..")" )()
-   else
-		loadstring(  tostring(glm) .. " =  glm.vec3(" .. tostring(table.x) .. "," .. tostring(table.y) .. "," .. tostring(table.z) ..")" )()
-   end
-end
 
 
 

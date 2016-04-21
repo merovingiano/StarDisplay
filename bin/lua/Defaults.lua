@@ -69,6 +69,12 @@ local Default = {
 		title = "Default Title",
 		description = "default description",
 		terminationGeneration = 100000000,
+
+		evolving_parameters = {
+			{name = ".pred.InitialPosition.y", type = "gaussian", initial = {min = 0, max = 600}, },
+		
+		
+		},
   },
 
   Birds = {

@@ -131,6 +131,10 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
 				yo.trein2.x = 14
 			print(yo.trein2.x)
 
+			tss = yo.trein.x
+			tss = 2
+			print(yo.trein2.x)
+
 			yo.trein3.x = 17
 			print(yo.trein3.x)
 
@@ -139,7 +143,11 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
 			print(huh)
 			huh.x = 5
 			print(huh.x)
-		 -- while 1==1 do
+			for key, value in pairs(gParam.evolution.evolving_parameters[1]) do
+            print(value)
+			end
+			
+		  --while 1==1 do
 
 		 -- end
 

@@ -282,8 +282,8 @@ namespace Param {
     float maxSpeed;
 	float rollRate;
     float minSpeed;
-    glm::dvec3 wBetaOut;
-    glm::dvec3 wBetaIn;
+    glm::vec3 wBetaOut;
+    glm::vec3 wBetaIn;
     float maxRadius;
     float neighborLerp;
     float topologicalRange;
@@ -291,12 +291,12 @@ namespace Param {
     float binocularOverlap;
     float blindAngle;
     int maxSeparationTopo;
-    glm::dvec2 separationStep;
-    glm::dvec3 separationWeight;
-    glm::dvec2 alignmentWeight;
-    glm::dvec3 cohesionWeight;
+    glm::vec2 separationStep;
+    glm::vec3 separationWeight;
+    glm::vec2 alignmentWeight;
+    glm::vec3 cohesionWeight;
     float randomWeight;
-    glm::dvec3 boundaryWeight;
+    glm::vec3 boundaryWeight;
     float boundaryReflectAngle;
     float outerBoundary;
     float innerBoundary;
@@ -340,23 +340,23 @@ namespace Param {
     float DetectionHemisphereFOV;
     int IncurNeighborPanic;
     double IncurLatency;
-    glm::dvec2 AlertnessRelexation;
+    glm::vec2 AlertnessRelexation;
     float AlertedReactionTimeFactor;
-    glm::dvec3 AlertedWBetaIn;
-    glm::dvec3 AlertedWBetaOut;
+    glm::vec3 AlertedWBetaIn;
+    glm::vec3 AlertedWBetaOut;
     float AlertedTopo;
-    glm::dvec2 AlertedAlignmentWeight;
+    glm::vec2 AlertedAlignmentWeight;
     bool Return2Flock;
     float ReturnRelaxation;
-    glm::dvec3 ReturnWeight;
-    glm::dvec2 ReturnThreshold;
+    glm::vec3 ReturnWeight;
+    glm::vec2 ReturnThreshold;
   };
 
 
   struct Pursuit {
     Pursuit() : type(0), deflection(0) {}
     int type;
-    glm::dvec3 deflection;
+    glm::vec3 deflection;
     luabind::object hook;
   };
 
@@ -390,8 +390,8 @@ namespace Param {
 
     Pursuit pursuit;
 	int PursuitStrategy;
-    glm::dvec3 AttackWBetaIn;
-    glm::dvec3 AttackWBetaOut;
+    glm::vec3 AttackWBetaIn;
+    glm::vec3 AttackWBetaOut;
     float CatchDistance;
     float AttackSpan;
     float Dogfight;
@@ -399,12 +399,12 @@ namespace Param {
     float LockBlindAngle;
     float LockDistance;
     int maxLocks;
-    glm::dvec2 ExposureThreshold;
+    glm::vec2 ExposureThreshold;
     float AttractMix;
     float HandleTime;
 	float VisualError;
-	glm::dvec2 VisualBias;
-	glm::dvec3 InitialPosition;
+	glm::vec2 VisualBias;
+	glm::vec3 InitialPosition;
 	float DPAdjParam;
 	float N;
   };
@@ -457,8 +457,8 @@ namespace Param {
     float ClusterDistance1D;
     float ClusterDistance3D;
     std::vector<std::pair<std::string, std::string> > Fonts;  // name filename pair
-    glm::dvec3 TextColor;
-    glm::dvec3 TextColorAlt;
+    glm::vec3 TextColor;
+    glm::vec3 TextColorAlt;
     Skybox skybox;
     std::vector<ModelDef> ModelSet;
     float RulerTick;
