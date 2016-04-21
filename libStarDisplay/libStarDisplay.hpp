@@ -31,7 +31,7 @@ public:
    
   void DoFile(const char* filename);
   bool ProcessKeyboardHooks(unsigned key, unsigned kbstate);
-	bool ProcessMouseHooks(int x, int y, unsigned button, bool dbl, unsigned kbState);
+  bool ProcessMouseHooks(int x, int y, unsigned button, bool dbl, unsigned kbState);
 
   class ITextBox* CreateTextBox(class IText* self, const char* name, const glm::ivec4& box, const class ICamera* camera);
 

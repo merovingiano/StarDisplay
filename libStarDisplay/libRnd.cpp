@@ -3,6 +3,7 @@
 #include <luabind/operator.hpp>
 #include <glm/glm.hpp>
 #include <glmutils/random.hpp>
+#include "libGLM.hpp"
 
 
 using namespace luabind;
@@ -16,8 +17,8 @@ struct lua_rnd
   double uniform(double min, double max) { return std::uniform_real_distribution<>(min, max)(eng_); }
   double normal(double mean, double sigma) { return std::normal_distribution<>(mean, sigma)(eng_); }
   double geometric(double p) { return std::geometric_distribution<>(p)(eng_); }
-  glm::dvec3 unit_vec() { return glmutils::unit_dvec3(eng_); }
-  glm::dvec3 vec_in_sphere() { return glmutils::dvec3_in_sphere(eng_); }
+  glm::vec3 unit_vec() { return glmutils::unit_vec3(eng_); }
+  glm::vec3 vec_in_sphere() { return glmutils::vec3_in_sphere(eng_); }
   std::mt19937 eng_;
   int seed_;
   std::uniform_real_distribution<> uniform01_;

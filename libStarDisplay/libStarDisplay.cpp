@@ -54,7 +54,7 @@ void LuaStarDisplay::Open()
   luaopen_libGlm(L_);
   luaopen_libRnd(L_);
   luaopen_libWin(L_);
-	luaopen_libParam(L_);
+  luaopen_libParam(L_);
   luaopen_libCamera(L_);
   luaopen_libIText(L_);
   luaopen_libAnalysis(L_);
@@ -109,16 +109,16 @@ void LuaStarDisplay::DoFile(const char* filename)
 
 bool LuaStarDisplay::ProcessKeyboardHooks(unsigned key, unsigned kbState)
 {
-	object pkh = globals(L_)["__ProcessKeyboardHooks"];
-	return object_cast<bool>(pkh((key << 8) | kbState));
+  object pkh = globals(L_)["__ProcessKeyboardHooks"];
+  return object_cast<bool>(pkh((key << 8) | kbState));
 }
 
 
 bool LuaStarDisplay::ProcessMouseHooks(int x, int y, unsigned button, bool dbl, unsigned kbState)
 {
-	object pmh = globals(L_)["__ProcessMouseHooks"];
-	if (dbl) kbState |= 8;
-	return object_cast<bool>(pmh((button << 8) | kbState, x, y));
+  object pmh = globals(L_)["__ProcessMouseHooks"];
+  if (dbl) kbState |= 8;
+  return object_cast<bool>(pmh((button << 8) | kbState, x, y));
 }
 
 
