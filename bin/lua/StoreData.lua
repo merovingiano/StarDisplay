@@ -5,7 +5,7 @@ defaultPrey_bird_userdata, defaultPrey_prey_userdata, defaultPrey_bird_table, de
 defaultPred_bird_userdata, defaultPred_pred_userdata, defaultPred_bird_table, defaultPred_pred_table = Birds.newBird(nil, gParam.Birds.csv_file_species , gParam.Birds.csv_file_prey_predator_settings,"Common starling", 1)
 
 
-
+Generation = 0
 
 
 function DataStorage.DataStorage()
@@ -20,8 +20,11 @@ function DataStorage.DataStorage()
 	   tableToFile(exp,  "Clustering Ruler Trail RenderFlags FeatureMap", "", file)
 	   file:close()
 	   file = io.open (folder .. "evolutionn.txt", "a")
-	  -- evolutionToFile(exp,  "Clustering Ruler Trail RenderFlags FeatureMap", "", file)
+	     evolutionToFile(exp,  Generation, file)
 	   file:close()
+
+	   --temporarily adjust Generation, until evolution is in lua:
+	   Generation = Generation + 1
    end
 end
 

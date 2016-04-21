@@ -146,10 +146,11 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
 			for key, value in pairs(gParam.evolution.evolving_parameters[1]) do
             print(value)
 			end
-			
-		  --while 1==1 do
+			print(tostring(nil))
+			print(tostring({hello = 5}))
+		 -- while 1==1 do
 
-		 -- end
+		-- end
 
 
 		  if isPredator == 0 then

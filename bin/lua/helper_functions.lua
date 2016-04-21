@@ -52,7 +52,7 @@ function tableToFile(orig, skip, string, file)
         end
     else -- number, string, boolean, etc 
 		if tostring(orig_type) ~= 'nil' then 
-		--print( tostring(type(orig)) " " .. tostring(string) .. " " .. tostring(orig) .. "\n")
+		print( tostring(type(orig)) .. " " .. tostring(string) .. " " .. tostring(orig) .. "\n")
 			file:write( tostring(type(orig)) .. " " .. tostring(string) .. " " .. tostring(orig) .. "\n")
 		end
     end
@@ -63,10 +63,23 @@ end
 
 
 --________________________________________________________________________________________________________________________________________________
-function evolutionToFile(orig, skip, string, file)
+function evolutionToFile(experiment, generation, file)
     -- get all pred param.
-	for p in Simulation.predators() do
-	   print(p.position)
+	if generation == 0 then
+		for num,table in pairs(experiment.Param.evolution.evolving_parameters) do
+		   file:write(table.name .. " ")
+		end
+		file:write("\n")
+	end
+	for p in Simulation.Predators() do
+	   local pred = p.PredParams
+	       for num,table in pairs(experiment.Param.evolution.evolving_parameters) do
+		       var_name = table.name
+			   loadstring("val_var = " .. var_name )()
+			   loadstring("print(" .. var_name .. ")")()
+			   file:write(tostring(val_var) .. " ")
+		   end
+		   file:write("\n")
 	end
 end
 --________________________________________________________________________________________________________________________________________________
