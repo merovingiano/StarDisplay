@@ -386,7 +386,7 @@ inline void CPrey::steerToFlock(fov_filter const& filter)
       const float distance = (*first).distance;
 
       // Separation
-      const float sstep = glmutils::smootherstep(float(pBird_.separationStep.x), float(pBird_.separationStep.y), distance);
+      const float sstep = glmutils::smootherstep(pBird_.separationStep.x, pBird_.separationStep.y, distance);
       if ((separation_neighbors_ < pBird_.maxSeparationTopo) && (distance < pBird_.separationStep.y))
       {
         separation_ += (1.0f - sstep) * (*first).direction;
@@ -420,8 +420,8 @@ inline void CPrey::steerToFlock(fov_filter const& filter)
   interaction_neighbors_ = std::max(std::max(alignment_neighbors_, separation_neighbors_), cohesion_neighbors_);
 
   // apply weights to components
-  separation_ = H_ * ((separation_ * H_) * glm::vec3(pBird_.separationWeight));
-  cohesion_ = H_ * ((cohesion_ * H_) * glm::vec3(pBird_.cohesionWeight));
+  separation_ = H_ * ((separation_ * H_) * pBird_.separationWeight);
+  cohesion_ = H_ * ((cohesion_ * H_) * pBird_.cohesionWeight);
   alignment_ *= alignmentWeight_.x;
   bankAlignment *= alignmentWeight_.y;
   alignment_ -= bankAlignment * B_[2];

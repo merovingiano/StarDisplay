@@ -49,7 +49,7 @@ namespace Param {
 	  float canaries;
 	  NepGLM wonderDokter;
 	  Vec3 trein;
-	  glm::dvec3 trein2;
+	  glm::vec3 trein2;
 	  poezie waarom;
 	  glm::vec3 trein3;
   };
