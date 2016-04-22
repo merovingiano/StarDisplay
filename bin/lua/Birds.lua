@@ -150,9 +150,12 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
 			print(tostring(nil))
 			print(tostring({hello = 5}))
 			yo.trein4 = "varkensvlees"
-		 -- while 1==1 do
 
-		-- end
+			print(random:normal(0, 4))
+			print(random:normal(1, 1))
+		 --while 1==1 do
+
+		--end
 
 
 		  if isPredator == 0 then

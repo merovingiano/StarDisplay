@@ -27,6 +27,7 @@ public:
   void GetExperimentSettings(const luabind::object& obj);
   void SetPFeatureMap(const Param::FeatureMap&);
   void SetPRoost(const Param::Roost&);
+  void Simulation::next_experiment();
   void SetPRenderFlags(const Param::RenderFlags&);
   void RegisterFactories(const luabind::object&, const luabind::object&);
   void RegisterDataStorage(const luabind::object&);

@@ -119,14 +119,13 @@ void EvolvePN::Reset()
 	else
 	{
 		Sim.expNumb++;
+        if (Sim.expNumb > Sim.experiments.size()) AppWindow.PostMessage(WM_CLOSE); 
 		CFlock::pred_iterator firstPred(GFLOCKNC.predator_begin());
 		CFlock::pred_iterator lastPred(GFLOCKNC.predator_end());
 		CFlock::prey_iterator firstPrey(GFLOCKNC.prey_begin());
 		CFlock::prey_iterator lastPrey(GFLOCKNC.prey_end());
-		std::cout << "\n Starting Simulation " << Sim.expNumb;
-		if (Sim.expNumb > Sim.experiments.size()) AppWindow.PostMessage(WM_CLOSE); 
+		
 		Param::Params p = Sim.experiments[Sim.expNumb-1].param;
-		if (Sim.Params().evolution.load) p.evolution.terminationGeneration = 500;
 		Sim.SetParams(p);
 		for (; firstPred != lastPred; ++firstPred)
 		{
@@ -137,17 +136,8 @@ void EvolvePN::Reset()
 		{
 			firstPrey->SetPreyParams(Sim.experiments[Sim.expNumb - 1].prey);
 			firstPrey->SetBirdParams(Sim.experiments[Sim.expNumb - 1].preyBird);
-
-			Sim.PrintFloat(Sim.experiments[Sim.expNumb - 1].preyBird.wingMass, "wing mass in experiment");
 		}
-		
-		std::cout << "\n Generation: " << Generation_;
-		std::cout << "\n expnum: " << Sim.expNumb;
-
-
-		CFlock::prey_iterator testfirstPrey(GFLOCKNC.prey_begin());
-
-
+		std::cout << "\n Experiment number: " << Sim.expNumb;
 	}
 	
 
@@ -565,14 +555,19 @@ void EvolvePN::Shuffle()
 
 	// 50% overwritten + mutation
 	std::copy(allele.begin(), allele.begin() + (N >> 1), allele.begin() + (N >> 1));
-	std::uniform_real_distribution<float> rnd(-0.5f, 0.5f);
+	//std::uniform_real_distribution<float> rnd(-0.5f, 0.5f);
+	// or alternatively
+	//std::cauchy_distribution<float> cauchy_dist(a, b);
+	std::normal_distribution<float> norm_dist(0, 1);
+
 	//each generation the mutation becomes less..
 	for (unsigned i = (N >> 1); i < N; ++i)
 	{
 
 		for (int ii = 0; ii < allele[i].size(); ii++)
 		{
-			allele[i][ii] += (1.0f / Generation_) * rnd(rnd_eng()) * 5 + rnd(rnd_eng()) *allele[i][ii]/10.0f;
+			//allele[i][ii] += (1.0f / Generation_) * rnd(rnd_eng()) * 5 + rnd(rnd_eng()) *allele[i][ii]/10.0f;
+			allele[i][ii] += (1.0f / Generation_) * norm_dist(rnd_eng()) * 5 + norm_dist(rnd_eng()) *allele[i][ii] / 10.0f;
 		}
 	}
 	CFlock::pred_iterator first(GFLOCKNC.predator_begin());

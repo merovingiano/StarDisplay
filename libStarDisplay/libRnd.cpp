@@ -16,6 +16,7 @@ struct lua_rnd
   double uniform01() { return uniform01_(eng_); }
   double uniform(double min, double max) { return std::uniform_real_distribution<>(min, max)(eng_); }
   double normal(double mean, double sigma) { return std::normal_distribution<>(mean, sigma)(eng_); }
+  double cauchy(double a, double b) { return std::cauchy_distribution<>(a, b)(eng_); }
   double geometric(double p) { return std::geometric_distribution<>(p)(eng_); }
   glm::vec3 unit_vec() { return glmutils::unit_vec3(eng_); }
   glm::vec3 vec_in_sphere() { return glmutils::vec3_in_sphere(eng_); }

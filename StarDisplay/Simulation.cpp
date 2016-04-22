@@ -595,6 +595,30 @@ void Simulation::UpdateCurrentStatistic(double stat_dt)
 }
 
 
+void Simulation::next_experiment()
+{
+	Sim.expNumb++;
+	if (Sim.expNumb > Sim.experiments.size()) AppWindow.PostMessage(WM_CLOSE);
+	CFlock::pred_iterator firstPred(GFLOCKNC.predator_begin());
+	CFlock::pred_iterator lastPred(GFLOCKNC.predator_end());
+	CFlock::prey_iterator firstPrey(GFLOCKNC.prey_begin());
+	CFlock::prey_iterator lastPrey(GFLOCKNC.prey_end());
+
+	Param::Params p = Sim.experiments[Sim.expNumb - 1].param;
+	Sim.SetParams(p);
+	for (; firstPred != lastPred; ++firstPred)
+	{
+		firstPred->SetPredParams(Sim.experiments[Sim.expNumb - 1].pred);
+		firstPred->SetBirdParams(Sim.experiments[Sim.expNumb - 1].predBird);
+	}
+	for (; firstPrey != lastPrey; ++firstPrey)
+	{
+		firstPrey->SetPreyParams(Sim.experiments[Sim.expNumb - 1].prey);
+		firstPrey->SetBirdParams(Sim.experiments[Sim.expNumb - 1].preyBird);
+	}
+	std::cout << "\n Experiment number: " << Sim.expNumb;
+}
+
 void Simulation::UpdateSimulation(double sim_dt)
 {
   const double stat_dt = SimulationTime_ - lastStatTime_;
@@ -623,7 +647,6 @@ void Simulation::UpdateSimulation(double sim_dt)
 			Sim.PrintFloat(Sim.experiments[0].pred.pursuit.type, "pursuit c++");
 			Sim.StorageData_(Sim.expNumb);
 			Sim.evolution_next_();
-			std::cout << "\n test";
 			timeSinceEvolution = 0.0f;
 		}
 	}
