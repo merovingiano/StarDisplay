@@ -109,7 +109,7 @@ end
 
 
 --________________________________________________________________________________________________________________________________________________
-function tableToUserDataREAL(orig, userdata)
+function tableToUserData(orig, userdata)
     local orig_type = type(orig)
     if orig_type == 'table' then
         for orig_key, orig_value in next, orig, nil do
@@ -127,7 +127,7 @@ end
 --________________________________________________________________________________________________________________________________________________
 
 
-function tableToUserData(orig, bird)
+function tableToUserDataTEMP(orig, bird)
     local orig_type = type(orig)
     if orig_type == 'table' then
         for orig_key, orig_value in next, orig, nil do
