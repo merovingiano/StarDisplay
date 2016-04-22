@@ -107,52 +107,7 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
 		  prey.AlertedWBetaIn = { x = 4, y = 1, z = 0 } 
 		  prey.AlertedWBetaOut = { x = 0, y = 0, z = 0 }
 
-		  print("pos.x" .. predator.InitialPosition.x)
-          
-		  print("yo ")
-		  hoi = Params.NepGLM()
-		  print("yoyo")
-		  hoi.x = 5
-		  print("hi")
-		  print(hoi.x)
-
-		  yo = Params.poep()
-		  yo.canaries = 7
-		  print(yo.canaries)
-
 		  
-		  yo.wonderDokter.x = 3
-		  print(yo.wonderDokter.x)
-
-		  yo.waarom.jezus.x = 13
-		  print(yo.waarom.jezus.x)
-			yo.trein.x = 9
-			print(yo.trein.x)
-
-				yo.trein2.x = 14
-			print(yo.trein2.x)
-
-			tss = yo.trein.x
-			tss = 2
-			print(yo.trein2.x)
-
-			yo.trein3.x = 17
-			print(yo.trein3.x)
-
-			huh = glm.vec3(3,2,3)
-
-			print(huh)
-			huh.x = 5
-			print(huh.x)
-			for key, value in pairs(gParam.evolution.evolving_parameters[1]) do
-            print(value)
-			end
-			print(tostring(nil))
-			print(tostring({hello = 5}))
-			yo.trein4 = "varkensvlees"
-
-			print(random:normal(0, 4))
-			print(random:normal(1, 1))
 		 --while 1==1 do
 
 		--end
@@ -174,11 +129,8 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
 		     cPred = Params.Predator()
 			 tableToUserData(bird, "cBird")
 		     tableToUserData(predator, "cPred")
-			 print("cpred x ", cPred.InitialPosition.x)
 			 cPred.ExposureThreshold = glm.vec2(3,5)
-			 print("handle ", cPred.ExposureThreshold.x)
 
-			 --print("should be nothing ".. cPred.ExposureThreshold.z)
 			 if p ~= nil then
 				 p.BirdParams = cBird
 				 p.PredParams = cPred

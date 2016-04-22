@@ -47,7 +47,6 @@ function InitHook ()
   sim.AddKeyboardHook(VK.RETURN, true, false, false, KBH_ReloadParameter)
   sim.AddKeyboardHook(VK["D"], true, false, false, KBH_Debug) 
 
-  print("gparam " .. gParam.Roost.numPredators)
 
       if doExperiments == 1 and gParam.evolution.load == false then
 		Simulation.GetExperimentSettings(experiments)

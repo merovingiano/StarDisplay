@@ -59,11 +59,7 @@ local newExp = function (a)
 	experiment.Param.evolution.fileName = "Long_experiment3_rt50_erratic_starling.txt"
 	experiment.pred['VisualError'] = 0
 
-	print(experiment.Param.evolution.fileName)
-	print("maneuver " .. maneuverCounter)
-	print(experiment.Param.Roost.numPredators)
-	print(gParam.Roost.numPredators)
-	print("initial " .. experiment.pred.InitialPosition.x)
+
 	return experiment
 end
 
@@ -74,7 +70,6 @@ thecounter = 0
 for n = 0,1,1 do
 	print(n)
 	thecounter = thecounter + 1
-	print("counter: " .. thecounter)
     experiments[thecounter] = newExp(n)
 end
 

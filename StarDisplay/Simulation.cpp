@@ -115,7 +115,6 @@ void Simulation::GetExperimentSettings(const luabind::object& obj)
 		experiment.pred = luabind::object_cast<Param::Predator>(obj[intKey]["pred"]);
 		experiment.prey = luabind::object_cast<Param::Prey>(obj[intKey]["prey"]);
 		experiment.param = libParam::FromLua<Param::Params>(obj[intKey]["Param"]);	
-		Sim.PrintFloat(experiment.param.evolution.durationGeneration, "durationGeneration");
 		Sim.experiments.push_back(experiment);
 	}
 }
@@ -642,9 +641,9 @@ void Simulation::UpdateSimulation(double sim_dt)
 		if (timeSinceEvolution > params_.evolution.durationGeneration)
 		{
             
+			//if (Sim.expNumb == 0) next_experiment();
 			evolution.apply();
 			evolution.save(params_.evolution.fileName.c_str(), 0); 
-			Sim.PrintFloat(Sim.experiments[0].pred.pursuit.type, "pursuit c++");
 			Sim.StorageData_(Sim.expNumb);
 			Sim.evolution_next_();
 			timeSinceEvolution = 0.0f;
@@ -899,10 +898,8 @@ void Simulation::UpdateSimulationNoGraphicsNoFlock(double sim_dt)
 				
 				evolution.apply();
 				evolution.save(params_.evolution.fileName.c_str(), 0);
-				Sim.PrintFloat(Sim.experiments[0].pred.pursuit.type, "pursuit c++");
 				Sim.StorageData_(Sim.expNumb);
 				Sim.evolution_next_();
-				std::cout << "\n test";
 				timeSinceEvolution = 0.0f;
 			}
 		}

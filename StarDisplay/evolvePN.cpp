@@ -49,8 +49,6 @@ void SetGetAlleles(one_allele& allele, CFlock::pred_iterator pred, int type)
 	int index = 0;
 	if (type == 2) pred->setGeneration(Sim.evolution.getGeneration()); 
 	if (type == 2) bird.generation = Sim.evolution.getGeneration();
-	if (type == 2) Sim.PrintFloat(Sim.evolution.getGeneration(), "lallaa Generation");
-	if (type == 2) Sim.PrintFloat(pred->pBird_.generation, "snoesnoesnoe Generation");
 	if (type == 1) allele.push_back(pred->get_N()); else if (Sim.Params().evolution.evolvePN) pred->set_N(allele[index]); index++; 
 	if (type == 1) allele.push_back(pred->getDPAdjParam()); else if (Sim.Params().evolution.evolveDPAdjParam) pred->setDPAdjParam(allele[index]); index++;
 	if (type == 1) allele.push_back(pred->getStartAltitude()); else if (Sim.Params().evolution.evolveAlt) pred->setStartAltitude(allele[index]); index++; 
@@ -268,9 +266,6 @@ void EvolvePN::save(const char* fname, bool append) const
 
 	}
 
-	os << '\n';
-	os2 << '\n';
-	std::cout << "\n done__________________________________________";
 	//if (!Sim.experiments.empty()) std::cout << "\n and is it working here..?  " << Sim.experiments[0].param.evolution.fileName;
 }
 

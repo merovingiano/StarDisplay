@@ -20,7 +20,7 @@ gParam.evolution.durationGeneration = 1
 gParam.evolution.load = false
 gParam.evolution.loadFolder = "D:/ownCloud/2013-2014/phd hunting/dataStarDisplay/continue folder/"
 gParam.evolution.description = "Here, I compare the evolution of 4 species, 3 movements, and 2 RTs"
-gParam.RenderFlags.turnOffGraphics = true
+gParam.RenderFlags.turnOffGraphics = false
 
 
 

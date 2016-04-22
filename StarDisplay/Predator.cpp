@@ -209,7 +209,7 @@ void CPredator::updateNeighbors(float dt, const CFlock& flock)
       }
       if ((dogFight_ > pPred_.Dogfight) || (locks_ > pPred_.maxLocks))
       {
-		  std::cout << "JAJAJAJAJAJA";
+		  
         EndHunt(false);
       }
     } 

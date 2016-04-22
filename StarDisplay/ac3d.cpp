@@ -217,8 +217,6 @@ namespace {
 	//! setting location for each part
 	for (int i = 0; i < partIndex; i++)
 	{
-		std::cout << "\nint i: "<< i;
-		std::cout << "\nStartNumb: " << startNumb[i];
 		glm::mat4 M = glm::translate(glm::mat4(1), obj.loc[i]);
 		glmutils::transformPoints(M, static_cast<int>(startNumb[i + 1] - startNumb[i]), obj.vert.begin() + startNumb[i], obj.vert.begin() + startNumb[i]);
 	}
@@ -282,7 +280,7 @@ namespace {
   void acParser::read_numsurf() 
   {
 	
-	std::cout << "\n Startnumb: " << startNumb;
+
     int S; is_ >> S;
     for (int i=0; i<S;) 
     {
@@ -359,13 +357,13 @@ namespace {
     model.bbox = glmutils::bbox3(static_cast<int>(v.size()), v.begin());
     acObject& obj(objects_[objectID]);
 	float* ptr = &(obj.vert[0]).x;
-	std::cout << "\n total vertices:  " << obj.vert.size() << "\n first: " << ptr[0] << "\n total triangles:  " << obj.triangles.size();
+	//std::cout << "\n total vertices:  " << obj.vert.size() << "\n first: " << ptr[0] << "\n total triangles:  " << obj.triangles.size();
     // Sort triangle by hilbert value (increase cache coherence)
     hilbert_cmp_tri_center cmp(v, model.bbox);
     std::sort(obj.triangles.begin(), obj.triangles.end(), std::ref(cmp));
     if (obj.vert.empty()) return model;
     model.twoSided = obj.twoSided;
-	std::cout << "\n total vertices:  " << obj.vert.size() << "\n first: " << ptr[0] << "\n total triangles:  " << obj.triangles.size();
+	//std::cout << "\n total vertices:  " << obj.vert.size() << "\n first: " << ptr[0] << "\n total triangles:  " << obj.triangles.size();
 	//! debugging variable
 	int countDouble = 0;
     for (long i=0; i<static_cast<long>(obj.triangles.size()); ++i)
@@ -400,8 +398,8 @@ namespace {
 	for (int i = 0; i < 3; i++){
 		model.loc[i] = obj.loc[i];
 	}
-	std::cout << "\n"<< countDouble << "\n";
-	std::cout << "\n total vertices:  " << model.vertices.size() << "\n";
+	//std::cout << "\n"<< countDouble << "\n";
+	//std::cout << "\n total vertices:  " << model.vertices.size() << "\n";
     model.texFile = obj.texture;
     model.material = material_;
     computeACMR(model);

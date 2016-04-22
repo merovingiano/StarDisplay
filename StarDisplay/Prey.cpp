@@ -94,7 +94,6 @@ CPrey::CPrey(int ID, const glm::vec3& position, const glm::vec3& forward)
   flockSize_(0)
 {
 	random_orientation_ = glm::vec3(1.0f,0.0f,0.0f);
-	Sim.PrintString("newBird!");
 }
 
 

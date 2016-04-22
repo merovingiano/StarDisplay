@@ -52,7 +52,7 @@ function tableToFile(orig, skip, string, file)
         end
     else -- number, string, boolean, etc 
 		if tostring(orig_type) ~= 'nil' then 
-		print( tostring(type(orig)) .. " " .. tostring(string) .. " " .. tostring(orig) .. "\n")
+		--print( tostring(type(orig)) .. " " .. tostring(string) .. " " .. tostring(orig) .. "\n")
 			file:write( tostring(type(orig)) .. " " .. tostring(string) .. " " .. tostring(orig) .. "\n")
 		end
     end
@@ -82,14 +82,12 @@ function evolutionToFile(experiment, generation, file)
 	       for num,table in pairs(experiment.Param.evolution.evolving_parameters) do
 		       var_name = table.name
 			   loadstring("val_var = " .. var_name )()
-			   loadstring("print(" .. var_name .. ")")()
 			   file:write(tostring(val_var) .. " ")
 		   end
 		   for num,table in pairs(experiment.Param.evolution.to_be_saved) do
 
 		       var_name = table[1]
 			   loadstring("val_var = " .. var_name )()
-			   loadstring("print(" .. var_name .. ")")()
 			   file:write(tostring(val_var) .. " ")
 		   end
 		   file:write("\n")
