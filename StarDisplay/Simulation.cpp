@@ -558,8 +558,8 @@ void Simulation::UpdateBirds(const float sim_dt)
 #     pragma omp for
       for (int i = 0; i < Nprey; ++i) 
       {
-        (*(firstPrey+i)).updateNeighbors(sim_dt, *flock_);
-        if (setDefaultColorTex) (*(firstPrey+i)).setDefaultColorTex();
+       // (*(firstPrey+i)).updateNeighbors(sim_dt, *flock_);
+       // if (setDefaultColorTex) (*(firstPrey+i)).setDefaultColorTex();
       }
 
 #     pragma omp for
@@ -616,6 +616,27 @@ void Simulation::next_experiment()
 		firstPrey->SetBirdParams(Sim.experiments[Sim.expNumb - 1].preyBird);
 	}
 	std::cout << "\n Experiment number: " << Sim.expNumb;
+
+	//save files of experiment
+	time_t     now = time(0);
+	struct tm  tstruct;
+	char       buf[80];
+	tstruct = *localtime(&now);
+	strftime(buf, sizeof(buf), "%d-%m-%Y", &tstruct);
+
+
+	std::string bufS("D:/ownCloud/2013-2014/phd\ hunting/dataStarDisplay/");
+	bufS.append(buf);
+	bufS.append("/");
+	std::string luaName("experiment.lua");
+	std::string fnameTrunc(std::string(params_.evolution.fileName.c_str()).substr(0, std::string(params_.evolution.fileName.c_str()).find(".txt")));
+
+
+	CreateDirectory(bufS.c_str(), NULL);
+	CopyFile("../../experiments.lua", (bufS + fnameTrunc + luaName).c_str(), TRUE);
+	CopyFile((Sim.experiments[Sim.expNumb - 1].param.birds.csv_file_prey_predator_settings).c_str(), (bufS + fnameTrunc + "pred_prey.csv").c_str(), TRUE);
+	CopyFile((Sim.experiments[Sim.expNumb - 1].param.birds.csv_file_species).c_str(), (bufS + fnameTrunc + "species.csv").c_str(), TRUE);
+
 }
 
 void Simulation::UpdateSimulation(double sim_dt)
@@ -641,9 +662,9 @@ void Simulation::UpdateSimulation(double sim_dt)
 		if (timeSinceEvolution > params_.evolution.durationGeneration)
 		{
             
-			//if (Sim.expNumb == 0) next_experiment();
-			evolution.apply();
-			evolution.save(params_.evolution.fileName.c_str(), 0); 
+			if (Sim.expNumb == 0) next_experiment();
+			//evolution.apply();
+			//evolution.save(params_.evolution.fileName.c_str(), 0); 
 			Sim.StorageData_(Sim.expNumb);
 			Sim.evolution_next_();
 			timeSinceEvolution = 0.0f;

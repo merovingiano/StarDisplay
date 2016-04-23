@@ -11,11 +11,20 @@ Generation = 0
 function DataStorage.DataStorage()
 --store data of experiment parameters, assuming all prey have the same parameters and all predators have too.
    return function(expNum)
-   print("\n expNUM " .. expNum)
+       
+
+	   
+
+
+
+	   --create directories
 	   folder = experiments[expNum]['Param']['DataStorage']['folder'] .. "test\\" .. tostring(expNum) .. "\\" 
 	   os.execute( "mkdir " ..  "\"" .. experiments[expNum]['Param']['DataStorage']['folder'] .. "test\"" )
 	   os.execute( "mkdir " ..  "\"" .. experiments[expNum]['Param']['DataStorage']['folder'] .. "test\\" .. tostring(expNum) .."\"" )
-	   exp = experimentToTable(expNum)
+       -- copy files
+       exp = experimentToTable(expNum)
+
+	   
 	   file = io.open (folder .. "settings.txt", "w")
 	   tableToFile(exp,  "Clustering Ruler Trail RenderFlags FeatureMap", "", file)
 	   file:close()

@@ -126,7 +126,7 @@ void CPrey::updateNeighbors(float dt, const CFlock& flock)
   //
   // Warning: this function is called from inside a parallel section!
   //
-  if ((reactionTime_ += dt) >= reactionInterval_) 
+  if ((reactionTime_ ) >= reactionInterval_) 
   {
     float topo = (alertnessRelaxation_.x > 0.0f) ? pPrey_.AlertedTopo : pBird_.topologicalRange;
     const float r = searchRadius_ * std::pow((topo / (interaction_neighbors_ + 1)), 1.0f/3.0f);
@@ -160,7 +160,7 @@ void CPrey::update(float dt, const CFlock& flock)
 
 	calculateAccelerations();
 	handleTrajectoryStorage();
-  if (reactionTime_ >= reactionInterval_)
+	if ((reactionTime_ += dt )>= reactionInterval_)
   {
 	  predatorForce_ = boundary_ = gyro_ = steering_ = glm::vec3(0);
       if (pPrey_.EvasionStrategyTEMP != 0 ) handleEvasion();
