@@ -24,6 +24,7 @@ public:
   int Generation_;
   //
   void SetInitialParameter(const Param::Params&);
+  void Initialize_birds();
   void SetParams(const Param::Params&);
   void GetExperimentSettings(const luabind::object& obj);
   void SetPFeatureMap(const Param::FeatureMap&);

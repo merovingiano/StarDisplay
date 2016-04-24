@@ -257,39 +257,8 @@ namespace libParam
 	cobj.evolution.startGen = object_cast<int >(luaobj["evolution"]["startGen"]);
 	cobj.evolution.load = object_cast<bool>(luaobj["evolution"]["load"]);
 	cobj.evolution.loadFolder = object_cast<std::string>(luaobj["evolution"]["loadFolder"]);
-	cobj.evolution.evolveAlt = object_cast<bool  >(luaobj["evolution"]["evolveAlt"]);
 	cobj.evolution.type = object_cast<std::string  >(luaobj["evolution"]["type"]);
 	cobj.evolution.fileName = object_cast<std::string  >(luaobj["evolution"]["fileName"]);
-	cobj.evolution.evolvePN = object_cast<bool  >(luaobj["evolution"]["evolvePN"]);
-	cobj.evolution.evolveDPAdjParam = object_cast<bool  >(luaobj["evolution"]["evolveDPAdjParam"]);
-	cobj.evolution.evolveX = object_cast<bool  >(luaobj["evolution"]["evolveX"]);
-	cobj.evolution.evolveZ = object_cast<bool  >(luaobj["evolution"]["evolveZ"]);
-	cobj.evolution.evolveCL = object_cast<bool  >(luaobj["evolution"]["evolveCL"]);
-	cobj.evolution.evolvewingAspectRatio = object_cast<bool  >(luaobj["evolution"]["evolvewingAspectRatio"]);
-	cobj.evolution.evolvewingBeatFreq = object_cast<bool  >(luaobj["evolution"]["evolvewingBeatFreq"]);
-	cobj.evolution.evolvetheta = object_cast<bool  >(luaobj["evolution"]["evolvetheta"]);
-	cobj.evolution.evolvewingLength = object_cast<bool  >(luaobj["evolution"]["evolvewingLength"]);
-	cobj.evolution.evolvebodyArea = object_cast<bool  >(luaobj["evolution"]["evolvebodyArea"]);
-	cobj.evolution.evolvecBody = object_cast<bool  >(luaobj["evolution"]["evolvecBody"]);
-	cobj.evolution.evolvecFriction = object_cast<bool  >(luaobj["evolution"]["evolvecFriction"]);
-	cobj.evolution.evolvewingSpan = object_cast<bool  >(luaobj["evolution"]["evolvewingSpan"]);
-	cobj.evolution.evolvemaxForce = object_cast<bool  >(luaobj["evolution"]["evolvemaxForce"]);
-	cobj.evolution.evolvebodyMass = object_cast<bool  >(luaobj["evolution"]["evolvebodyMass"]);
-	cobj.evolution.evolvewingMass = object_cast<bool  >(luaobj["evolution"]["evolvewingMass"]);
-	cobj.evolution.evolveInertiaWing = object_cast<bool  >(luaobj["evolution"]["evolveInertiaWing"]);
-	cobj.evolution.evolveInertiaBody = object_cast<bool  >(luaobj["evolution"]["evolveInertiaBody"]);
-	cobj.evolution.evolveJ = object_cast<bool  >(luaobj["evolution"]["evolveJ"]);
-	cobj.evolution.evolvecontrolCL = object_cast<bool  >(luaobj["evolution"]["evolvecontrolCL"]);
-	cobj.evolution.evolvecruiseSpeed = object_cast<bool  >(luaobj["evolution"]["evolvecruiseSpeed"]);
-	cobj.evolution.evolvemaxLift = object_cast<bool  >(luaobj["evolution"]["evolvemaxLift"]);
-	cobj.evolution.evolvemaxSpeed = object_cast<bool  >(luaobj["evolution"]["evolvemaxSpeed"]);
-	cobj.evolution.evolverollRate = object_cast<bool  >(luaobj["evolution"]["evolverollRate"]);
-	cobj.evolution.evolveminSpeed = object_cast<bool  >(luaobj["evolution"]["evolveminSpeed"]);
-	cobj.evolution.evolvereactionTime = object_cast<bool  >(luaobj["evolution"]["evolvereactionTime"]);
-	cobj.evolution.evolvealignmentWeight = object_cast<bool  >(luaobj["evolution"]["evolvealignmentWeight"]);
-	cobj.evolution.evolvecohesionWeight = object_cast<bool  >(luaobj["evolution"]["evolvecohesionWeight"]);
-	cobj.evolution.evolveHandleTime = object_cast<bool  >(luaobj["evolution"]["evolveHandleTime"]);
-	cobj.evolution.evolveLockDistance = object_cast<bool  >(luaobj["evolution"]["evolveLockDistance"]);
 	cobj.evolution.TrajectoryBestPredator = object_cast<bool  >(luaobj["evolution"]["TrajectoryBestPredator"]);
 	cobj.evolution.TrajectoryPrey = object_cast<bool  >(luaobj["evolution"]["TrajectoryPrey"]);
 	cobj.evolution.terminationGeneration = object_cast<int  >(luaobj["evolution"]["terminationGeneration"]);
@@ -608,6 +577,9 @@ void luaopen_libParam(lua_State* L)
       .def_readwrite("boundaryReflectAngle", &Bird::boundaryReflectAngle)
       .def_readwrite("outerBoundary", &Bird::outerBoundary)
       .def_readwrite("innerBoundary", &Bird::innerBoundary)
+	  .def_readwrite("InitialPosition", &Bird::InitialPosition)
+	  .def_readwrite("InitialPosition", &Bird::InitialSpeed)
+	  .def_readwrite("InitialHeading", &Bird::InitialHeading)
       .def_readwrite("altitude", &Bird::altitude),
 
     class_<Prey>("Prey")
@@ -651,7 +623,7 @@ void luaopen_libParam(lua_State* L)
       .def_readwrite("HandleTime", &Predator::HandleTime)
 	  .def_readwrite("VisualError", &Predator::VisualError)
 	  .def_readwrite("VisualBias", &Predator::VisualBias)
-	  .def_readwrite("InitialPosition", &Predator::InitialPosition)
+	  
 	  .def_readwrite("DPAdjParam", &Predator::DPAdjParam)
 	  .def_readwrite("N", &Predator::N)
   ];

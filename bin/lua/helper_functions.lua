@@ -21,62 +21,60 @@ end
 --________________________________________________________________________________________________________________________________________________
 
 
-function sort_by(unsorted_table, unsorted_table2, by_var)
+function sort_by(unsorted_table, by_var)
 table.sort(by_var,function (k1, k2) return k1[1] < k2[1] end )   
 	   local sorted_table = {}
-	   local sorted_table2 = {}
        for i,n in ipairs(by_var) do
 			sorted_table[i] = unsorted_table[n[2]]
-			sorted_table2[i] = unsorted_table2[n[2]]
 		end
-		return sorted_table, sorted_table2,by_var
+		return sorted_table,by_var
 end
 
 
-function copy_half_and_mutate(the_table,the_table2, expNum)
+function copy_half_and_mutate(the_table,bird_prey_or_pred, expNum)
 	n = table.getn(the_table)
 	global_table_copy = the_table
-	global_table_copy2 = the_table2
-	print(the_table2[1].reactionTime)
-	print(global_table_copy2[1].reactionTime)
 	for loop = 1,(0.5*n),1 do
 	    for key,val in pairs(experiments[expNum].Param.evolution.evolving_parameters) do
-			if string.find(val.name, "pred_params") then
-				local variab = string.gsub(val.name, "pred_params", "")
+			if string.find(val.name, bird_prey_or_pred) then
+				local variab = string.gsub(val.name, bird_prey_or_pred, "")
 				mutation = 0
 				loadstring("mutation = random:" .. val.type .. "(" .. val.a .. "," .. val.b .. ")")()
 				if (val.scale == 1) then loadstring("mutation = mutation * global_table_copy[" .. loop .. "]" ..  variab)() end
 				loadstring("global_table_copy[" .. loop + 0.5*n .. "]" ..  variab .. " = " .. "global_table_copy[" .. loop .. "]" ..  variab .. " + mutation")()
 			end
-			if string.find(val.name, "predBird_params") then
-				local variab = string.gsub(val.name, "predBird_params", "")
-				mutation = 0
-				loadstring("mutation = random:" .. val.type .. "(" .. val.a .. "," .. val.b .. ")")()
-				if (val.scale == 1) then loadstring("mutation = mutation * global_table_copy2[" .. loop .. "]" ..  variab)() end
-				loadstring("global_table_copy2[" .. loop + 0.5*n .. "]" ..  variab .. " = " .. "global_table_copy2[" .. loop .. "]" ..  variab .. " + mutation")()
-			end
 	    end
 	end
 end
 
 
-function initialize_evolving_parameters(the_table, the_table2, expNum)
+function randomize_random_variables(the_table, bird_prey_or_pred, expNum)
    n = table.getn(the_table)
    global_table_copy = the_table
-   global_table_copy2 = the_table2
 	for loop = 1,(n),1 do
-	    for key,val in pairs(experiments[expNum].Param.evolution.evolving_parameters) do
-			if string.find(val.name, "pred_params") then
-				local variab = string.gsub(val.name, "pred_params", "")
-				loadstring("global_table_copy[" .. loop .. "]" ..  variab .. " =  random:uniform(" .. val.initial.min .. "," .. val.initial.max .. ")")()
-			end
-			if string.find(val.name, "predBird_params") then
-				local variab = string.gsub(val.name, "predBird_params", "")
-				loadstring("global_table_copy2[" .. loop .. "]" ..  variab .. " =  random:uniform(" .. val.initial.min .. "," .. val.initial.max .. ")")()
+	    for key,val in pairs(experiments[expNum].Param.evolution.random_variables) do
+			if string.find(val.name, bird_prey_or_pred) then
+				local variab = string.gsub(val.name, bird_prey_or_pred, "")
+			    loadstring("global_table_copy[" .. loop .. "]" ..  variab .. " =  random:" .. val.type  .. "(" .. val.a .. "," .. val.b .. ")")()
 			end
 	    end
 	end
 end
+
+
+function initialize_evolving_parameters(the_table, bird_prey_or_pred, expNum)
+   n = table.getn(the_table)
+   global_table_copy = the_table
+	for loop = 1,(n),1 do
+	    for key,val in pairs(experiments[expNum].Param.evolution.evolving_parameters) do
+			if string.find(val.name, bird_prey_or_pred) then
+				local variab = string.gsub(val.name, bird_prey_or_pred, "")
+				loadstring("global_table_copy[" .. loop .. "]" ..  variab .. " =  random:uniform(" .. val.initial.min .. "," .. val.initial.max .. ")")()
+			end
+	    end
+	end
+end
+
 --________________________________________________________________________________________________________________________________________________
 function deepcopy(orig)
     local orig_type = type(orig)

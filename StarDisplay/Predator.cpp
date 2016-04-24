@@ -613,7 +613,7 @@ void CPredator::DirectPursuit(const glm::vec3& targetHeading, const glm::vec3& t
 	glm::vec3 r = targetPoint_ - position_;
 	glm::vec3 rp = r;
 
-	if(Sim.Params().evolution.evolveDPAdjParam)	rp += DPAdjParam_ * targetVelocity; 
+	rp += DPAdjParam_ * targetVelocity; 
 	glm::vec3 v = velocity_;
 	glm::vec3 omega = glm::cross(v, rp) / glm::length(glm::cross(v, rp));
 	float angle = asin(glm::length(glm::cross(v, rp)) / (glm::length(v)*glm::length(rp)));
@@ -650,7 +650,7 @@ void CPredator::DirectPursuit2(const glm::vec3& targetHeading, const glm::vec3& 
 
 	glm::vec3 r = targetPoint_ - position_;
 	glm::vec3 rp = r;
-	if (Sim.Params().evolution.evolveDPAdjParam)	rp += DPAdjParam_ * targetVelocity;
+	rp += DPAdjParam_ * targetVelocity;
 	steering_ += glm::normalize(rp) * pPred_.N * 100.0f;
 
 }

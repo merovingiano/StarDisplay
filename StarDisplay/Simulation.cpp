@@ -33,6 +33,7 @@
 #include "random.hpp"
 #include "Mmsystem.h"
 #include "libParam.hpp"
+#include <glmutils/random.hpp>
 
 
 using namespace Param;
@@ -88,8 +89,6 @@ void Simulation::SetParams(const Param::Params& param)
 void Simulation::SetInitialParameter(const Param::Params& param)
 {
   params_ = param;
-  params_.vaderJacob.Eitje = 2;
-  /*SimulationTime_ = 0.0;	/*changed by Robin*/
 	gl_.reset( new GLSLState() );
 	gl_->Init(AppWindow.GetDC());
   flock_.reset( new CFlock(params_.roost.numPrey) );
@@ -640,6 +639,33 @@ void Simulation::next_experiment()
 
 }
 
+void Simulation::Initialize_birds()
+{
+	CFlock::pred_iterator firstPred(GFLOCKNC.predator_begin());
+	CFlock::pred_iterator lastPred(GFLOCKNC.predator_end());
+	CFlock::prey_iterator firstPrey(GFLOCKNC.prey_begin());
+	CFlock::prey_iterator lastPrey(GFLOCKNC.prey_end());
+
+	for (; firstPred != lastPred; ++firstPred)
+	{
+		firstPred->position_ = firstPred->pBird_.InitialPosition;
+		firstPred->B_[0] = firstPred->pBird_.InitialHeading;
+		// reset the couunter to compute the averages
+		firstPred->velocity_ = firstPred->pBird_.InitialSpeed * firstPred->B_[0];
+		firstPred->SetSpeed(firstPred->pBird_.InitialSpeed);
+
+	};
+
+	for (; firstPrey != lastPrey; ++firstPrey)
+	{
+		firstPrey->position_ = firstPrey->pBird_.InitialPosition;
+		firstPrey->B_[0] = firstPrey->pBird_.InitialHeading;
+		// reset the couunter to compute the averages
+		firstPrey->velocity_ = firstPrey->pBird_.InitialSpeed * firstPrey->B_[0];
+		firstPrey->SetSpeed(firstPrey->pBird_.InitialSpeed);
+	};
+}
+
 void Simulation::UpdateSimulation(double sim_dt)
 {
   const double stat_dt = SimulationTime_ - lastStatTime_;
@@ -669,6 +695,7 @@ void Simulation::UpdateSimulation(double sim_dt)
 			Sim.StorageData_(expNumb);
 			Generation_ += 1;
 			Sim.evolution_next_(expNumb);
+			Initialize_birds();
 			timeSinceEvolution = 0.0f;
 		}
 	}

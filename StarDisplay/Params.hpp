@@ -70,37 +70,6 @@ namespace Param {
 	  int startGen;
 	  bool load;
 	  std::string loadFolder;
-	  bool evolvePN;
-	  bool evolveDPAdjParam;
-	  bool evolveAlt;
-	  bool evolveX;
-	  bool evolveZ;
-	  bool evolveCL;
-	  bool evolvewingAspectRatio;
-	  bool evolvewingBeatFreq;
-	  bool evolvetheta;
-	  bool evolvewingLength;
-	  bool evolvebodyArea;
-	  bool evolvecBody;
-	  bool evolvecFriction;
-	  bool evolvemaxForce;
-	  bool evolvewingSpan;
-	  bool evolvebodyMass;
-	  bool evolvewingMass;
-	  bool evolveInertiaWing;
-	  bool evolveInertiaBody;
-	  bool evolveJ;
-	  bool evolvecontrolCL;
-	  bool evolvecruiseSpeed;
-	  bool evolvemaxLift;
-	  bool evolvemaxSpeed;
-	  bool evolverollRate;
-	  bool evolveminSpeed;
-	  bool evolvereactionTime;
-	  bool evolvealignmentWeight;
-	  bool evolvecohesionWeight;
-	  bool evolveHandleTime;
-	  bool evolveLockDistance;
 	  bool TrajectoryBestPredator;
 	  bool TrajectoryPrey;
 	  int terminationGeneration;
@@ -307,6 +276,9 @@ namespace Param {
 	int maneuver;
 	bool controlCL;
 	float CDCL;
+	glm::vec3 InitialPosition;
+	glm::vec3 InitialHeading;
+	float InitialSpeed;
   };
 
 
@@ -405,7 +377,7 @@ namespace Param {
     float HandleTime;
 	float VisualError;
 	glm::vec2 VisualBias;
-	glm::vec3 InitialPosition;
+	
 	float DPAdjParam;
 	float N;
   };

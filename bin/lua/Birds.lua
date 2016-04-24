@@ -85,7 +85,10 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
 
 
 		  --intitial pred parameters
-		  predator.InitialPosition = {x = 500, y = 500, z = 500}
+		  bird.InitialPosition = {x = 0, y = 0, z = 0}
+		  bird.InitialPosition = {x = 1, y = 0, z = 0}
+		  bird.InitialSpeed = tonumber(bird_info["Cruise speed male"])
+
 		  predator.DPAdjParam = 0
 		  predator.N = 3
 		  bird.generation = 0
