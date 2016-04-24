@@ -648,11 +648,15 @@ void Simulation::Initialize_birds()
 
 	for (; firstPred != lastPred; ++firstPred)
 	{
+		firstPred->ResetHunt();
+		firstPred->setTrail(false);
 		firstPred->position_ = firstPred->pBird_.InitialPosition;
 		firstPred->B_[0] = firstPred->pBird_.InitialHeading;
 		// reset the couunter to compute the averages
 		firstPred->velocity_ = firstPred->pBird_.InitialSpeed * firstPred->B_[0];
 		firstPred->SetSpeed(firstPred->pBird_.InitialSpeed);
+		firstPred->setTrail(true);
+		firstPred->BeginHunt();
 
 	};
 
