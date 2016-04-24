@@ -578,7 +578,7 @@ void luaopen_libParam(lua_State* L)
       .def_readwrite("outerBoundary", &Bird::outerBoundary)
       .def_readwrite("innerBoundary", &Bird::innerBoundary)
 	  .def_readwrite("InitialPosition", &Bird::InitialPosition)
-	  .def_readwrite("InitialPosition", &Bird::InitialSpeed)
+	  .def_readwrite("InitialSpeed", &Bird::InitialSpeed)
 	  .def_readwrite("InitialHeading", &Bird::InitialHeading)
       .def_readwrite("altitude", &Bird::altitude),
 

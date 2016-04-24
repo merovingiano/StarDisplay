@@ -40,7 +40,7 @@ function copy_half_and_mutate(the_table,bird_prey_or_pred, expNum)
 				local variab = string.gsub(val.name, bird_prey_or_pred, "")
 				mutation = 0
 				loadstring("mutation = random:" .. val.type .. "(" .. val.a .. "," .. val.b .. ")")()
-				if (val.scale == 1) then loadstring("mutation = mutation * global_table_copy[" .. loop .. "]" ..  variab)() end
+				if (val.scale == true) then loadstring("mutation = mutation * global_table_copy[" .. loop .. "]" ..  variab)() end
 				loadstring("global_table_copy[" .. loop + 0.5*n .. "]" ..  variab .. " = " .. "global_table_copy[" .. loop .. "]" ..  variab .. " + mutation")()
 			end
 	    end
@@ -55,7 +55,8 @@ function randomize_random_variables(the_table, bird_prey_or_pred, expNum)
 	    for key,val in pairs(experiments[expNum].Param.evolution.random_variables) do
 			if string.find(val.name, bird_prey_or_pred) then
 				local variab = string.gsub(val.name, bird_prey_or_pred, "")
-			    loadstring("global_table_copy[" .. loop .. "]" ..  variab .. " =  random:" .. val.type  .. "(" .. val.a .. "," .. val.b .. ")")()
+			    if val.a ~= nil then loadstring("global_table_copy[" .. loop .. "]" ..  variab .. " =  random:" .. val.type  .. "(" .. val.a .. "," .. val.b .. ")")() end
+				if val.a == nil then loadstring("global_table_copy[" .. loop .. "]" ..  variab .. " =  random:" .. val.type  .. "()")() end
 			end
 	    end
 	end
@@ -118,7 +119,6 @@ end
 --________________________________________________________________________________________________________________________________________________
 function evolutionToFile(experiment, generation, file)
     -- get all pred param.
-	print("gen .." .. generation)
 	if generation == 0 then
 		for num,table in pairs(experiment.Param.evolution.evolving_parameters) do
 		   file:write(table.name .. " ")
@@ -415,6 +415,19 @@ skipHemisphere = function (P)
   end
 end
 --________________________________________________________________________________________________________________________________________________
+
+
+
+
+function directory_exists( sPath )
+  if type( sPath ) ~= "string" then return false end
+
+  local response = os.execute( "cd " .. sPath )
+  if response == 0 then
+    return true
+  end
+  return false
+end
 
 
 

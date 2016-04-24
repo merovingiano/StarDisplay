@@ -12,8 +12,10 @@ function DataStorage.DataStorage()
    return function(expNum)
 	   --create directories
 	   folder = experiments[expNum]['Param']['DataStorage']['folder'] .. "test\\" .. tostring(expNum) .. "\\" 
-	   os.execute( "mkdir " ..  "\"" .. experiments[expNum]['Param']['DataStorage']['folder'] .. "test\"" )
-	   os.execute( "mkdir " ..  "\"" .. experiments[expNum]['Param']['DataStorage']['folder'] .. "test\\" .. tostring(expNum) .."\"" )
+	   if (directory_exists("\"" .. experiments[expNum]['Param']['DataStorage']['folder'] .. "test\"") ~= true) then
+		   os.execute( "mkdir " ..  "\"" .. experiments[expNum]['Param']['DataStorage']['folder'] .. "test\"" )
+		   os.execute( "mkdir " ..  "\"" .. experiments[expNum]['Param']['DataStorage']['folder'] .. "test\\" .. tostring(expNum) .."\"" )
+	   end
        -- copy files
        exp = experimentToTable(expNum)
 

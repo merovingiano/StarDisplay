@@ -646,27 +646,42 @@ void Simulation::Initialize_birds()
 	CFlock::prey_iterator firstPrey(GFLOCKNC.prey_begin());
 	CFlock::prey_iterator lastPrey(GFLOCKNC.prey_end());
 
+	float meanN = 0;
+	float meanStartAltitude = 0;
+	float meanXDist = 0;
+	int N = static_cast<int>(GFLOCKNC.num_pred());
+
 	for (; firstPred != lastPred; ++firstPred)
 	{
 		firstPred->ResetHunt();
 		firstPred->setTrail(false);
 		firstPred->position_ = firstPred->pBird_.InitialPosition;
-		firstPred->B_[0] = firstPred->pBird_.InitialHeading;
+		firstPred->B_[0] = glm::normalize(-firstPred->position_);
 		// reset the couunter to compute the averages
 		firstPred->velocity_ = firstPred->pBird_.InitialSpeed * firstPred->B_[0];
 		firstPred->SetSpeed(firstPred->pBird_.InitialSpeed);
 		firstPred->setTrail(true);
 		firstPred->BeginHunt();
 
+		meanN += firstPred->pPred_.N * 1.0f / float(N);
+		meanStartAltitude += firstPred->pBird_.InitialPosition.y * 1.0f / float(N);
+		meanXDist += firstPred->pBird_.InitialPosition.x * 1.0f / float(N);
+
 	};
+
+	GFLOCKNC.meanN = meanN;
+	GFLOCKNC.meanStartAltitude = meanStartAltitude;
+	GFLOCKNC.meanXDist = meanXDist;
 
 	for (; firstPrey != lastPrey; ++firstPrey)
 	{
+		firstPrey->setTrail(false);
 		firstPrey->position_ = firstPrey->pBird_.InitialPosition;
 		firstPrey->B_[0] = firstPrey->pBird_.InitialHeading;
 		// reset the couunter to compute the averages
 		firstPrey->velocity_ = firstPrey->pBird_.InitialSpeed * firstPrey->B_[0];
 		firstPrey->SetSpeed(firstPrey->pBird_.InitialSpeed);
+		firstPrey->setTrail(true);
 	};
 }
 

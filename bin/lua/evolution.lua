@@ -41,7 +41,6 @@ function evolution.evolve_next()
 		copy_half_and_mutate(Bird_params, "predBird_params", expNum)
 		randomize_random_variables(Pred_params, "pred_params", expNum)
 		randomize_random_variables(Bird_params, "predBird_params", expNum)
-		print("RT pred= " .. Bird_params[1].reactionTime)
 
 
 	    Prey_params = {}
@@ -54,7 +53,6 @@ function evolution.evolve_next()
 			counter = counter + 1
 			Prey_params[counter] = p.PreyParams
 			Bird_params[counter] = p.BirdParams
-				print("RT prey = " .. Bird_params[1].reactionTime)
 			Bird_params[counter].generation = Generation
 			prey_stat = p.BirdParams
 			if crit ~= nil then
@@ -76,7 +74,6 @@ function evolution.evolve_next()
 		copy_half_and_mutate(Bird_params, "preyBird_params", expNum)
 		randomize_random_variables(Prey_params, "prey_params", expNum)
 		randomize_random_variables(Bird_params, "preyBird_params", expNum)
-		print("RT prey = " .. Bird_params[1].reactionTime)
 
 	   
 	    print("seconds: " .. os.clock() - begin)

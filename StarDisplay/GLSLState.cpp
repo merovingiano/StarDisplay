@@ -285,7 +285,7 @@ void GLSLState::PrintInfoText()
   {
 	  Fonts->set_color(glm::vec4(1, 1, 0, 1));
 	  const CPredator* focalPred = GCAMERA.GetFocalPredator();
-	  _snprintf_s(buf, 399, details_predator, glm::length(focalBird->velocity()), (focalBird->position())[1], glm::length(focalBird->steering()), glm::length(focalBird->accel()), (focalPred->hunts()).success, (focalPred->hunts()).minDist, (focalPred->hunts()).locks, focalPred->is_attacking(), (focalPred->hunts()).lastMinDist, focalPred->get_N(), GFLOCKNC.meanN, GFLOCKNC.meanStartAltitude, GFLOCKNC.meanXDist, sqrt(glm::dot(focalPred->liftMax_, focalPred->liftMax_)) / focalBird->GetBirdParams().bodyMass, focalBird->roll_rate_, focalBird->angular_acc_);
+	  _snprintf_s(buf, 399, details_predator, glm::length(focalBird->velocity()), (focalBird->position())[1], glm::length(focalBird->steering()), glm::length(focalBird->accel()), (focalPred->hunts()).success, (focalPred->hunts()).minDist, (focalPred->hunts()).locks, focalPred->is_attacking(), (focalPred->hunts()).lastMinDist, focalPred->pPred_.N, GFLOCKNC.meanN, GFLOCKNC.meanStartAltitude, GFLOCKNC.meanXDist, sqrt(glm::dot(focalPred->liftMax_, focalPred->liftMax_)) / focalBird->GetBirdParams().bodyMass, focalBird->roll_rate_, focalBird->angular_acc_);
 	  Fonts->print(buf);
   }
   else

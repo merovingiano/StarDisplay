@@ -86,7 +86,7 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
 
 		  --intitial pred parameters
 		  bird.InitialPosition = {x = 0, y = 0, z = 0}
-		  bird.InitialPosition = {x = 1, y = 0, z = 0}
+		  bird.InitialHeading = {x = 1, y = 0, z = 0}
 		  bird.InitialSpeed = tonumber(bird_info["Cruise speed male"])
 
 		  predator.DPAdjParam = 0
@@ -110,8 +110,7 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
 		  prey.AlertedWBetaIn = { x = 4, y = 1, z = 0 } 
 		  prey.AlertedWBetaOut = { x = 0, y = 0, z = 0 }
 
-		  
-		 --while 1==1 do
+		-- while 1==1 do
 
 		--end
 

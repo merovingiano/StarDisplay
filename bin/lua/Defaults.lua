@@ -45,7 +45,6 @@ local Default = {
 			{name = "predBird_params.InitialPosition.y", type = "normal", a = 0, b = 0.1, scale = true, initial = {min = 0, max = 600}, },
 		    {name = "predBird_params.InitialPosition.x", type = "normal", a = 0, b = 0.1, scale = true, initial = {min = 0, max = 600}, },
 			{name = "pred_params.N", type = "normal", a = 0, b = 0.1, scale = true, initial = {min = 0, max = 100}, },
-			{name = "predBird_params.wingAspectRatio", type = "normal", a = 0, b = 0.0001, scale = true, initial = {min = 9, max = 9.5}, },
 		
 		},
 
@@ -57,7 +56,8 @@ local Default = {
 		},
 
 		random_variables = {
-		  {name = "preyBird_params.reactionTime",  type = "normal", a = 4, b = 1},
+		  {name = "preyBird_params.reactionTime",  type = "normal", a = 0.07, b = 0.001},
+		  {name = "preyBird_params.InitialHeading",  type = "vec_in_sphere",},
 		},
   },
 
