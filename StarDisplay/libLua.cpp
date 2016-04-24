@@ -285,6 +285,12 @@ namespace liblua {
     return PARAMS.IntegrationTimeStep;
   }
 
+  double GetGeneration()
+  {
+	  return Sim.Generation_;
+  }
+
+
   int PreyIterator(lua_State* L)
   {
     return luabind::detail::make_range(L, GFLOCKNC.prey_begin(), GFLOCKNC.prey_end());
@@ -339,6 +345,7 @@ namespace liblua {
       def("GetRoost", &GetRoost),
 	  def("GetVaderJacob", &GetVaderJacob),
       def("SetRoost", &SetRoost),
+	  def("Generation", &GetGeneration),
       def("NewPrey", &NewPrey),
       def("NewPredator", &NewPredator),
       def("RegisterFactories", &RegisterFactories),

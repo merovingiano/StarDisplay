@@ -597,6 +597,7 @@ void Simulation::UpdateCurrentStatistic(double stat_dt)
 void Simulation::next_experiment()
 {
 	Sim.expNumb++;
+	Generation_ = 0;
 	if (Sim.expNumb > Sim.experiments.size()) AppWindow.PostMessage(WM_CLOSE);
 	CFlock::pred_iterator firstPred(GFLOCKNC.predator_begin());
 	CFlock::pred_iterator lastPred(GFLOCKNC.predator_end());
@@ -662,11 +663,12 @@ void Simulation::UpdateSimulation(double sim_dt)
 		if (timeSinceEvolution > params_.evolution.durationGeneration)
 		{
             
-			if (Sim.expNumb == 0) next_experiment();
+			if (expNumb == 0) next_experiment();
 			//evolution.apply();
 			//evolution.save(params_.evolution.fileName.c_str(), 0); 
-			Sim.StorageData_(Sim.expNumb);
-			Sim.evolution_next_();
+			Sim.StorageData_(expNumb);
+			Generation_ += 1;
+			Sim.evolution_next_(expNumb);
 			timeSinceEvolution = 0.0f;
 		}
 	}

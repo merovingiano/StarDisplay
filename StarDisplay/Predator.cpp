@@ -289,9 +289,9 @@ void CPredator::update(float dt, const CFlock&)
 			B_[0] = glm::normalize(-position_);
 
 			velocity_ = 80.0f *B_[0];
-			N_ = 2.0f;
+			pPred_.N = 2.0f;
 		}
-		if (GetAsyncKeyState(VK_NUMPAD5)) N_ = 5.0f;
+		if (GetAsyncKeyState(VK_NUMPAD5)) pPred_.N = 5.0f;
 
 		//if (GetAsyncKeyState(VK_NUMPAD8)) std::cout << "\n Yes"; else std::cout << "\n No";
 
@@ -620,7 +620,7 @@ void CPredator::DirectPursuit(const glm::vec3& targetHeading, const glm::vec3& t
 	omega *= angle;
 	omega *= glm::length(v);
 	omega = glm::cross(omega, v);
-	steering_ += omega * N_;
+	steering_ += omega * pPred_.N;
 }
 
 void CPredator::checkEndHunt(const glm::vec3& targetHeading, const glm::vec3& targetVelocity)
@@ -651,7 +651,7 @@ void CPredator::DirectPursuit2(const glm::vec3& targetHeading, const glm::vec3& 
 	glm::vec3 r = targetPoint_ - position_;
 	glm::vec3 rp = r;
 	if (Sim.Params().evolution.evolveDPAdjParam)	rp += DPAdjParam_ * targetVelocity;
-	steering_ += glm::normalize(rp) * N_ * 100.0f;
+	steering_ += glm::normalize(rp) * pPred_.N * 100.0f;
 
 }
 
@@ -685,7 +685,7 @@ void CPredator::proportionalNavigation(const glm::vec3& targetHeading, const glm
 
 	glm::vec3 v = velocity_ - targetVelocity;
 	glm::vec3 wLOS = glm::cross(v, r) / glm::dot(r, r);
-	steering_ += N_ * glm::cross(wLOS, velocity_)*pBird_.bodyMass;
+	steering_ += pPred_.N * glm::cross(wLOS, velocity_)*pBird_.bodyMass;
 	//!stopping attack when in blind angle and close to prey
 	//if (glm::length(steering_) > 50) std::cout << "\n r " << glm::length(r) << "  v: " << glm::length(v) << "  wLOS " << glm::length(wLOS) << " mass " << pBird_.bodyMass << " N " << N_ << " steering " << glm::length(steering_);
 }

@@ -21,6 +21,7 @@ public:
   EvolvePN evolution;
   bool done_;
   double timeSinceEvolution;
+  int Generation_;
   //
   void SetInitialParameter(const Param::Params&);
   void SetParams(const Param::Params&);

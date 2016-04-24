@@ -26,6 +26,8 @@ local Default = {
 
     evolution = {
 		type ="PN",
+		pred_fitness_criterion = "pred_stat.minDist",
+		prey_fitness_criterion = nil,
 		fileName = "default.txt",
 		durationGeneration = 25.0,   -- length in seconds in which one duration hunts
 		startGen = 0,				-- When no randomization at start is desired, set it to >0 (such as when loading an old one)
@@ -71,9 +73,10 @@ local Default = {
 		terminationGeneration = 100000000,
 
 		evolving_parameters = {
-			{name = "pred_params.InitialPosition.y", type = "gaussian", initial = {min = 0, max = 600}, },
-		    {name = "pred_params.InitialPosition.x", type = "gaussian", initial = {min = 0, max = 600}, },
-			{name = "pred_params.N", type = "gaussian", initial = {min = 0, max = 400}, },
+			{name = "pred_params.InitialPosition.y", type = "normal", a = 0, b = 0.1, scale = true, initial = {min = 0, max = 600}, },
+		    {name = "pred_params.InitialPosition.x", type = "normal", a = 0, b = 0.1, scale = true, initial = {min = 0, max = 600}, },
+			{name = "pred_params.N", type = "normal", a = 0, b = 0.1, scale = true, initial = {min = 0, max = 100}, },
+			{name = "predBird_params.wingAspectRatio", type = "normal", a = 0, b = 0.0001, scale = true, initial = {min = 9, max = 9.5}, },
 		
 		},
 
@@ -82,6 +85,10 @@ local Default = {
 		   {"pred_stat.velocityMinDist"},
 		   {"pred_stat.seqTime"},
 		   {"predBird_params.generation"},
+		},
+
+		random_variables = {
+		  {name = "predBird_params.reactionTime",  "uniform", a = 0, b = 100},
 		},
   },
 
