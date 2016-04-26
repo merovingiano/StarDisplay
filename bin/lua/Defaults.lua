@@ -33,8 +33,7 @@ local Default = {
 		startGen = 0,				-- When no randomization at start is desired, set it to >0 (such as when loading an old one)
 		load = false,
 		loadFolder = "",
-		TrajectoryBestPredator = false,
-		TrajectoryPrey = false,
+		Trajectories = {amount = 3, dt = 0.1,},
 		externalPrey = false,
 		externalPreyFile = "pos_lure_flight1.txt",
 		title = "Default Title",
@@ -52,6 +51,7 @@ local Default = {
 		   {"pred_stat.minDist"},
 		   {"pred_stat.velocityMinDist"},
 		   {"pred_stat.seqTime"},
+		   {"predator.id"},
 		   {"predBird_params.generation"},
 		},
 
@@ -69,8 +69,8 @@ local Default = {
   },
 
   DataStorage = {
-     folder = "D:\\ownCloud\\2013-2014\\phd hunting\\dataStarDisplay\\",
-  
+     folder_lua = "D:\\ownCloud\\2013-2014\\phd hunting\\dataStarDisplay\\",
+     folder = "D:/ownCloud/2013-2014/phd hunting/dataStarDisplay/",
   },
 
   Trail = {

@@ -26,6 +26,7 @@ function evolution.evolve_next()
 			if crit ~= nil then
 				loadstring("fitness[counter] = {" .. crit .. " , counter}")()
 				if (string.find(tostring(fitness[counter][1]),"#IND")) then fitness[counter][1] = 999 end
+				if (string.find(tostring(fitness[counter][1]),"#QNAN")) then fitness[counter][1] = 999 end
 			end
 		end
 

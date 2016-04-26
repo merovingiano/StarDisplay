@@ -109,7 +109,7 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
 		  bird.wBetaOut = { x = 0, y = 0, z = 0 }    -- roll, pitch, yaw 
 		  prey.AlertedWBetaIn = { x = 4, y = 1, z = 0 } 
 		  prey.AlertedWBetaOut = { x = 0, y = 0, z = 0 }
-
+		  predator.StoreTrajectory = false
 		-- while 1==1 do
 
 		--end
@@ -163,6 +163,29 @@ function Birds.getMorphology(birdy)
 		  return bird
 end
 
+
+
+function TrajectoryTable()
+   
+   local trajectory = {
+    Pred_position = {x=0,y=0,z=0},
+	Prey_position= {x=0,y=0,z=0},
+	Pred_up= {x=0,y=0,z=0},
+	Prey_up= {x=0,y=0,z=0},
+	Pred_forward= {x=0,y=0,z=0},
+	Prey_forward= {x=0,y=0,z=0},
+	Pred_acc= {x=0,y=0,z=0},
+	Prey_acc= {x=0,y=0,z=0},
+	pred_velocity= {x=0,y=0,z=0},
+	prey_velocity= {x=0,y=0,z=0},
+	Pred_id =0,
+	Pred_gen =0,
+	Prey_id =0,
+	time =0,
+   
+   }
+   return trajectory
+end
 
 
 return Birds

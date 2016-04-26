@@ -259,13 +259,14 @@ namespace libParam
 	cobj.evolution.loadFolder = object_cast<std::string>(luaobj["evolution"]["loadFolder"]);
 	cobj.evolution.type = object_cast<std::string  >(luaobj["evolution"]["type"]);
 	cobj.evolution.fileName = object_cast<std::string  >(luaobj["evolution"]["fileName"]);
-	cobj.evolution.TrajectoryBestPredator = object_cast<bool  >(luaobj["evolution"]["TrajectoryBestPredator"]);
-	cobj.evolution.TrajectoryPrey = object_cast<bool  >(luaobj["evolution"]["TrajectoryPrey"]);
+	cobj.evolution.Trajectories.amount = object_cast<int>(luaobj["evolution"]["Trajectories"]["amount"]);
+	cobj.evolution.Trajectories.dt = object_cast<float>(luaobj["evolution"]["Trajectories"]["dt"]);
 	cobj.evolution.terminationGeneration = object_cast<int  >(luaobj["evolution"]["terminationGeneration"]);
 	cobj.evolution.externalPreyFile = object_cast<std::string  >(luaobj["evolution"]["externalPreyFile"]);
 	cobj.evolution.externalPrey = object_cast<bool>(luaobj["evolution"]["externalPrey"]);
 	cobj.evolution.title = object_cast<std::string>(luaobj["evolution"]["title"]);
 	cobj.evolution.description = object_cast<std::string >(luaobj["evolution"]["description"]);
+	cobj.DataStorage.folder = object_cast<std::string >(luaobj["DataStorage"]["folder"]);
 
 	cobj.birds.csv_file_species = object_cast<std::string  >(luaobj["Birds"]["csv_file_species"]);
 	cobj.birds.csv_file_prey_predator_settings = object_cast<std::string  >(luaobj["Birds"]["csv_file_prey_predator_settings"]);
@@ -602,6 +603,24 @@ void luaopen_libParam(lua_State* L)
       .def_readwrite("ReturnRelaxation", &Prey::ReturnRelaxation)
       .def_readwrite("ReturnWeight", &Prey::ReturnWeight)
       .def_readwrite("ReturnThreshold", &Prey::ReturnThreshold),
+    
+
+	  class_<Trajectory>("Trajectory")
+	  .def(constructor<>())
+	  .def_readwrite("Pred_acc", &Trajectory::Pred_acc)
+	  .def_readwrite("Pred_forward", &Trajectory::Pred_forward)
+	  .def_readwrite("Pred_gen", &Trajectory::Pred_gen)
+	  .def_readwrite("Pred_id", &Trajectory::Pred_id)
+	  .def_readwrite("Pred_position", &Trajectory::Pred_position)
+	  .def_readwrite("Pred_up", &Trajectory::Pred_up)
+	  .def_readwrite("pred_velocity", &Trajectory::pred_velocity)
+	  .def_readwrite("Prey_acc", &Trajectory::Prey_acc)
+	  .def_readwrite("Prey_forward", &Trajectory::Prey_forward)
+	  .def_readwrite("Prey_id", &Trajectory::Prey_id)
+	  .def_readwrite("Prey_position", &Trajectory::Prey_position)
+	  .def_readwrite("Prey_up", &Trajectory::Prey_up)
+	  .def_readwrite("prey_velocity", &Trajectory::prey_velocity)
+	  .def_readwrite("time", &Trajectory::time),
 
     class_<Predator>("Predator")
       .def(constructor<>())
@@ -616,6 +635,7 @@ void luaopen_libParam(lua_State* L)
       .def_readwrite("Dogfight", &Predator::Dogfight)
       .def_readwrite("HoldLock", &Predator::HoldLock)
       .def_readwrite("LockBlindAngle", &Predator::LockBlindAngle)
+	  .def_readwrite("StoreTrajectory", &Predator::StoreTrajectory)
       .def_readwrite("LockDistance", &Predator::LockDistance)
       .def_readwrite("maxLocks", &Predator::maxLocks)
       .def_readwrite("ExposureThreshold", &Predator::ExposureThreshold)

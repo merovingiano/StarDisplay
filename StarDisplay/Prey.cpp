@@ -19,6 +19,7 @@
 #include <iostream>
 #include <string>
 #include "random.hpp"
+#include "ICamera.hpp"
 
 using namespace Param;
 namespace avx = glmutils::avx;
@@ -183,17 +184,13 @@ void CPrey::update(float dt, const CFlock& flock)
   }
   regenerateLocalSpace(dt);
   appendTrail(trail_, position_, B_[2], color_tex_, dt);
-  testSettings();
+  if ((GCAMERA.GetFocalBird())->id() == id_) testSettings();
 }
 
 
 
 void CPrey::handleTrajectoryStorage()
 {
-	if (GFLOCKNC.prey_begin()->id() == id_ && Sim.Params().evolution.TrajectoryPrey)
-	{
-		positionsAndSpeed.push_back(glm::vec4(position_, glm::length(velocity_)));
-	}
 }
 
 void CPrey::handleManeuvers()
@@ -210,7 +207,7 @@ void CPrey::flightDynamic()
 
 	const float pi = glm::pi<float>();
 	// often used combination of variables:
-	const float dynamic = 0.5*pBird_.rho*speed_* speed_;
+	const float dynamic = 0.5f*pBird_.rho*speed_* speed_;
 	// subtract the part of the body of total wing area
 	float area = pBird_.wingArea * (pBird_.wingLength * 2) / pBird_.wingSpan;
 	// Now, first calculate the maximum lift, given torque constraints, the wing span is:
@@ -224,14 +221,14 @@ void CPrey::flightDynamic()
 	// calculate the inertia, bases on b_maxlift
 	float phi = (b_maxlift - bmin) / (bmax - bmin);
 	//
-	float InertiaWingCenter = pBird_.InertiaWing * phi*phi + 1 / 4 * 0.098*0.098 * pow(pBird_.bodyMass, 0.70f) * pBird_.wingMass + 0.098 * pow(pBird_.bodyMass, 0.35f) * pBird_.J*phi;
+	float InertiaWingCenter = pBird_.InertiaWing * phi*phi + 10.f / 4.0f * 0.098f*0.098f * pow(pBird_.bodyMass, 0.70f) * pBird_.wingMass + 0.098f * pow(pBird_.bodyMass, 0.35f) * pBird_.J*phi;
 	float Inertia = 2* InertiaWingCenter + pBird_.InertiaBody;
 
 	// How big should the cl be?
 	float r_desired_lift = std::min(desiredLift_, liftMax);
 	float CL = std::min(r_desired_lift / (dynamic*area), 1.6f);
 	// unconstrained Tmax
-	float Tmax = pi*pi*pi / 16 * pBird_.rho * pBird_.wingAspectRatio * area * (sin(0.5*pBird_.theta)*pBird_.wingBeatFreq)  * (sin(0.5*pBird_.theta)*pBird_.wingBeatFreq) * pBird_.wingLength *  pBird_.wingLength;
+	float Tmax = pi*pi*pi / 16.0f * pBird_.rho * pBird_.wingAspectRatio * area * (sin(0.5f*pBird_.theta)*pBird_.wingBeatFreq)  * (sin(0.5f*pBird_.theta)*pBird_.wingBeatFreq) * pBird_.wingLength *  pBird_.wingLength;
 	// constrained Tmax
 	float Tmax_cons = std::min(Tmax, Tmax * pBird_.cruiseSpeed / speed_);
 	// calculate Thrust for flapping. !!IMPORTANT, I don't yet have a cap on the maximum thrust due to torque constraints. How to do this?
@@ -273,7 +270,7 @@ void CPrey::flightDynamic()
 	if ((-D + T) > -D2) glide_ = false; else glide_ = true;
 	float forwardAccel = std::max(-D + T, -D2);
 	flightForce_ = lift_ + B_[0] * (forwardAccel);
-	flightForce_.y -= pBird_.bodyMass * 9.81;        // apply gravity
+	flightForce_.y -= pBird_.bodyMass * 9.81f;        // apply gravity
 	if (glide_ == true) span_ = 1.0f - (b - bmin) / (bmax - bmin); else span_ = 0.0f;
 
 
@@ -282,7 +279,7 @@ void CPrey::flightDynamic()
 
 void CPrey::maneuver_lat_roll()
 {
-	float max = glm::length(liftMax_) - pBird_.bodyMass*9.81 / 2.0f;
+	float max = glm::length(liftMax_) - pBird_.bodyMass*9.81f / 2.0f;
 	//if (fmod(Sim.SimulationTime(), 0.05) < 0.025)
 	//HACK
 	if ((float(rand()) / float(RAND_MAX)) > (1.0f - reactionInterval_*10.0f))
@@ -359,7 +356,7 @@ void CPrey::flightExternal()
 		}
 		float time1 = externalPos[0][3];
 		float time2 = externalPos[1][3];
-		float timeNow = fmod(Sim.SimulationTime(), Sim.Params().evolution.durationGeneration);
+		float timeNow = fmod(float(Sim.SimulationTime()), Sim.Params().evolution.durationGeneration);
 		float weight = (timeNow - time1) / (time2 - time1);
 		position_ = (1.0f - weight) * glm::vec3(externalPos[0].x, externalPos[0].z, externalPos[0].y) + weight *glm::vec3(externalPos[1].x, externalPos[1].z, externalPos[1].y);
 		position_.y += 120; 

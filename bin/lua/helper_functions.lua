@@ -131,6 +131,7 @@ function evolutionToFile(experiment, generation, file)
 	end
 	for p in Simulation.Predators() do
 	       pred_stat = p:GetHuntStat()
+		   predator = p
 	       pred_params = p.PredParams
 		   predBird_params = p.BirdParams
 	       prey_params = p:GetTargetPrey()
@@ -150,6 +151,31 @@ function evolutionToFile(experiment, generation, file)
 end
 --________________________________________________________________________________________________________________________________________________
 
+function TrajectoryToFile(experiment, generation, file)
+
+
+  if (generation == 0) then
+		        global_ts = {}
+				trajectoryTableLayout = TrajectoryTable()
+				trajectoryTableOutput = TrajectoryTable()
+			    row_table_to_file(trajectoryTableOutput, generation, "",file)
+			    file:write("\n")
+				print("poep")
+  else
+	  for p in Simulation.Predators() do
+			   for ts in Simulation.getTrajectory(p) do
+					global_ts = ts
+					trajectoryTableLayout = TrajectoryTable()
+					trajectoryTableOutput = TrajectoryTable()
+					userDatatoTable(trajectoryTableLayout, "global_ts", "trajectoryTableOutput")
+					row_table_to_file(trajectoryTableOutput, generation, "",file)
+					file:write("\n")
+			   end
+	   end
+  end
+end
+
+
 
 function tableToGlm(glm, table)
    if table.z == nil then
@@ -159,7 +185,21 @@ function tableToGlm(glm, table)
    end
 end
 
+function row_table_to_file(orig, generation, string, file)
+    local orig_type = type(orig)
+    if orig_type == 'table' then
+        for orig_key, orig_value in next, orig, nil do
+			newstring = string .. "." .. orig_key
+            row_table_to_file(orig_value, generation, newstring, file )
+        end
+    else 
+		if tostring(orig_type) ~= 'nil' then 
+		    if (generation == 0) then file:write(tostring(string) .. " " ) end
+			if (generation > 0) then file:write(tostring(orig) .. " " ) end
+		end
+    end
 
+end
 
 --________________________________________________________________________________________________________________________________________________
 function tableToUserData(orig, userdata)

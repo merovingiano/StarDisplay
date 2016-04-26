@@ -76,7 +76,7 @@ public:
   float get_average_roll_rate() const { return average_roll_rate_; }
   float get_max_roll_rate() const { return max_roll_rate_; }
   long get_counter_acc() const { return counter_acc_; }
-  void set_counter_acc(float counter) { counter_acc_ = counter; }
+  void set_counter_acc(long counter) { counter_acc_ = counter; }
   void handleTrajectoryStorage();
   void handleManeuvers();
 

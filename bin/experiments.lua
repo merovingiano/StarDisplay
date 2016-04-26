@@ -41,11 +41,10 @@ local newExp = function (a)
 	}
 	experiment.pred.PursuitStrategy = 1
 	experiment.Param.evolution.fileName =  "hoi"  .. ".txt"
-	experiment.Param.evolution.TrajectoryBestPredator = false
 	experiment.Param.evolution.title =  ""
 	experiment.Param.evolution.description = ""
 	experiment.Param.evolution.terminationGeneration = 3000
-	experiment.Param.evolution.durationGeneration = 20
+	experiment.Param.evolution.durationGeneration = 5
 	experiment.Param.evolution.evolveDPAdjParam = false
 
 	--experiment.preyBird = peregrine_bird
@@ -56,7 +55,7 @@ local newExp = function (a)
 	experiment.preyBird.maneuver = 2
 	
 	experiment.predBird.reactionTime = 0.05
-	experiment.Param.evolution.fileName = "Long_experiment3_rt50_erratic_starling.txt"
+	experiment.Param.evolution.fileName = "Long_experiment3_rt50_erratic_starling"
 	experiment.pred['VisualError'] = 0
 
 

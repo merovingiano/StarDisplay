@@ -146,6 +146,7 @@ protected:
   int     keyState_;
   float   reactionTime_;
   float   reactionInterval_;
+  float   StoreTrajectory_;
   float   searchRadius_;
   int     separation_neighbors_;
   int     alignment_neighbors_;

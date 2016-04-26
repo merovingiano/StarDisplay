@@ -38,6 +38,8 @@ public:
     float minDistLockedOn;
     double seqTime;
     double lookTime;
+	
+	std::vector<Param::Trajectory> Trajectory_;
     std::vector<unsigned> attackSize;
     std::vector<unsigned> catchSize;
 	//! add the miss distance of last attack too
@@ -59,7 +61,7 @@ public:
   Param::Predator& GetPredParams() { return pPred_; }
   void SetPredParams(const Param::Predator& pPred);
 
-
+  void handle_trajectory_storage();
   Param::Predator  pPred_;
   void updateNeighbors(float dt, const CFlock& flock);
   void update(float dt, const CFlock&);
@@ -101,6 +103,8 @@ private:
   friend struct find_prey_qf;
 
   void Accelerate();
+  void handle_user_controls();
+  void handle_direct_attack();
   void flightDynamic();
   void steerToFlock();
   void ignoreFlock();
@@ -114,12 +118,12 @@ private:
   void SelectPicked(struct find_prey_qf&);
   void SelectPickedTopo(struct find_prey_qf&);
 
-  void PursuitCustom(const glm::vec3& targetHeading, const glm::vec3& targetVelocity);
-  void proportionalNavigation(const glm::vec3& targetHeading, const glm::vec3& targetVelocity);
-  void PNDP(const glm::vec3& targetHeading, const glm::vec3& targetVelocity);
-  void DirectPursuit(const glm::vec3& targetHeading, const glm::vec3& targetVelocity);
-  void DirectPursuit2(const glm::vec3& targetHeading, const glm::vec3& targetVelocity);
-  void checkEndHunt(const glm::vec3& targetHeading, const glm::vec3& targetVelocity);
+  void PursuitCustom(const glm::vec3& targetPosition, const glm::vec3& targetVelocity);
+  void proportionalNavigation(const glm::vec3& targetPosition, const glm::vec3& targetVelocity);
+  void PNDP(const glm::vec3& targetPosition, const glm::vec3& targetVelocity);
+  void DirectPursuit(const glm::vec3& targetPosition, const glm::vec3& targetVelocity);
+  void DirectPursuit2(const glm::vec3& targetPosition, const glm::vec3& targetVelocity);
+  void checkEndHunt(const glm::vec3& targetPosition);
 
   
   float            attackTime_;

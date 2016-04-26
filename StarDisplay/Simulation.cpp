@@ -572,7 +572,7 @@ void Simulation::UpdateBirds(const float sim_dt)
 #     pragma omp for nowait
       for (int i = 0; i < Npred; ++i) 
       { 
-        (*(firstPred+i)).updateNeighbors(sim_dt, *flock_);
+        //(*(firstPred+i)).updateNeighbors(sim_dt, *flock_);
         (*(firstPred+i)).update(sim_dt, *flock_);
         if (setDefaultColorTex) (*(firstPred+i)).setDefaultColorTex();
       }
@@ -625,17 +625,19 @@ void Simulation::next_experiment()
 	strftime(buf, sizeof(buf), "%d-%m-%Y", &tstruct);
 
 
-	std::string bufS("D:/ownCloud/2013-2014/phd\ hunting/dataStarDisplay/");
+	std::string bufS(Sim.params_.DataStorage.folder);
 	bufS.append(buf);
+	bufS.append("/");
+	bufS.append(Sim.params_.evolution.fileName);
 	bufS.append("/");
 	std::string luaName("experiment.lua");
 	std::string fnameTrunc(std::string(params_.evolution.fileName.c_str()).substr(0, std::string(params_.evolution.fileName.c_str()).find(".txt")));
 
 
 	CreateDirectory(bufS.c_str(), NULL);
-	CopyFile("../../experiments.lua", (bufS + fnameTrunc + luaName).c_str(), TRUE);
-	CopyFile((Sim.experiments[Sim.expNumb - 1].param.birds.csv_file_prey_predator_settings).c_str(), (bufS + fnameTrunc + "pred_prey.csv").c_str(), TRUE);
-	CopyFile((Sim.experiments[Sim.expNumb - 1].param.birds.csv_file_species).c_str(), (bufS + fnameTrunc + "species.csv").c_str(), TRUE);
+	CopyFile("../../experiments.lua", (bufS + luaName).c_str(), TRUE);
+	CopyFile((Sim.experiments[Sim.expNumb - 1].param.birds.csv_file_prey_predator_settings).c_str(), (bufS +  "pred_prey.csv").c_str(), TRUE);
+	CopyFile((Sim.experiments[Sim.expNumb - 1].param.birds.csv_file_species).c_str(), (bufS + "species.csv").c_str(), TRUE);
 
 }
 
@@ -649,20 +651,28 @@ void Simulation::Initialize_birds()
 	float meanN = 0;
 	float meanStartAltitude = 0;
 	float meanXDist = 0;
+	
 	int N = static_cast<int>(GFLOCKNC.num_pred());
-
+	int N_prey = static_cast<int>(GFLOCKNC.num_prey());
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<> dis(0, N_prey-1);
+	for (int nn = 0; nn < Sim.Params().evolution.Trajectories.amount && nn < N; ++nn)
+	{
+		((firstPred + nn))->pPred_.StoreTrajectory = true;
+	};
 	for (; firstPred != lastPred; ++firstPred)
 	{
+		
 		firstPred->ResetHunt();
 		firstPred->setTrail(false);
 		firstPred->position_ = firstPred->pBird_.InitialPosition;
 		firstPred->B_[0] = glm::normalize(-firstPred->position_);
-		// reset the couunter to compute the averages
 		firstPred->velocity_ = firstPred->pBird_.InitialSpeed * firstPred->B_[0];
 		firstPred->SetSpeed(firstPred->pBird_.InitialSpeed);
 		firstPred->setTrail(true);
 		firstPred->BeginHunt();
-
+		firstPred->SetTargetPrey(&(*(firstPrey + dis(gen))));
 		meanN += firstPred->pPred_.N * 1.0f / float(N);
 		meanStartAltitude += firstPred->pBird_.InitialPosition.y * 1.0f / float(N);
 		meanXDist += firstPred->pBird_.InitialPosition.x * 1.0f / float(N);
@@ -945,7 +955,7 @@ void Simulation::EnterGameLoopNoGraphicsNoLua()
 
 		UpdateSimulationNoGraphicsNoFlock(dt);
 		SimulationTime_ += dt;
-		if (fmod(SimulationTime_, 1.0f) > 0 && fmod(SimulationTime_, 1.0f) <= dt) PrintFloat(SimulationTime_, "time = ");
+		if (fmod(float(SimulationTime_), 1.0f) > 0 && fmod(float(SimulationTime_), 1.0f) <= dt) PrintFloat(float(SimulationTime_), "time = ");
 		timeSinceEvolution += dt;
 	}
 }

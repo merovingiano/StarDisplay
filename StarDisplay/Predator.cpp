@@ -227,142 +227,53 @@ void CPredator::update(float dt, const CFlock&)
   //
   // Warning: this function is called from inside a parallel section!
   //
-  if (reactionTime_ >= reactionInterval_)
+	if (pPred_.StoreTrajectory && (StoreTrajectory_ += dt) >= Sim.Params().evolution.Trajectories.dt)
+	{
+		handle_trajectory_storage();
+		StoreTrajectory_ = 0.0f;
+	}
+  const CPrey* target = GetTargetPrey();
+  if ((reactionTime_ += dt) >= reactionInterval_)
   {
     steering_ = cohesion_ = boundary_ = gyro_ = glm::vec3(0);
-    if (! is_attacking()) 
-    {
-      (this->*startAttack[pPred_.StartAttack]);
-    }
-    if (is_attacking()) 
-    {
-      wBetaIn_ = pPred_.AttackWBetaIn;
-      wBetaOut_ = pPred_.AttackWBetaOut;
-      steerToFlock();
-      if (interaction_neighbors_ == 0) 
-      {
-        //handleBoundary(pBird_.altitude, position_.y); 
-      }
-    }
-    else 
-    {
-      //wBetaIn_ = pBird_.wBetaIn;
-      //wBetaOut_ = pBird_.wBetaOut;
-      //handleBoundary(pBird_.altitude, position_.y); 
-    }
-    //handleGPWS();
-    //steering_ += boundary_;
-    //steering_ += speedControl() * B_[0];
+	
+	if (is_attacking())
+	{
+		handle_direct_attack();
+		hunts_.seqTime += reactionTime_;
+	}
 	//! Controlling the bird. 
 	if ((GCAMERA.GetFocalBird())->id() == id_)
 	{
-		//std::cout << pPred_.VisualError << "\n";
-		//std::cout << pPred_.VisualBias.x << "  " << pPred_.VisualBias.y << "\n";
-
-
-		if (!GetAsyncKeyState(VK_F11) && keyState_ != 0)
-		{
-			keyState_ = 0;
-		}
-		if (GetAsyncKeyState(VK_F11) && keyState_ == 0)
-		{
-			testSettings();
-
-		}
-
-		if (GetAsyncKeyState(VK_DOWN)) steering_ += 5.0f*glm::vec3(0, 1, 0);
-		if (GetAsyncKeyState(VK_NUMPAD2)) steering_ += glm::length(liftMax_)*glm::vec3(0, 1, 0);
-		if (GetAsyncKeyState(VK_UP)) steering_ -= 5.0f*glm::vec3(0, 1, 0);;
-		if (GetAsyncKeyState(VK_NUMPAD8)) steering_ -= glm::length(liftMax_)*glm::vec3(0, 1, 0);
-		if (GetAsyncKeyState(VK_RIGHT)) steering_ += 5.0f*H_[2];
-		if (GetAsyncKeyState(VK_NUMPAD6)) steering_ += glm::length(liftMax_)*H_[2];
-		if (GetAsyncKeyState(VK_LEFT)) steering_ -= 5.0f*H_[2];
-		if (GetAsyncKeyState(VK_NUMPAD4)) steering_ -= glm::length(liftMax_)*H_[2];
-		if (GetAsyncKeyState(VK_NUMPAD5)) steering_ += 3.0f*H_[0];
-		if (GetAsyncKeyState(VK_NUMPAD0)) steering_ += 1.0f*H_[0];
-
-		if (GetAsyncKeyState(VK_F7))
-		{
-			position_.y = 1200.0f;
-			position_.x = 1.0f;
-			position_.z = 1.0f;
-			B_[0] = glm::normalize(-position_);
-
-			velocity_ = 80.0f *B_[0];
-			pPred_.N = 2.0f;
-		}
-		if (GetAsyncKeyState(VK_NUMPAD5)) pPred_.N = 5.0f;
-
-		//if (GetAsyncKeyState(VK_NUMPAD8)) std::cout << "\n Yes"; else std::cout << "\n No";
-
+		handle_user_controls();
 	}
-	//! saving the position of some predator in a genetic algorithm (will be more general code when I come back)
-	if (GFLOCKNC.predator_begin()->id() == id_  && Sim.Params().evolution.TrajectoryBestPredator)
-	{
-			positionsAndSpeed.push_back(glm::vec4(position_, glm::length(velocity_)));
-		
-			
-	}
-
-	//! handle acceleration
-	//Accelerate();
-	//!Quick hack for StarDisplay problem in steering when too low to the ground
-	//if (position_.y < 1) steering_ += 5.0f*B_[1];
 	//! used to mimick wind effects in graphics
-	rand_ = float(rand()) / (float(RAND_MAX)*100) +0.8 * rand_;
-    //noise();    // add some noise
-	//! Clamped force no longer used. Just for graphics
-    avx::vec3 force(steering_);
-
-
+	rand_ = float(rand()) / (float(RAND_MAX)*100.f) +0.8f * rand_;
     // calculate time of next reaction
     nextReactionTime();
   }
 
   // Physics works in real time...
-  handleTime_ -= dt;
   flightDynamic();
   predatorIntegration(dt);
   predatorRegenerateLocalSpace(dt);
 
-  if (closestPrey_)
+  if (target)
   {
     // Check for collisions in real-time
-    const float distance = glm::distance(position_, closestPrey_->position());
-	checkEndHunt(closestPrey_->velocity(), closestPrey_->forward());
+	const float distance = glm::distance(position_, target->position());
+	checkEndHunt(target->position());
 	if (distance < hunts_.minDist)
 	{
 		hunts_.minDist = distance;
 		hunts_.velocityMinDist = glm::length(velocity_);
-		
 	}
 	if (distance < hunts_.lastMinDist)
 	{
 		hunts_.lastMinDist = distance;
 	}
   }
-  if (0 == lockedOn_)
-  {
-    bool attack = is_attacking();
-    attackTime_ -= dt;
-    if (attack && (attackTime_ < 0.0)) EndHunt(false);
-  }
-  else
-  {
-    // Check for catches in real-time
-    const float distance = glm::distance(position_, lockedOn_->position());
-    if (distance < hunts_.minDistLockedOn) hunts_.minDistLockedOn = distance;
-	checkEndHunt(lockedOn_->velocity(), lockedOn_->forward());
-    if (distance <= pPred_.CatchDistance)
-    {
-      // EndHunt(true);
-    }
-  }
-  
   appendTrail(trail_, position_, B_[2], color_tex_, dt);
-
-  //std::cout << "\n x: " << B_[0].x << " y: " <<  B_[0].y << " z: " <<B_[0].z;	
-  //testSettings();
 }
 
 
@@ -373,12 +284,75 @@ void CPredator::Accelerate()
 }
 
 
+void CPredator::handle_trajectory_storage()
+{
+	Param::Trajectory traj;
+	const CPrey* target = GetTargetPrey();
+
+	traj.Pred_acc = accel_;
+	traj.Pred_forward = forward();
+	traj.Pred_gen = pBird_.generation;
+	traj.Pred_id = id_;
+	traj.Pred_position = position_;
+	traj.Pred_up = up();
+	traj.pred_velocity = velocity_;
+	traj.Prey_acc = target->accel_;
+	traj.Prey_forward = target->forward();
+	traj.Prey_id = target->id();
+	traj.Prey_position = target->position_;
+	traj.Prey_up = target->up();
+	traj.prey_velocity = target->velocity_;
+	traj.time = Sim.SimulationTime();
+
+	hunts_.Trajectory_.push_back(traj);
+	
+}
+
+void CPredator::handle_user_controls()
+{
+
+	if (!GetAsyncKeyState(VK_F11) && keyState_ != 0)
+	{
+		keyState_ = 0;
+	}
+	if (GetAsyncKeyState(VK_F11) && keyState_ == 0)
+	{
+		testSettings();
+
+	}
+
+	if (GetAsyncKeyState(VK_DOWN)) steering_ += 5.0f*glm::vec3(0, 1, 0);
+	if (GetAsyncKeyState(VK_NUMPAD2)) steering_ += glm::length(liftMax_)*glm::vec3(0, 1, 0);
+	if (GetAsyncKeyState(VK_UP)) steering_ -= 5.0f*glm::vec3(0, 1, 0);;
+	if (GetAsyncKeyState(VK_NUMPAD8)) steering_ -= glm::length(liftMax_)*glm::vec3(0, 1, 0);
+	if (GetAsyncKeyState(VK_RIGHT)) steering_ += 5.0f*H_[2];
+	if (GetAsyncKeyState(VK_NUMPAD6)) steering_ += glm::length(liftMax_)*H_[2];
+	if (GetAsyncKeyState(VK_LEFT)) steering_ -= 5.0f*H_[2];
+	if (GetAsyncKeyState(VK_NUMPAD4)) steering_ -= glm::length(liftMax_)*H_[2];
+	if (GetAsyncKeyState(VK_NUMPAD5)) steering_ += 3.0f*H_[0];
+	if (GetAsyncKeyState(VK_NUMPAD0)) steering_ += 1.0f*H_[0];
+
+	if (GetAsyncKeyState(VK_F7))
+	{
+		position_.y = 1200.0f;
+		position_.x = 1.0f;
+		position_.z = 1.0f;
+		B_[0] = glm::normalize(-position_);
+
+		velocity_ = 80.0f *B_[0];
+		pPred_.N = 2.0f;
+	}
+	if (GetAsyncKeyState(VK_NUMPAD5)) pPred_.N = 5.0f;
+
+}
+
+
 void CPredator::flightDynamic()
 {
 
 	const float pi = glm::pi<float>();
 	// often used combination of variables:
-	const float dynamic = 0.5*pBird_.rho*speed_* speed_;
+	const float dynamic = 0.5f*pBird_.rho*speed_* speed_;
 	// subtract the part of the body of total wing area
 	float area = pBird_.wingArea * (pBird_.wingLength * 2) / pBird_.wingSpan;
 	// Now, first calculate the maximum lift, given torque constraints, the wing span is:
@@ -392,14 +366,14 @@ void CPredator::flightDynamic()
 	// calculate the inertia, bases on b_maxlift
 	float phi = (b_maxlift - bmin) / (bmax - bmin);
 	//
-	float InertiaWingCenter = pBird_.InertiaWing * phi*phi + 1 / 4 * 0.098*0.098 * pow(pBird_.bodyMass, 0.70f) * pBird_.wingMass + 0.098 * pow(pBird_.bodyMass, 0.35f) * pBird_.J*phi;
-	float Inertia = 2 * InertiaWingCenter + pBird_.InertiaBody;
+	float InertiaWingCenter = pBird_.InertiaWing * phi*phi + 1.0f / 4.0f * 0.098f*0.098f * pow(pBird_.bodyMass, 0.70f) * pBird_.wingMass + 0.098f * pow(pBird_.bodyMass, 0.35f) * pBird_.J*phi;
+	float Inertia = 2.0f * InertiaWingCenter + pBird_.InertiaBody;
 
 	// How big should the cl be?
 	float r_desired_lift = std::min(desiredLift_, liftMax);  //VISUAL ERROR, DT 
 	float CL = std::min(r_desired_lift / (dynamic*area), 1.6f);
 	// unconstrained Tmax
-	float Tmax = pi*pi*pi / 16 * pBird_.rho * pBird_.wingAspectRatio * area * (sin(0.5*pBird_.theta)*pBird_.wingBeatFreq)  * (sin(0.5*pBird_.theta)*pBird_.wingBeatFreq) * pBird_.wingLength *  pBird_.wingLength;
+	float Tmax = pi*pi*pi / 16.0f * pBird_.rho * pBird_.wingAspectRatio * area * (sin(0.5f*pBird_.theta)*pBird_.wingBeatFreq)  * (sin(0.5f*pBird_.theta)*pBird_.wingBeatFreq) * pBird_.wingLength *  pBird_.wingLength;
 	// constrained Tmax
 	float Tmax_cons = std::min(Tmax, Tmax * pBird_.cruiseSpeed / speed_);
 	// calculate Thrust for flapping. !!IMPORTANT, torque constraint is hacky
@@ -440,11 +414,24 @@ void CPredator::flightDynamic()
 	if ((-D + T) > -D2) glide_ = false; else glide_ = true;
 	float forwardAccel = std::max(-D + T, -D2);
 	flightForce_ = lift_ + B_[0] * (forwardAccel);
-	flightForce_.y -= pBird_.bodyMass * 9.81;        // apply gravity
+	flightForce_.y -= pBird_.bodyMass * 9.81f;        // apply gravity
 	if (glide_ == true) span_ = 1.0f - (b - bmin) / (bmax - bmin); else span_ = 0.0f;    
 
 }
 
+
+void CPredator::handle_direct_attack()
+{
+
+	const CPrey* target = GetTargetPrey();
+	//Sim.PrintFloat( target->id(), "target id");
+	glm::vec3 targetPosition = target->position();
+	glm::vec3 targetVelocity = target->velocity_;
+	if (pPred_.PursuitStrategy == 1) proportionalNavigation(targetPosition, targetVelocity);
+	if (pPred_.PursuitStrategy == 2) DirectPursuit(targetPosition, targetVelocity);
+	if (pPred_.PursuitStrategy == 3) DirectPursuit2(targetPosition, targetVelocity);
+	if (pPred_.PursuitStrategy == 4) PNDP(targetPosition, targetVelocity);
+}
 
 // basic flocking
 void CPredator::steerToFlock()
@@ -598,19 +585,19 @@ void CPredator::setDefaultColorTex() const
 }
 
 
-void CPredator::PursuitCustom(const glm::vec3& targetHeading, const glm::vec3& targetVelocity)
+void CPredator::PursuitCustom(const glm::vec3& targetPosition, const glm::vec3& targetVelocity)
 {
   if (pPred_.pursuit.hook.is_valid())
   {
     auto lock = Lua.LuaLock();
-    this->pPred_.pursuit.hook(this, Sim.SimulationTime(), targetPoint_, targetHeading, targetVelocity);
+	this->pPred_.pursuit.hook(this, Sim.SimulationTime(), targetPosition, targetPosition, targetVelocity);
   }
 }
 
-void CPredator::DirectPursuit(const glm::vec3& targetHeading, const glm::vec3& targetVelocity)
+void CPredator::DirectPursuit(const glm::vec3& targetPosition, const glm::vec3& targetVelocity)
 {
 
-	glm::vec3 r = targetPoint_ - position_;
+	glm::vec3 r = targetPosition - position_;
 	glm::vec3 rp = r;
 
 	rp += DPAdjParam_ * targetVelocity; 
@@ -623,9 +610,9 @@ void CPredator::DirectPursuit(const glm::vec3& targetHeading, const glm::vec3& t
 	steering_ += omega * pPred_.N;
 }
 
-void CPredator::checkEndHunt(const glm::vec3& targetHeading, const glm::vec3& targetVelocity)
+void CPredator::checkEndHunt(const glm::vec3& targetPosition)
 {
-	glm::vec3 r = targetPoint_ - position_;
+	glm::vec3 r = targetPosition - position_;
 
 	if (hunts_.minDist< 5)
 	{
@@ -645,31 +632,31 @@ void CPredator::checkEndHunt(const glm::vec3& targetHeading, const glm::vec3& ta
 
 }
 
-void CPredator::DirectPursuit2(const glm::vec3& targetHeading, const glm::vec3& targetVelocity)
+void CPredator::DirectPursuit2(const glm::vec3& targetPosition, const glm::vec3& targetVelocity)
 {
 
-	glm::vec3 r = targetPoint_ - position_;
+	glm::vec3 r = targetPosition - position_;
 	glm::vec3 rp = r;
 	rp += DPAdjParam_ * targetVelocity;
 	steering_ += glm::normalize(rp) * pPred_.N * 100.0f;
 
 }
 
-void CPredator::PNDP(const glm::vec3& targetHeading, const glm::vec3& targetVelocity)
+void CPredator::PNDP(const glm::vec3& targetPosition, const glm::vec3& targetVelocity)
 {
-	glm::vec3 r = targetPoint_ - position_;
-	if (glm::length(r) > 300) DirectPursuit2(targetHeading, targetVelocity);
-	else proportionalNavigation(targetHeading, targetVelocity);
+	glm::vec3 r = targetPosition - position_;
+	if (glm::length(r) > 300) DirectPursuit2(targetPosition, targetVelocity);
+	else proportionalNavigation(targetPosition, targetVelocity);
 }
 
 
 //! Prop Nav function
-void CPredator::proportionalNavigation(const glm::vec3& targetHeading, const glm::vec3& targetVelocity)
+void CPredator::proportionalNavigation(const glm::vec3& targetPosition, const glm::vec3& targetVelocity)
 {
 	//Hack
 	//N_ = 8.0f;
-
-	glm::vec3 r = targetPoint_ - position_;
+	//Sim.PrintVector(targetPosition, "targetPosition");
+	glm::vec3 r = targetPosition - position_;
 
 	//add visual error!! translate angular velocity to position. This is hacky: actually computations should be done on FOV pred (cant do bias like this)
 	//if ((GCAMERA.GetFocalBird())->id() == id_) Sim.PrintVector(r, "before");
@@ -732,7 +719,7 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 	avx::vec3 steering = steering_;
 
 	glm::vec3 steering2 = steering_;
-	steering2.y += pBird_.bodyMass * 9.81;
+	steering2.y += pBird_.bodyMass * 9.81f;
 	avx::vec3 gyro = gyro_.x * forward + gyro_.y * side + gyro_.z * up;
 	//steering += gyro;
 
@@ -762,7 +749,7 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 	if (p < 0) a *= -1;
 	// I calculate whether, if the bird would decelerate maximally from here, it would still reach the desired bank angle (it has a solution). If so, it means that the bird has to decelerate from now on in order to have a rollrate of zero 
 	// at the desired bank angle. I also check whether the rollrate is in the direction of desired bank angle, else always accelerate in the direction of the bank angle.
-	if (c*c > 2 * a*p & p*c > 0) a *= -1;
+	if (c*c > 2 * a*p && p*c > 0) a *= -1;
 
 	roll_rate_ = roll_rate_ + a*dt;
 	float rollrate = roll_rate_;
@@ -793,7 +780,7 @@ void CPredator::predatorRegenerateLocalSpace(float dt)
 
 	//! Doing the beat cycle for graphics
 	//beat cycle
-	beatCycle_ += dt*(pBird_.wingBeatFreq * 2*3.14);
+	beatCycle_ += dt*(pBird_.wingBeatFreq * 2.0f*3.14f);
 	if (glide_) beatCycle_ = 0.0f;
 	if (Sim.SimulationTime() < 0.1) beatCycle_ += rand_;
 }

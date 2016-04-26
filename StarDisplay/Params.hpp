@@ -26,7 +26,28 @@ namespace Param {
 
   };
 
+  struct Trajectory
+  {
+	  glm::vec3 Pred_position;
+	  glm::vec3 Prey_position;
+	  glm::vec3 Pred_up;
+	  glm::vec3 Prey_up;
+	  glm::vec3 Pred_forward;
+	  glm::vec3 Prey_forward;
+	  glm::vec3 Pred_acc;
+	  glm::vec3 Prey_acc;
+	  glm::vec3 pred_velocity;
+	  glm::vec3 prey_velocity;
+	  float Pred_id;
+	  float Pred_gen;
+	  float Prey_id;
+	  double time;
+  };
 
+  struct DataStorage
+  {
+	  std::string folder;
+  };
   class Vec3 : public glm::vec3
   {
 	  float q;
@@ -61,6 +82,11 @@ namespace Param {
 	  std::string csv_file_prey_predator_settings;
   };
 
+  struct Trajectories
+  {
+	  int amount;
+	  float dt;
+  };
 
   struct Evolution
   {
@@ -70,8 +96,7 @@ namespace Param {
 	  int startGen;
 	  bool load;
 	  std::string loadFolder;
-	  bool TrajectoryBestPredator;
-	  bool TrajectoryPrey;
+	  Trajectories Trajectories;
 	  int terminationGeneration;
 	  bool externalPrey;
 	  std::string externalPreyFile;
@@ -366,6 +391,7 @@ namespace Param {
     glm::vec3 AttackWBetaIn;
     glm::vec3 AttackWBetaOut;
     float CatchDistance;
+	bool StoreTrajectory;
     float AttackSpan;
     float Dogfight;
     bool HoldLock;
@@ -428,6 +454,7 @@ namespace Param {
 	NepGLM draagkracht;
     double ClusterDetectionTime;
     float ClusterDistance1D;
+	DataStorage DataStorage;
     float ClusterDistance3D;
     std::vector<std::pair<std::string, std::string> > Fonts;  // name filename pair
     glm::vec3 TextColor;

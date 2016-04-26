@@ -47,6 +47,7 @@ CBird::CBird(int id, const glm::vec3& position, const glm::vec3& forward)
   wBetaIn_(0),
   wBetaOut_(0),
   reactionTime_(0),
+  StoreTrajectory_(0),
   reactionInterval_(0),
   searchRadius_(500),
   separation_neighbors_(PARAMS.maxTopologicalRange),
@@ -227,7 +228,7 @@ void CBird::regenerateLocalSpace(float dt)
 	avx::vec3 steering = steering_;
 
 	glm::vec3 steering2 = steering_;
-	steering2.y += pBird_.bodyMass * 9.81;
+	steering2.y += pBird_.bodyMass * 9.81f;
 	avx::vec3 gyro = gyro_.x * forward + gyro_.y * side + gyro_.z * up;
 	//steering += gyro;
 
@@ -259,7 +260,7 @@ void CBird::regenerateLocalSpace(float dt)
 	if (p < 0) a *= -1;
 	// I calculate whether, if the bird would decelerate maximally from here, it would still reach the desired bank angle (it has a solution). If so, it means that the bird has to decelerate from now on in order to have a rollrate of zero 
 	// at the desired bank angle. I also check whether the rollrate is in the direction of desired bank angle, else always accelerate in the direction of the bank angle.
-	if (c*c > 2 * a*p & p*c > 0) a *= -1;
+	if (c*c > 2 * a*p && p*c > 0) a *= -1;
 
 	roll_rate_ = roll_rate_ + a*dt;
 	float rollrate = roll_rate_;
@@ -305,7 +306,7 @@ void CBird::regenerateLocalSpace(float dt)
 	//std::cout << "\n body " << B_[1][0] << " " << B_[1][1] << " " << B_[1][2];
 	//std::cout << "\n body " << B_[2][0] << " " << B_[2][1] << " " << B_[2][2];
 	//beat cycle
-	beatCycle_ += dt*(pBird_.wingBeatFreq * 2 * 3.14);
+	beatCycle_ += dt*(pBird_.wingBeatFreq * 2.0f * 3.14f);
 	if (glide_) beatCycle_ = 0.0f;
 	if (Sim.SimulationTime() < 0.1) beatCycle_ += rand_;
 }

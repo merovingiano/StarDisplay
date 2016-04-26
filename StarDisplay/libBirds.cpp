@@ -9,7 +9,8 @@
 #include "features.hpp"
 #include "visitors.hpp"
 #include "Globals.hpp"
-
+#include <luabind/adopt_policy.hpp>
+#include <luabind/iterator_policy.hpp>
 
 using namespace Param;
 using namespace libParam;
@@ -66,6 +67,7 @@ namespace libBirds {
 }
 
 
+
 void luaopen_libBirds(lua_State* L)
 {
   module(L)[
@@ -83,7 +85,7 @@ void luaopen_libBirds(lua_State* L)
       .def_readonly("predatorReaction", &neighborInfo::predatorReaction)
       .def_readonly("panicOnset", &neighborInfo::panicOnset),
 
-    class_<CPredator::hunt>("__predhunt")
+	  class_<CPredator::hunt>("__predhunt")
       .def_readonly("sequences", &CPredator::hunt::sequences)
       .def_readonly("locks", &CPredator::hunt::locks)
       .def_readonly("catches", &CPredator::hunt::success)
@@ -92,8 +94,8 @@ void luaopen_libBirds(lua_State* L)
       .def_readonly("minDistLockedOn", &CPredator::hunt::minDistLockedOn)
       .def_readonly("seqTime", &CPredator::hunt::seqTime)
       .def_readonly("lockTime", &CPredator::hunt::lookTime),
+	  
     
-
 
     class_<CBird>("__bird")
 		  .def("isPrey", &CBird::isPrey)

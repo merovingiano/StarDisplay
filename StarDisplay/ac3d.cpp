@@ -213,7 +213,7 @@ namespace {
       if (objects_.back().kids >= 0) break;  // last object token
     }
 	acObject& obj(objects_.back());
-	startNumb[3] = obj.vert.size();
+	startNumb[3] = int(obj.vert.size());
 	//! setting location for each part
 	for (int i = 0; i < partIndex; i++)
 	{
@@ -266,7 +266,7 @@ namespace {
 
   void acParser::read_numvert() 
   {
-	  startNumb[partIndex] = objects_.back().vert.size();
+	  startNumb[partIndex] = int(objects_.back().vert.size());
     int N; is_ >> N;
     for (int i=0; i<N; ++i)
     {

@@ -327,6 +327,11 @@ namespace liblua {
     return luabind::detail::make_range(L, bird->nbegin(), bird->nend());
   }
 
+  int TrajectoryIterator(lua_State* L, const CPredator* pred)
+  {
+	  return luabind::detail::make_range(L, pred->hunts().Trajectory_.begin(), pred->hunts().Trajectory_.end());
+  }
+
 
   void open_libLua()
   {
@@ -372,7 +377,8 @@ namespace liblua {
       def("Flockmates", &FlockmateIterator),
       def("Flockmembers", &FlockmemberIterator),
       def("Neighbors", &NeighborsIterator),
-      def("line", &line)
+      def("line", &line),
+	  def("getTrajectory", &TrajectoryIterator)
     ];
   }
 

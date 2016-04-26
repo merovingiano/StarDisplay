@@ -11,7 +11,10 @@ function DataStorage.DataStorage()
 --store data of experiment parameters, assuming all prey have the same parameters and all predators have too.
    return function(expNum)
 	   --create directories
-	   folder = experiments[expNum]['Param']['DataStorage']['folder'] .. "test\\" .. tostring(expNum) .. "\\" 
+	   local generation = Simulation.Generation()
+	
+	   folder = experiments[expNum]['Param']['DataStorage']['folder_lua'] .. os.date("%d-%m-%Y\\") .. experiments[expNum]['Param']['evolution']['fileName'] .. "\\"
+	   if (directory_exists(folder) ~= true) then os.execute( "mkdir " ..  "\"" .. folder .. "\"") end
 	   if (directory_exists("\"" .. experiments[expNum]['Param']['DataStorage']['folder'] .. "test\"") ~= true) then
 		   os.execute( "mkdir " ..  "\"" .. experiments[expNum]['Param']['DataStorage']['folder'] .. "test\"" )
 		   os.execute( "mkdir " ..  "\"" .. experiments[expNum]['Param']['DataStorage']['folder'] .. "test\\" .. tostring(expNum) .."\"" )
@@ -23,8 +26,13 @@ function DataStorage.DataStorage()
 	   file = io.open (folder .. "settings.txt", "w")
 	   tableToFile(exp,  "Clustering Ruler Trail RenderFlags FeatureMap", "", file)
 	   file:close()
-	   file = io.open (folder .. "evolutionn.txt", "a")
-	     evolutionToFile(exp,  Simulation.Generation(), file)
+	   if (generation == 0) then os.remove(folder .. "evolution.txt") end
+	   file = io.open (folder .. "evolution.txt", "a")
+	     evolutionToFile(exp,  generation, file)
+	   file:close()
+	   if (generation == 0) then os.remove(folder .. "trajectory.txt") end
+	   file = io.open (folder .. "trajectory.txt", "a")
+	     TrajectoryToFile(exp,  generation, file)
 	   file:close()
 
    end
