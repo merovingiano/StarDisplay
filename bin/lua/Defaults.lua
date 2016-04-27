@@ -41,9 +41,9 @@ local Default = {
 		terminationGeneration = 100000000,
 
 		evolving_parameters = {
-			{name = "predBird_params.InitialPosition.y", type = "normal", a = 0, b = 0.1, scale = true, initial = {min = 0, max = 600}, },
-		    {name = "predBird_params.InitialPosition.x", type = "normal", a = 0, b = 0.1, scale = true, initial = {min = 0, max = 600}, },
-			{name = "pred_params.N", type = "normal", a = 0, b = 0.1, scale = true, initial = {min = 0, max = 100}, },
+			--{name = "predBird_params.InitialPosition.y", type = "normal", a = 0, b = 0.1, scale = true, initial = {min = 0, max = 600}, },
+		    --{name = "predBird_params.InitialPosition.x", type = "normal", a = 0, b = 0.1, scale = true, initial = {min = 0, max = 600}, },
+			--{name = "pred_params.N", type = "normal", a = 0, b = 0.1, scale = true, initial = {min = 0, max = 100}, },
 		
 		},
 
@@ -53,11 +53,15 @@ local Default = {
 		   {"pred_stat.seqTime"},
 		   {"predator.id"},
 		   {"predBird_params.generation"},
+		   {"pred_stat.InterceptionState", template = "TrajectoryTable()"},
 		},
 
 		random_variables = {
 		  {name = "preyBird_params.reactionTime",  type = "normal", a = 0.07, b = 0.001},
-		  {name = "preyBird_params.InitialHeading",  type = "vec_in_sphere",},
+		  {name = "predBird_params.InitialPosition.y",  type = "uniform", a = -100, b = 2500},
+		  {name = "predBird_params.InitialPosition.x",  type = "uniform", a = 0, b = 800},
+		  {name = "pred_params.N",  type = "uniform", a = 1, b = 20},
+          {name = "preyBird_params.InitialHeading",  type = "vec_in_sphere",},
 		},
   },
 

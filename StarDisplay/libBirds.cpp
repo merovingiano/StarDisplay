@@ -93,6 +93,7 @@ void luaopen_libBirds(lua_State* L)
 	  .def_readonly("velocityMinDist", &CPredator::hunt::velocityMinDist)
       .def_readonly("minDistLockedOn", &CPredator::hunt::minDistLockedOn)
       .def_readonly("seqTime", &CPredator::hunt::seqTime)
+	  .def_readonly("InterceptionState", &CPredator::hunt::InterceptionState)
       .def_readonly("lockTime", &CPredator::hunt::lookTime),
 	  
     

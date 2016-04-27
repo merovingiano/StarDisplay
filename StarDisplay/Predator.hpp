@@ -38,7 +38,7 @@ public:
     float minDistLockedOn;
     double seqTime;
     double lookTime;
-	
+	Param::Trajectory InterceptionState;
 	std::vector<Param::Trajectory> Trajectory_;
     std::vector<unsigned> attackSize;
     std::vector<unsigned> catchSize;
@@ -61,7 +61,7 @@ public:
   Param::Predator& GetPredParams() { return pPred_; }
   void SetPredParams(const Param::Predator& pPred);
 
-  void handle_trajectory_storage();
+  Param::Trajectory handle_trajectory_storage(bool storeInVector);
   Param::Predator  pPred_;
   void updateNeighbors(float dt, const CFlock& flock);
   void update(float dt, const CFlock&);

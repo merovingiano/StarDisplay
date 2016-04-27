@@ -6,8 +6,8 @@ require "config_functions"
 doExperiments = 1
 
 -- Overwrite default initial parameters if required
-gParam.Roost.numPrey = 1
-gParam.Roost.numPredators = 6
+gParam.Roost.numPrey = 100
+gParam.Roost.numPredators = 2000
 gParam.Roost.Radius = 500.0
 gParam.Roost.minRadius = 150.0
 gParam.Roost.maxRadius = 10000.0
@@ -19,7 +19,7 @@ gParam.evolution.durationGeneration = 1
 gParam.evolution.load = false
 gParam.evolution.loadFolder = "D:/ownCloud/2013-2014/phd hunting/dataStarDisplay/continue folder/"
 gParam.evolution.description = "Here, I compare the evolution of 4 species, 3 movements, and 2 RTs"
-gParam.RenderFlags.turnOffGraphics = false
+gParam.RenderFlags.turnOffGraphics = true
 
 
 

@@ -229,7 +229,7 @@ void CPredator::update(float dt, const CFlock&)
   //
 	if (pPred_.StoreTrajectory && (StoreTrajectory_ += dt) >= Sim.Params().evolution.Trajectories.dt)
 	{
-		handle_trajectory_storage();
+		handle_trajectory_storage(true);
 		StoreTrajectory_ = 0.0f;
 	}
   const CPrey* target = GetTargetPrey();
@@ -267,6 +267,7 @@ void CPredator::update(float dt, const CFlock&)
 	{
 		hunts_.minDist = distance;
 		hunts_.velocityMinDist = glm::length(velocity_);
+		hunts_.InterceptionState = handle_trajectory_storage(false);
 	}
 	if (distance < hunts_.lastMinDist)
 	{
@@ -284,7 +285,7 @@ void CPredator::Accelerate()
 }
 
 
-void CPredator::handle_trajectory_storage()
+Param::Trajectory CPredator::handle_trajectory_storage(bool storeInVector)
 {
 	Param::Trajectory traj;
 	const CPrey* target = GetTargetPrey();
@@ -295,16 +296,18 @@ void CPredator::handle_trajectory_storage()
 	traj.Pred_id = id_;
 	traj.Pred_position = position_;
 	traj.Pred_up = up();
-	traj.pred_velocity = velocity_;
+	traj.N = pPred_.N;
+	traj.Pred_velocity = velocity_;
 	traj.Prey_acc = target->accel_;
 	traj.Prey_forward = target->forward();
 	traj.Prey_id = target->id();
 	traj.Prey_position = target->position_;
 	traj.Prey_up = target->up();
-	traj.prey_velocity = target->velocity_;
+	traj.Prey_velocity = target->velocity_;
 	traj.time = Sim.SimulationTime();
 
-	hunts_.Trajectory_.push_back(traj);
+	if (storeInVector) hunts_.Trajectory_.push_back(traj);
+	return(traj);
 	
 }
 

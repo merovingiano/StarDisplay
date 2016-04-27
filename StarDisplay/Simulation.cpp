@@ -975,10 +975,13 @@ void Simulation::UpdateSimulationNoGraphicsNoFlock(double sim_dt)
 			if (timeSinceEvolution > params_.evolution.durationGeneration)
 			{
 				
-				evolution.apply();
-				evolution.save(params_.evolution.fileName.c_str(), 0);
-				Sim.StorageData_(Sim.expNumb);
-				Sim.evolution_next_();
+				if (expNumb == 0) next_experiment();
+				//evolution.apply();
+				//evolution.save(params_.evolution.fileName.c_str(), 0); 
+				Sim.StorageData_(expNumb);
+				Generation_ += 1;
+				Sim.evolution_next_(expNumb);
+				Initialize_birds();
 				timeSinceEvolution = 0.0f;
 			}
 		}

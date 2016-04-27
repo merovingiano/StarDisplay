@@ -124,7 +124,18 @@ function evolutionToFile(experiment, generation, file)
 		   file:write(table.name .. " ")
 		end
 		for num,table in pairs(experiment.Param.evolution.to_be_saved) do
-		   file:write(table[1] .. " ")
+		   if table['template'] == nil then
+		         file:write(table[1] .. " ")
+		   else
+		         loadstring(" global_ts = {}")()
+			     loadstring(" TEMPLATE = " .. table['template'] )()
+				 loadstring(" trajectoryTableOutput = " .. table['template'] )()
+				 row_table_to_file(trajectoryTableOutput, generation, "",file)
+				 print(" boeren")
+           end
+		end
+		for num,table in pairs(experiment.Param.evolution.random_variables) do
+		   file:write(table.name .. " ")
 		end
 		file:write("\n")
 		return
@@ -134,15 +145,30 @@ function evolutionToFile(experiment, generation, file)
 		   predator = p
 	       pred_params = p.PredParams
 		   predBird_params = p.BirdParams
-	       prey_params = p:GetTargetPrey()
+		   theprey = p:GetTargetPrey()
+	       prey_params = theprey.PreyParams
+		   preyBird_params = theprey.BirdParams
 	       for num,table in pairs(experiment.Param.evolution.evolving_parameters) do
 		       var_name = table.name
 			   loadstring("val_var = " .. var_name )()
 			   file:write(tostring(val_var) .. " ")
 		   end
 		   for num,table in pairs(experiment.Param.evolution.to_be_saved) do
-
+		       
 		       var_name = table[1]
+			   if table['template'] == nil then
+					loadstring("val_var = " .. var_name )()
+					file:write(tostring(val_var) .. " ")
+			   else
+			     loadstring(" global_ts = "  .. table[1])()
+			     loadstring(" TEMPLATE = " .. table['template'] )()
+				 loadstring(" trajectoryTableOutput = " .. table['template'] )()
+				 userDatatoTable(TEMPLATE, "global_ts", "trajectoryTableOutput")
+				 row_table_to_file(trajectoryTableOutput, generation, "",file)
+			  end
+		   end
+		   for num,table in pairs(experiment.Param.evolution.random_variables) do
+		       var_name = table.name
 			   loadstring("val_var = " .. var_name )()
 			   file:write(tostring(val_var) .. " ")
 		   end

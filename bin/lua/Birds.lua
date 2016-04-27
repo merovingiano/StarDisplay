@@ -176,11 +176,12 @@ function TrajectoryTable()
 	Prey_forward= {x=0,y=0,z=0},
 	Pred_acc= {x=0,y=0,z=0},
 	Prey_acc= {x=0,y=0,z=0},
-	pred_velocity= {x=0,y=0,z=0},
-	prey_velocity= {x=0,y=0,z=0},
+	Pred_velocity= {x=0,y=0,z=0},
+	Prey_velocity= {x=0,y=0,z=0},
 	Pred_id =0,
 	Pred_gen =0,
 	Prey_id =0,
+	N = 0,
 	time =0,
    
    }
