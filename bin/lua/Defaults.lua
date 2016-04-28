@@ -61,7 +61,7 @@ local Default = {
 		  {name = "predBird_params.InitialPosition.y",  type = "uniform", a = -100, b = 2500},
 		  {name = "predBird_params.InitialPosition.x",  type = "uniform", a = 0, b = 800},
 		  {name = "pred_params.N",  type = "uniform", a = 1, b = 20},
-          {name = "preyBird_params.InitialHeading",  type = "vec_in_sphere",},
+          {name = "preyBird_params.InitialHeading",  type = "vec_in_sphere", template = "{x=0,y=0,z=0}"},
 		},
   },
 
