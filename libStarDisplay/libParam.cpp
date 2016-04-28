@@ -621,6 +621,10 @@ void luaopen_libParam(lua_State* L)
 	  .def_readwrite("Prey_position", &Trajectory::Prey_position)
 	  .def_readwrite("Prey_up", &Trajectory::Prey_up)
 	  .def_readwrite("Prey_velocity", &Trajectory::Prey_velocity)
+	  .def_readwrite("Prey_roll_acc", &Trajectory::Prey_roll_acc)
+	  .def_readwrite("Prey_roll_rate", &Trajectory::Prey_roll_rate)
+	  .def_readwrite("Pred_roll_acc", &Trajectory::Pred_roll_acc)
+	  .def_readwrite("Pred_roll_rate", &Trajectory::Pred_roll_rate)
 	  .def_readwrite("time", &Trajectory::time),
 
     class_<Predator>("Predator")

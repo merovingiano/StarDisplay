@@ -38,6 +38,10 @@ namespace Param {
 	  glm::vec3 Prey_acc;
 	  glm::vec3 Pred_velocity;
 	  glm::vec3 Prey_velocity;
+	  float Pred_roll_rate;
+	  float Pred_roll_acc;
+	  float Prey_roll_rate;
+	  float Prey_roll_acc;
 	  float Pred_id;
 	  float Pred_gen;
 	  float Prey_id;

@@ -305,6 +305,10 @@ Param::Trajectory CPredator::handle_trajectory_storage(bool storeInVector)
 	traj.Prey_up = target->up();
 	traj.Prey_velocity = target->velocity_;
 	traj.time = Sim.SimulationTime();
+	traj.Pred_roll_acc = angular_acc_;
+	traj.Pred_roll_rate = roll_rate_;
+	traj.Prey_roll_acc = target->angular_acc_;
+	traj.Prey_roll_rate = target->roll_rate_;
 
 	if (storeInVector) hunts_.Trajectory_.push_back(traj);
 	return(traj);
