@@ -48,12 +48,12 @@ local newExp = function (a)
 	experiment.Param.evolution.evolveDPAdjParam = false
 
 	--experiment.preyBird = starling_bird
-   experiment.preyBird = peregrine_bird 
+   experiment.preyBird = starling_bird 
 	--if (PreyCounter == 2) then experiment.preyBird = peregrine_bird  end
 	--if (PreyCounter == 3) then experiment.preyBird = starling_bird end
 	--if (PreyCounter == 4) then experiment.preyBird = peregrine_bird end
-	experiment.preyBird.maneuver = 2
-	
+	experiment.preyBird.maneuver = 3
+	experiment.preyBird.reactionTime = 1
 	experiment.predBird.reactionTime = 0.05
 	experiment.Param.evolution.fileName = "take2_no_evol_starling_erratic_landscape"
 	experiment.pred['VisualError'] = 0
