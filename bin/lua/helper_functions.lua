@@ -518,3 +518,10 @@ function script_path()
     return debug.getinfo(2, "S").source:sub(2) 
 end 
 --________________________________________________________________________________________________________________________________________________
+
+
+
+
+function round2(num, idp)
+  return tonumber(string.format("%." .. (idp or 0) .. "f", num))
+end
