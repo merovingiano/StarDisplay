@@ -77,7 +77,7 @@ function evolution.evolve_next()
 		randomize_random_variables(Bird_params, "preyBird_params", expNum)
 
 	   
-	    print("seconds: " .. os.clock() - begin)
+	    print("Evolution in seconds: " .. os.clock() - begin)
 	end
 
 	--next generation
