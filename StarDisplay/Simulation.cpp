@@ -635,6 +635,7 @@ void Simulation::next_experiment()
 
 
 	CreateDirectory(bufS.c_str(), NULL);
+
 	CopyFile("../../experiments.lua", (bufS + luaName).c_str(), TRUE);
 	CopyFile((Sim.experiments[Sim.expNumb - 1].param.birds.csv_file_prey_predator_settings).c_str(), (bufS +  "pred_prey.csv").c_str(), TRUE);
 	CopyFile((Sim.experiments[Sim.expNumb - 1].param.birds.csv_file_species).c_str(), (bufS + "species.csv").c_str(), TRUE);
@@ -719,6 +720,7 @@ void Simulation::UpdateSimulation(double sim_dt)
 		{
             
 			if (expNumb == 0) next_experiment();
+			if (Generation_ >= Sim.Params().evolution.terminationGeneration) next_experiment();
 			//evolution.apply();
 			//evolution.save(params_.evolution.fileName.c_str(), 0); 
 			Sim.StorageData_(expNumb);
@@ -976,6 +978,7 @@ void Simulation::UpdateSimulationNoGraphicsNoFlock(double sim_dt)
 			{
 				
 				if (expNumb == 0) next_experiment();
+				if (Generation_ >= Sim.Params().evolution.terminationGeneration) next_experiment();
 				//evolution.apply();
 				//evolution.save(params_.evolution.fileName.c_str(), 0); 
 				Sim.StorageData_(expNumb);
