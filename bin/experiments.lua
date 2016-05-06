@@ -63,7 +63,7 @@ local newExp = function (a)
 	experiment.preyBird.maneuver = maneuverCounter
 	
 	experiment.predBird.reactionTime = 0.05
-	experiment.Param.evolution.fileName = "no_evol_landscape_" .. experiment.preyBird.birdName .. "_" .. experiment.preyBird.maneuver .. "_" .. round2(experiment.predBird.reactionTime,3)
+	experiment.Param.evolution.fileName = "Lno_evol_landscape_" .. experiment.preyBird.birdName .. "_" .. experiment.preyBird.maneuver .. "_" .. round2(experiment.predBird.reactionTime,3)
 	experiment.pred['VisualError'] = 0
 
 	print("experiment: " .. a)
@@ -79,10 +79,10 @@ end
 RT = {0.001,0.05}
 
 thecounter = 0
-for n = 1,11,1 do
+for n = 2,11,1 do
 	print(n)
 	thecounter = thecounter + 1
-    experiments[thecounter] = newExp(n)
+    experiments[thecounter] = newExp(11-n)
 end
 
 

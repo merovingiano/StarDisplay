@@ -34,7 +34,7 @@ function DataStorage.DataStorage()
 	   file = io.open (folder .. "trajectory.txt", "a")
 	     TrajectoryToFile(exp,  generation, file)
 	   file:close()
-
+	   print("saving success")
    end
 end
 
