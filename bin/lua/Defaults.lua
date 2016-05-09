@@ -33,7 +33,7 @@ local Default = {
 		startGen = 0,				-- When no randomization at start is desired, set it to >0 (such as when loading an old one)
 		load = false,
 		loadFolder = "",
-		Trajectories = {amount = 3, dt = 0.1,},
+		Trajectories = {amount = 0, dt = 0.1,},
 		externalPrey = false,
 		externalPreyFile = "pos_lure_flight1.txt",
 		title = "Default Title",
