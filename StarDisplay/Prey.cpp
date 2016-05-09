@@ -195,7 +195,7 @@ void CPrey::handleTrajectoryStorage()
 
 void CPrey::handleManeuvers()
 {
-	if (pBird_.maneuver == 1) steering_ = glm::vec3(1, 0, 0) * 20.0f;
+	if (pBird_.maneuver == 1) steering_ = glm::normalize(glm::vec3(pBird_.InitialHeading.x, 0.0f, pBird_.InitialHeading.z)) * 20.0f;
 	if (pBird_.maneuver == 2) { maneuver_lat_roll(); };
 	if (pBird_.maneuver == 3){ maneuver_lat(); };
 	if (pBird_.maneuver == 4){ maneuver_lat_roll2(); };

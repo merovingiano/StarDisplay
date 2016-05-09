@@ -36,6 +36,7 @@ public:
     float minDist;
 	float velocityMinDist;
     float minDistLockedOn;
+	
     double seqTime;
     double lookTime;
 	Param::Trajectory InterceptionState;
@@ -124,7 +125,7 @@ private:
   void DirectPursuit(const glm::vec3& targetPosition, const glm::vec3& targetVelocity);
   void DirectPursuit2(const glm::vec3& targetPosition, const glm::vec3& targetVelocity);
   void checkEndHunt(const glm::vec3& targetPosition);
-
+  void proportionalNavigation_error_estimation_velocity(const glm::vec3& targetPosition, const glm::vec3& targetVelocity);
   
   float            attackTime_;
 
@@ -143,7 +144,7 @@ private:
   float            XDist_;
   float            ZDist_;
   float            generation_;
-
+  glm::vec3 previous_relative_position_;
   
   typedef void (CPredator::*handleAttackMPTR)();
   typedef void (CPredator::*selectPreyMPTR)(struct find_prey_qf&);

@@ -35,9 +35,9 @@ local newExp = function (a)
 	local PreyCounter = repeater(a, 2,3)
 	local maneuverCounter = repeater(a,6,4)
 
-	local PreyCounter = repeater(a, 1,4)
-	local maneuverCounter = repeater(a,4,3)
-
+	
+	local maneuverCounter = repeater(a,1,3)
+    local PreyCounter = repeater(a, 3,4)
 	local experiment = 
 	{
 		Param = deepcopy(gParam),
@@ -46,7 +46,7 @@ local newExp = function (a)
 		prey = defaultPrey_prey,
 		pred = defaultPred_pred,
 	}
-	experiment.pred.PursuitStrategy = 1
+	experiment.pred.PursuitStrategy = 5
 	experiment.Param.evolution.fileName =  "hoi"  .. ".txt"
 	experiment.Param.evolution.title =  ""
 	experiment.Param.evolution.description = ""
@@ -56,15 +56,15 @@ local newExp = function (a)
 
 	--experiment.preyBird = starling_bird
    --experiment.preyBird = peregrine_bird 
-   if (PreyCounter == 1) then experiment.preyBird = dove_bird  end
+   if (PreyCounter == 1) then experiment.preyBird = starling_bird  end
 	if (PreyCounter == 2) then experiment.preyBird = tired_dove_bird  end
-	if (PreyCounter == 3) then experiment.preyBird = starling_bird end
+	if (PreyCounter == 3) then experiment.preyBird = dove_bird end
 	if (PreyCounter == 4) then experiment.preyBird = chaffinch_bird end
 	experiment.preyBird.maneuver = maneuverCounter
 	
 	experiment.predBird.reactionTime = 0.05
-	experiment.Param.evolution.fileName = "Lno_evol_landscape_" .. experiment.preyBird.birdName .. "_" .. experiment.preyBird.maneuver .. "_" .. round2(experiment.predBird.reactionTime,3)
-	experiment.pred['VisualError'] = 0
+	experiment.Param.evolution.fileName = "L_DP_no_evol_landscape_" .. experiment.preyBird.birdName .. "_" .. experiment.preyBird.maneuver .. "_" .. round2(experiment.predBird.reactionTime,3)
+	experiment.pred['VisualError'] = 0.007
 
 	print("experiment: " .. a)
 	print("maneuver: " .. maneuverCounter)
@@ -79,10 +79,10 @@ end
 RT = {0.001,0.05}
 
 thecounter = 0
-for n = 2,11,1 do
+for n = 0,11,1 do
 	print(n)
 	thecounter = thecounter + 1
-    experiments[thecounter] = newExp(11-n)
+    experiments[thecounter] = newExp(n)
 end
 
 

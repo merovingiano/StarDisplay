@@ -438,6 +438,7 @@ void CPredator::handle_direct_attack()
 	if (pPred_.PursuitStrategy == 2) DirectPursuit(targetPosition, targetVelocity);
 	if (pPred_.PursuitStrategy == 3) DirectPursuit2(targetPosition, targetVelocity);
 	if (pPred_.PursuitStrategy == 4) PNDP(targetPosition, targetVelocity);
+	if (pPred_.PursuitStrategy == 5) proportionalNavigation_error_estimation_velocity(targetPosition, targetVelocity);
 }
 
 // basic flocking
@@ -660,29 +661,40 @@ void CPredator::PNDP(const glm::vec3& targetPosition, const glm::vec3& targetVel
 //! Prop Nav function
 void CPredator::proportionalNavigation(const glm::vec3& targetPosition, const glm::vec3& targetVelocity)
 {
+	glm::vec3 r = targetPosition - position_;
+	glm::vec3 v = velocity_ - targetVelocity;
+	glm::vec3 wLOS = glm::cross(v, r) / glm::dot(r, r);
+	steering_ += pPred_.N * glm::cross(wLOS, velocity_)*pBird_.bodyMass;
+
+}
+
+
+
+//! Prop Nav function
+void CPredator::proportionalNavigation_error_estimation_velocity(const glm::vec3& targetPosition, const glm::vec3& targetVelocity)
+{
 	//Hack
 	//N_ = 8.0f;
 	//Sim.PrintVector(targetPosition, "targetPosition");
 	glm::vec3 r = targetPosition - position_;
 
 	//add visual error!! translate angular velocity to position. This is hacky: actually computations should be done on FOV pred (cant do bias like this)
-	//if ((GCAMERA.GetFocalBird())->id() == id_) Sim.PrintVector(r, "before");
+	float LOS = avx::fast_sqrt(glm::dot(r, r));
 
-	//float LOS = avx::fast_sqrt(glm::dot(r, r));
-	//if ((GCAMERA.GetFocalBird())->id() == id_) Sim.PrintFloat(LOS, "LOS");
-	//r.x += (pPred_.VisualError * (float(rand()) / (float(RAND_MAX))) ) * LOS;
-	//r.y += (pPred_.VisualError * (float(rand()) / (float(RAND_MAX))) ) * LOS;
-	//r.z += (pPred_.VisualError * (float(rand()) / (float(RAND_MAX)))) * LOS;
+	r.x += (pPred_.VisualError * (float(rand()) / (float(RAND_MAX))) ) * LOS;
+	r.y += (pPred_.VisualError * (float(rand()) / (float(RAND_MAX))) ) * LOS;
+	r.z += (pPred_.VisualError * (float(rand()) / (float(RAND_MAX)))) * LOS;
 
-	//if ((GCAMERA.GetFocalBird())->id() == id_) Sim.PrintFloat((float(rand()) / (float(RAND_MAX))), "random");
-	//if ((GCAMERA.GetFocalBird())->id() == id_) Sim.PrintVector(r, "after");
-
-	glm::vec3 v = velocity_ - targetVelocity;
+	glm::vec3 target_velocity = (r - previous_relative_position_) * reactionInterval_;
+	glm::vec3 v = velocity_ - target_velocity;
 	glm::vec3 wLOS = glm::cross(v, r) / glm::dot(r, r);
 	steering_ += pPred_.N * glm::cross(wLOS, velocity_)*pBird_.bodyMass;
 	//!stopping attack when in blind angle and close to prey
 	//if (glm::length(steering_) > 50) std::cout << "\n r " << glm::length(r) << "  v: " << glm::length(v) << "  wLOS " << glm::length(wLOS) << " mass " << pBird_.bodyMass << " N " << N_ << " steering " << glm::length(steering_);
+	previous_relative_position_ = r;
 }
+
+
 
 void CPredator::predatorIntegration(float dt)
 {
