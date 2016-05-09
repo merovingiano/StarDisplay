@@ -685,8 +685,11 @@ void CPredator::proportionalNavigation_error_estimation_velocity(const glm::vec3
 	r.y += (pPred_.VisualError * (float(rand()) / (float(RAND_MAX))) ) * LOS;
 	r.z += (pPred_.VisualError * (float(rand()) / (float(RAND_MAX)))) * LOS;
 
-	glm::vec3 relative_velocity = (r - previous_relative_position_) / reactionInterval_;
-	glm::vec3 v = relative_velocity;
+	glm::vec3 target_velocity = (r - previous_relative_position_) / reactionInterval_ * -1.0f;
+
+	
+	glm::vec3 v = target_velocity;
+    
 	glm::vec3 wLOS = glm::cross(v, r) / glm::dot(r, r);
 	steering_ += pPred_.N * glm::cross(wLOS, velocity_)*pBird_.bodyMass;
 	//!stopping attack when in blind angle and close to prey
