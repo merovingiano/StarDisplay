@@ -651,6 +651,7 @@ void luaopen_libParam(lua_State* L)
 	  
 	  .def_readwrite("DPAdjParam", &Predator::DPAdjParam)
 	  .def_readwrite("N", &Predator::N)
+	  .def_readwrite("N2", &Predator::N2)
   ];
 }
 

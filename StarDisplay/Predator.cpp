@@ -676,25 +676,31 @@ void CPredator::proportionalNavigation_error_estimation_velocity(const glm::vec3
 	//Hack
 	//N_ = 8.0f;
 	//Sim.PrintVector(targetPosition, "targetPosition");
-	glm::vec3 r = targetPosition - position_;
-
-	//add visual error!! translate angular velocity to position. This is hacky: actually computations should be done on FOV pred (cant do bias like this)
-	float LOS = avx::fast_sqrt(glm::dot(r, r));
-
-	r.x += (pPred_.VisualError * (float(rand()) / (float(RAND_MAX))) ) * LOS;
-	r.y += (pPred_.VisualError * (float(rand()) / (float(RAND_MAX))) ) * LOS;
-	r.z += (pPred_.VisualError * (float(rand()) / (float(RAND_MAX)))) * LOS;
-
-	glm::vec3 target_velocity = (r - previous_relative_position_) / reactionInterval_ * -1.0f;
 
 	
-	glm::vec3 v = target_velocity;
+	glm::vec3 r = targetPosition - position_;
+    float LOS = avx::fast_sqrt(glm::dot(r, r));
+    glm::vec3 targetPosition_error = targetPosition;
+	targetPosition_error.x += (pPred_.VisualError * (float(rand()) / (float(RAND_MAX)))) * LOS;
+	targetPosition_error.y += (pPred_.VisualError * (float(rand()) / (float(RAND_MAX)))) * LOS;
+	targetPosition_error.z += (pPred_.VisualError * (float(rand()) / (float(RAND_MAX)))) * LOS;
+    r = targetPosition_error - position_;
+	glm::vec3 r_adj = pPred_.N2 * targetPosition_error - position_;
+	//add visual error!! translate angular velocity to position. This is hacky: actually computations should be done on FOV pred (cant do bias like this)
+	
+
+
+
+	glm::vec3 relative_velocity = (r_adj - previous_relative_position_) / reactionInterval_ * -1.0f;
+
+	
+	glm::vec3 v = relative_velocity;
     
 	glm::vec3 wLOS = glm::cross(v, r) / glm::dot(r, r);
 	steering_ += pPred_.N * glm::cross(wLOS, velocity_)*pBird_.bodyMass;
 	//!stopping attack when in blind angle and close to prey
 	//if (glm::length(steering_) > 50) std::cout << "\n r " << glm::length(r) << "  v: " << glm::length(v) << "  wLOS " << glm::length(wLOS) << " mass " << pBird_.bodyMass << " N " << N_ << " steering " << glm::length(steering_);
-	previous_relative_position_ = r;
+	previous_relative_position_ = r_adj;
 }
 
 
