@@ -64,7 +64,7 @@ local newExp = function (a)
 	
 	experiment.predBird.reactionTime = 0.05
 	experiment.Param.evolution.fileName = "L_yes_verror_no_evol_landscape_" .. experiment.preyBird.birdName .. "_" .. experiment.preyBird.maneuver .. "_" .. round2(experiment.predBird.reactionTime,3)
-	experiment.pred['VisualError'] = 0.1
+	experiment.pred['VisualError'] = 0.007
 
 	print("experiment: " .. a)
 	print("maneuver: " .. maneuverCounter)
