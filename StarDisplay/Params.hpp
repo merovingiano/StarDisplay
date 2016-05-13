@@ -411,6 +411,7 @@ namespace Param {
 	
 	float DPAdjParam;
 	float N;
+	float N2;
   };
 
 

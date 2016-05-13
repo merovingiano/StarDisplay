@@ -91,6 +91,7 @@ function Birds.newBird (p, file,settingsFile, name, isPredator)
 
 		  predator.DPAdjParam = 0
 		  predator.N = 3
+		  predator.N2 = 1
 		  bird.generation = 0
 
 		  -- currently unused, to be deleted or may we useful later

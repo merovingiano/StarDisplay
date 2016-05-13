@@ -37,7 +37,8 @@ local newExp = function (a)
 
 	
 	local maneuverCounter = repeater(a,1,3)
-    local PreyCounter = repeater(a, 3,4)
+	local errorCounter = repeater(a,3,2)
+    local PreyCounter = repeater(a, 6,4)
 	local experiment = 
 	{
 		Param = deepcopy(gParam),
@@ -62,9 +63,11 @@ local newExp = function (a)
 	if (PreyCounter == 4) then experiment.preyBird = chaffinch_bird end
 	experiment.preyBird.maneuver = maneuverCounter
 	
+	experiment.pred.N2 = 0
 	experiment.predBird.reactionTime = 0.05
-	experiment.Param.evolution.fileName = "L_yes_verror_no_evol_landscape_" .. experiment.preyBird.birdName .. "_" .. experiment.preyBird.maneuver .. "_" .. round2(experiment.predBird.reactionTime,3)
-	experiment.pred['VisualError'] = 0.007
+	experiment.Param.evolution.fileName = "PC_yes_verror_DP_no_evol_landscape_" .. experiment.preyBird.birdName .. "_" .. experiment.preyBird.maneuver .. "_" .. round2(experiment.predBird.reactionTime,3)
+	if (errorCounter == 1) then experiment.pred['VisualError'] = 0 end
+	if (errorCounter == 2) then experiment.pred['VisualError'] = 0.007 end
 
 	print("experiment: " .. a)
 	print("maneuver: " .. maneuverCounter)
@@ -79,7 +82,7 @@ end
 RT = {0.001,0.05}
 
 thecounter = 0
-for n = 0,11,1 do
+for n = 4,11,1 do
 	print(n)
 	thecounter = thecounter + 1
     experiments[thecounter] = newExp(n)
